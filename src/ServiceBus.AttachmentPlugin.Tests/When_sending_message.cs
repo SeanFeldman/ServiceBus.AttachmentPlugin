@@ -1,0 +1,93 @@
+﻿namespace ServiceBus.AttachmentPlugin.Tests
+{
+    using System;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Microsoft.Azure.ServiceBus;
+    using Microsoft.WindowsAzure.Storage;
+    using Xunit;
+
+    public class When_sending_message : IClassFixture<AzureStorageEmulatorFixture>
+    {
+        [Fact]
+        public async Task Should_nullify_body_when_body_should_be_sent_as_attachment()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes)
+            {
+                MessageId = Guid.NewGuid().ToString(),
+            };
+            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                connectionString:"UseDevelopmentStorage=true", containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id"));
+            var result = await plugin.BeforeMessageSend(message);
+
+            Assert.Null(result.Body);
+            Assert.True(message.UserProperties.ContainsKey("attachment-id"));
+        }
+
+        [Fact]
+        public async Task Should_leave_body_as_is_for_message_not_exceeding_max_size()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes)
+            {
+                MessageId = Guid.NewGuid().ToString(),
+                TimeToLive = TimeSpan.FromHours(1)
+            };
+            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                connectionString:"UseDevelopmentStorage=true", containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id", 
+                messageMaxSizeReachedCriteria:msg => msg.Body.Length > 100));
+            var result = await plugin.BeforeMessageSend(message);
+
+            Assert.NotNull(result.Body);
+            Assert.False(message.UserProperties.ContainsKey("attachment-id"));
+        }
+
+        [Fact]
+        public async Task Should_set_valid_until_datetime_on_blob_same_as_message_TTL()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes)
+            {
+                MessageId = Guid.NewGuid().ToString(),
+                TimeToLive = TimeSpan.FromHours(1)
+            };
+            var dateTimeNowUtc = new DateTime(2017, 1, 2);
+            var configuration = new AzureStorageAttachmentConfiguration(connectionString:"UseDevelopmentStorage=true", containerName:"attachments", 
+                messagePropertyToIdentifyAttachmentBlob:"attachment-id");
+            AzureStorageAttachment.DateTimeFunc = () => dateTimeNowUtc;
+            var plugin = new AzureStorageAttachment(configuration);
+            await plugin.BeforeMessageSend(message);
+
+            var account = CloudStorageAccount.Parse(configuration.ConnectionString);
+            var client = account.CreateCloudBlobClient();
+            var container = client.GetContainerReference(configuration.ContainerName);
+            var blob = container.GetBlockBlobReference(message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob].ToString());
+            await blob.FetchAttributesAsync();
+            var validUntil = blob.Metadata[AzureStorageAttachment.ValidUntilUtc];
+            Assert.Equal(dateTimeNowUtc.Add(message.TimeToLive).ToString(AzureStorageAttachment.DateFormat), validUntil);
+        }
+
+        [Fact]
+        public async Task Should_receive_it()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes);
+            var configuration = new AzureStorageAttachmentConfiguration(
+                connectionString: "UseDevelopmentStorage=true", containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+
+            var plugin = new AzureStorageAttachment(configuration);
+            await plugin.BeforeMessageSend(message);
+
+            Assert.Null(message.Body);
+
+            var receivedMessage = await plugin.AfterMessageReceive(message);
+
+            Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
+        }
+    }
+}
