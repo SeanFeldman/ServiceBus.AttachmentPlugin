@@ -13,7 +13,7 @@
     <PackageTags>Azure;Service Bus;ServiceBus;.NET;AMQP;IoT;Queue;Topic;Attachment;Plugin</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/SeanFeldman/ServiceBus.AttachmentPlugin/master/images/project-icon.png</PackageIconUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/SeanFeldman/ServiceBus.AttachmentPlugin/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://nuget.org</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.1</NetStandardImplicitPackageVersion>
