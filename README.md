@@ -4,7 +4,7 @@
 
 Allows sending messages that exceed maxinum size by implementing [Claim Check pattern](http://www.enterpriseintegrationpatterns.com/patterns/messaging/StoreInLibrary.html) with Azure Storage.
 
-### Nuget package [![NuGet Status](http://img.shields.io/nuget/v/ServiceBus.AttachmentPlugin.svg?style=flat-square)](https://www.nuget.org/packages/ServiceBus.AttachmentPlugin/) [![Build Status](https://img.shields.io/appveyor/ci/seanfeldman/ServiceBus.AttachmentPlugin.svg?style=flat-square)](https://ci.appveyor.com/project/seanfeldman/ServiceBus.AttachmentPlugin)
+### Nuget package [![NuGet Status](http://img.shields.io/nuget/v/ServiceBus.AttachmentPlugin.svg?style=flat-square)](https://www.nuget.org/packages/ServiceBus.AttachmentPlugin/) [![Build Status](https://img.shields.io/appveyor/ci/seanfeldman/ServiceBus-AttachmentPlugin.svg?style=flat-square)](https://ci.appveyor.com/project/seanfeldman/servicebus-attachmentplugin)
 
 [N/A] Available here http://nuget.org/packages/ServiceBus.AttachmentPlugin
 
