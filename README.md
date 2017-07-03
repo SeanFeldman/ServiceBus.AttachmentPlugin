@@ -11,12 +11,64 @@ Allows sending messages that exceed maxinum size by implementing [Claim Check pa
 To Install from the Nuget Package Manager Console 
     
     PM> Install-Package ServiceBus.AttachmentPlugin
-    
-## How to use it
 
-## Example
+## Examples
 
-### Usage
+### Convert body into attachment, no matter how big it is
+
+Configuration and registration
+
+```c#
+
+var sender = new MessageSender(connectionString, queueName);
+var config = new AzureStorageAttachmentConfiguration(storageConnectionString);
+var plugin = new AzureStorageAttachment(config);
+sender.RegisterPlugin(plugin);
+```
+
+Sending
+
+```c#
+var payload = new MyMessage { ... }; 
+var serialized = JsonConvert.SerializeObject(payload);
+var payloadAsBytes = Encoding.UTF8.GetBytes(serialized);
+var message = new Message(payloadAsBytes);
+```
+
+Receiving
+
+```c#
+var receiver = new MessageReceiver(connectionString, entityPath, ReceiveMode.ReceiveAndDelete);
+receiver.RegisterPlugin(plugin);
+var msg = await receiver.ReceiveAsync();
+// msg will contain the original payload
+```
+
+### Configure blobs container name
+
+Default container name is "attachments".
+
+```c#
+new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"blobs");
+```
+
+### Configure message property to identify attachment blob
+
+Default container name is "$attachment.blob".
+
+```c#
+new AzureStorageAttachmentConfiguration(storageConnectionString, messagePropertyToIdentifyAttachmentBlob: "myblob");
+```
+
+
+### Configure criteria for message max size identification
+
+Default is to convert any body to attachment.
+
+```c#
+// messages with body > 200KB should be converted to use attachments
+new AzureStorageAttachmentConfiguration(storageConnectionString, message => message.Body.Length > 200 * 1024);
+```
 
 ## Icon
 
