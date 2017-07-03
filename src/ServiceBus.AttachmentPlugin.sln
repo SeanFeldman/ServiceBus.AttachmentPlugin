@@ -5,7 +5,12 @@ VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceBus.AttachmentPlugin", "ServiceBus.AttachmentPlugin\ServiceBus.AttachmentPlugin.csproj", "{5B09D75C-3554-4A8B-8DE2-C593CEF79656}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBus.AttachmentPlugin.Tests", "ServiceBus.AttachmentPlugin.Tests\ServiceBus.AttachmentPlugin.Tests.csproj", "{D52B8E45-D641-4E74-A0C9-222D408D3032}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceBus.AttachmentPlugin.Tests", "ServiceBus.AttachmentPlugin.Tests\ServiceBus.AttachmentPlugin.Tests.csproj", "{D52B8E45-D641-4E74-A0C9-222D408D3032}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{2295CF61-70EF-43B4-8747-7C01493D607C}"
+	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

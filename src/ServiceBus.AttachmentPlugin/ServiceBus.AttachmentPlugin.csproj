@@ -24,6 +24,7 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ServiceBus.AttachmentPlugin.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <RepositoryUrl>https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin</RepositoryUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
