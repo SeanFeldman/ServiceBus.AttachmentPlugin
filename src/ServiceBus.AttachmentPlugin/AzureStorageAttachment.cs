@@ -89,6 +89,7 @@
             var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
 
             var blob = container.GetBlockBlobReference(blobName);
+            await blob.FetchAttributesAsync().ConfigureAwait(false);
             var fileByteLength = blob.Properties.Length;
             var bytes = new byte[fileByteLength];
             await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
