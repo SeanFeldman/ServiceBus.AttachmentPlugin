@@ -86,7 +86,7 @@
 
             var container = client.Value.GetContainerReference(configuration.ContainerName);
             await container.CreateIfNotExistsAsync().ConfigureAwait(false);
-            var blobName = userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob].ToString();
+            var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
 
             var blob = container.GetBlockBlobReference(blobName);
             var fileByteLength = blob.Properties.Length;

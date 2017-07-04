@@ -37,7 +37,7 @@
                 TimeToLive = TimeSpan.FromHours(1)
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionString:"UseDevelopmentStorage=true", containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id", 
+                connectionString:"UseDevelopmentStorage=true", containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id",
                 messageMaxSizeReachedCriteria:msg => msg.Body.Length > 100));
             var result = await plugin.BeforeMessageSend(message);
 
@@ -56,7 +56,7 @@
                 TimeToLive = TimeSpan.FromHours(1)
             };
             var dateTimeNowUtc = new DateTime(2017, 1, 2);
-            var configuration = new AzureStorageAttachmentConfiguration(connectionString:"UseDevelopmentStorage=true", containerName:"attachments", 
+            var configuration = new AzureStorageAttachmentConfiguration(connectionString:"UseDevelopmentStorage=true", containerName:"attachments",
                 messagePropertyToIdentifyAttachmentBlob:"attachment-id");
             AzureStorageAttachment.DateTimeFunc = () => dateTimeNowUtc;
             var plugin = new AzureStorageAttachment(configuration);
@@ -65,7 +65,8 @@
             var account = CloudStorageAccount.Parse(configuration.ConnectionString);
             var client = account.CreateCloudBlobClient();
             var container = client.GetContainerReference(configuration.ContainerName);
-            var blob = container.GetBlockBlobReference(message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob].ToString());
+            var blobName = (string)message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
+            var blob = container.GetBlockBlobReference(blobName);
             await blob.FetchAttributesAsync();
             var validUntil = blob.Metadata[AzureStorageAttachment.ValidUntilUtc];
             Assert.Equal(dateTimeNowUtc.Add(message.TimeToLive).ToString(AzureStorageAttachment.DateFormat), validUntil);
