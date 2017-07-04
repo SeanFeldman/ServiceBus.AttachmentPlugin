@@ -21,7 +21,26 @@
             ConnectionString = connectionString;
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
-            MessageMaxSizeReachedCriteria = messageMaxSizeReachedCriteria ?? (_ => true);
+            MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
+        }
+
+        Func<Message, bool> GetMessageMaxSizeReachedCriteria(Func<Message, bool> messageMaxSizeReachedCriteria)
+        {
+            if (messageMaxSizeReachedCriteria == null)
+            {
+                return _ => true;
+            }
+            return message =>
+            {
+                try
+                {
+                    return messageMaxSizeReachedCriteria(message);
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception("An exception occured when executing the MessageMaxSizeReachedCriteria delegate.", exception);
+                }
+            };
         }
 
         /// <summary>Storage account connection string to use.</summary>
