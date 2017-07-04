@@ -25,6 +25,7 @@
     <DebugType>full</DebugType>
     <RepositoryUrl>https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <NoWarn>CS0809</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
