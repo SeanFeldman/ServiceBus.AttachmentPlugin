@@ -3,7 +3,6 @@
 namespace ServiceBus.AttachmentPlugin
 {
     using System;
-    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.WindowsAzure.Storage;
