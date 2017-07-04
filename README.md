@@ -6,7 +6,7 @@ Allows sending messages that exceed maxinum size by implementing [Claim Check pa
 
 ### Nuget package [![NuGet Status](https://buildstats.info/nuget/ServiceBus.AttachmentPlugin?includePreReleases=true)](https://www.nuget.org/packages/ServiceBus.AttachmentPlugin/) [![Build Status](https://img.shields.io/appveyor/ci/seanfeldman/ServiceBus-AttachmentPlugin.svg?style=flat-square)](https://ci.appveyor.com/project/seanfeldman/servicebus-attachmentplugin)
 
-[N/A] Available here http://nuget.org/packages/ServiceBus.AttachmentPlugin
+Available here http://nuget.org/packages/ServiceBus.AttachmentPlugin
 
 To Install from the Nuget Package Manager Console 
     
