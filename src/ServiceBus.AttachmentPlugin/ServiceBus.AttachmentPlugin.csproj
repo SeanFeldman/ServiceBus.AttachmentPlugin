@@ -26,6 +26,7 @@
     <RepositoryUrl>https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <NoWarn>CS0809</NoWarn>
+    <Version>0.0.2-preview</Version>
   </PropertyGroup>
 
   <ItemGroup>
