@@ -11,7 +11,7 @@ namespace ServiceBus.AttachmentPlugin
     /// <summary>Service Bus plugin to send large messages using attachments stored as Azure Storage blobs.</summary>
     public class AzureStorageAttachment : ServiceBusPlugin
     {
-        internal const string MessageId = "_MessageId";
+        const string MessageId = "_MessageId";
         internal const string ValidUntilUtc = "_ValidUntilUtc";
         internal const string DateFormat = "yyyy-MM-dd HH:mm:ss:ffffff Z";
 
