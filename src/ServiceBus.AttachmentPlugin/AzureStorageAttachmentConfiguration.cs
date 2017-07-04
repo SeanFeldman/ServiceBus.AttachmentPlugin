@@ -43,18 +43,12 @@
             };
         }
 
-        /// <summary>Storage account connection string to use.</summary>
-        public string ConnectionString { get; }
+        internal string ConnectionString { get; }
 
-        /// <summary>Storage container name used for storing attachment blobs.</summary>
-        public string ContainerName { get; }
+        internal string ContainerName { get; }
 
-        /// <summary><see cref="Message"/> property used to store attachment blob name.</summary>
-        public string MessagePropertyToIdentifyAttachmentBlob { get; }
+        internal string MessagePropertyToIdentifyAttachmentBlob { get; }
 
-        /// <summary>
-        /// Predicate used to control decision if message maximum size is exceeded or not.
-        /// </summary>
-        public Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
+        internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
     }
 }
