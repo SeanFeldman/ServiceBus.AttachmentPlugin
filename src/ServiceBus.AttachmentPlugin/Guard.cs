@@ -11,5 +11,12 @@ namespace ServiceBus.AttachmentPlugin
                 throw new ArgumentNullException(argumentName);
             }
         }
+        public static void AgainstNull(string argumentName, object value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(argumentName);
+            }
+        }
     }
 }

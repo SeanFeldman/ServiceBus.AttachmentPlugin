@@ -21,6 +21,7 @@ namespace ServiceBus.AttachmentPlugin
         /// <summary>Instantiate plugin with the required configuration.</summary>
         public AzureStorageAttachment(AzureStorageAttachmentConfiguration configuration)
         {
+            Guard.AgainstNull(nameof(configuration), configuration);
             var account = CloudStorageAccount.Parse(configuration.ConnectionString);
             client = new Lazy<CloudBlobClient>(() => account.CreateCloudBlobClient());
             this.configuration = configuration;
