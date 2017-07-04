@@ -46,10 +46,7 @@ namespace ServiceBus.AttachmentPlugin
             SetValidMessageId(blob, message.MessageId);
             SetValidUntil(blob, message.TimeToLive);
 
-            using (var stream = new MemoryStream(message.Body))
-            {
-                await blob.UploadFromStreamAsync(stream).ConfigureAwait(false);
-            }
+            await blob.UploadFromByteArrayAsync(message.Body,0, message.Body.Length).ConfigureAwait(false);
 
             message.Body = null;
             message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob] = blob.Name;
