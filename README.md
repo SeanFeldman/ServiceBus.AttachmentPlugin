@@ -40,7 +40,7 @@ Receiving
 ```c#
 var receiver = new MessageReceiver(connectionString, entityPath, ReceiveMode.ReceiveAndDelete);
 receiver.RegisterPlugin(plugin);
-var msg = await receiver.ReceiveAsync();
+var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
 // msg will contain the original payload
 ```
 
