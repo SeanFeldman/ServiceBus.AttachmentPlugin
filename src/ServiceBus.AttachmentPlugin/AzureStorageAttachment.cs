@@ -7,8 +7,7 @@
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
-    /// <summary>Service Bus plugin to send large messages using attachments stored as Azure Storage blobs.</summary>
-    public class AzureStorageAttachment : ServiceBusPlugin
+    class AzureStorageAttachment : ServiceBusPlugin
     {
         const string NotForUseWarning = "This API exposed for the purposes of plugging into the Azure ServiceBus extensibility pipeline. It is not intended to be consumed by systems using this plugin.";
         const string MessageId = "_MessageId";
@@ -18,7 +17,6 @@
         Lazy<CloudBlobClient> client;
         AzureStorageAttachmentConfiguration configuration;
 
-        /// <summary>Instantiate plugin with the required configuration.</summary>
         public AzureStorageAttachment(AzureStorageAttachmentConfiguration configuration)
         {
             Guard.AgainstNull(nameof(configuration), configuration);
@@ -27,14 +25,10 @@
             this.configuration = configuration;
         }
 
-        /// <inheritdoc />
-        [Obsolete(NotForUseWarning)]
         public override string Name => nameof(AzureStorageAttachment);
 
         internal static Func<DateTime> DateTimeFunc = () => DateTime.UtcNow;
 
-        /// <inheritdoc />
-        [Obsolete(NotForUseWarning)]
         public override async Task<Message> BeforeMessageSend(Message message)
         {
             if (!configuration.MessageMaxSizeReachedCriteria(message))
@@ -74,8 +68,6 @@
             blob.Metadata[ValidUntilUtc] = validUntil.ToString(DateFormat);
         }
 
-        /// <inheritdoc />
-        [Obsolete(NotForUseWarning)]
         public override async Task<Message> AfterMessageReceive(Message message)
         {
             var userProperties = message.UserProperties;

@@ -22,8 +22,7 @@ Configuration and registration
 
 var sender = new MessageSender(connectionString, queueName);
 var config = new AzureStorageAttachmentConfiguration(storageConnectionString);
-var plugin = new AzureStorageAttachment(config);
-sender.RegisterPlugin(plugin);
+sender.RegisterAzureStorageAttachmentPlugin(config);
 ```
 
 Sending
@@ -39,7 +38,7 @@ Receiving
 
 ```c#
 var receiver = new MessageReceiver(connectionString, entityPath, ReceiveMode.ReceiveAndDelete);
-receiver.RegisterPlugin(plugin);
+receiver.RegisterAzureStorageAttachmentPlugin(config);
 var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
 // msg will contain the original payload
 ```
