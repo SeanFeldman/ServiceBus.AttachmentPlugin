@@ -78,19 +78,21 @@ namespace ServiceBus.AttachmentPlugin
         /// <inheritdoc />
         public override async Task<Message> AfterMessageReceive(Message message)
         {
-            if (!message.UserProperties.ContainsKey(configuration.MessagePropertyToIdentifyAttachmentBlob))
+            var userProperties = message.UserProperties;
+            if (!userProperties.ContainsKey(configuration.MessagePropertyToIdentifyAttachmentBlob))
             {
                 return message;
             }
 
             var container = client.Value.GetContainerReference(configuration.ContainerName);
             await container.CreateIfNotExistsAsync().ConfigureAwait(false);
-            var blob = container.GetBlockBlobReference(message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob].ToString());
-            using (var stream = new MemoryStream())
-            {
-                await blob.DownloadToStreamAsync(stream).ConfigureAwait(false);
-                message.Body = stream.ToArray();
-            }
+            var blobName = userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob].ToString();
+
+            var blob = container.GetBlockBlobReference(blobName);
+            var fileByteLength = blob.Properties.Length;
+            var bytes = new byte[fileByteLength];
+            await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
+            message.Body = bytes;
             return message;
         }
     }
