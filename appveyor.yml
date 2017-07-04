@@ -1,10 +1,20 @@
 init:
 - git config --global core.autocrlf false
 
+skip_tags: true
+skip_commits:
+  files:
+    - '**/*.md'
+    - images/*
+matrix:
+  fast_finish: true 
 image: Visual Studio 2017
-
-assembly_info:
-  patch: false
+environment:
+  matrix:
+    # First build
+    - DotNetRunTime: net451
+    # Second build
+    - DotNetRunTime: netcoreapp1.0
 
 #---------------------------------#
 #       restore nuget packages    #
