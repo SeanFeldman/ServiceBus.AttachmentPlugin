@@ -38,7 +38,7 @@
                 }
                 catch (Exception exception)
                 {
-                    throw new Exception("An exception occured when executing the MessageMaxSizeReachedCriteria delegate.", exception);
+                    throw new Exception("An exception occurred when executing the MessageMaxSizeReachedCriteria delegate.", exception);
                 }
             };
         }
