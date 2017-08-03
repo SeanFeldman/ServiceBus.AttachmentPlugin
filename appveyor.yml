@@ -16,14 +16,15 @@ environment:
     # Second build
     - DotNetRunTime: netcoreapp1.0
 
+install:
+  - ps: $msiPath = "$env:TEMP\MicrosoftAzureStorageEmulator.msi" (New-Object Net.WebClient).DownloadFile('https://download.microsoft.com/download/F/3/8/F3857A38-D344-43B4-8E5B-2D03489909B9/MicrosoftAzureStorageEmulator.msi', $msiPath) cmd /c start /wait msiexec /i $msiPath /quiet del $msiPath
+
 #---------------------------------#
 #       restore nuget packages    #
 #---------------------------------#
 before_build:
   - cmd: dotnet restore src\ServiceBus.AttachmentPlugin.sln
   - cmd: echo %appveyor_build_version%
-##  - ps: gitversion /l console /output buildserver /updateAssemblyInfo
-##  - cmd: ECHO %GitVersion_MajorMinorPatch%
   
 #---------------------------------#
 #       build configuration       #
@@ -41,7 +42,6 @@ build:
 
   # MSBuild verbosity level
   verbosity: normal                  # quiet|minimal|normal|detailed
-  - ps: $msiPath = "$env:TEMP\MicrosoftAzureStorageEmulator.msi" (New-Object Net.WebClient).DownloadFile('https://download.microsoft.com/download/F/3/8/F3857A38-D344-43B4-8E5B-2D03489909B9/MicrosoftAzureStorageEmulator.msi', $msiPath) cmd /c start /wait msiexec /i $msiPath /quiet del $msiPath
 
 test:
   assemblies:
