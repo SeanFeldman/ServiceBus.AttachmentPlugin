@@ -16,7 +16,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ServiceBus.AttachmentPlugin.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DebugType>full</DebugType>
     <RepositoryUrl>https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
