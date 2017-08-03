@@ -20,7 +20,7 @@ environment:
 #       restore nuget packages    #
 #---------------------------------#
 before_build:
-  - nuget restore src\ServiceBus.AttachmentPlugin.sln
+  - cmd: dotnet restore src\ServiceBus.AttachmentPlugin.sln
   - cmd: echo %appveyor_build_version%
 ##  - ps: gitversion /l console /output buildserver /updateAssemblyInfo
 ##  - cmd: ECHO %GitVersion_MajorMinorPatch%
