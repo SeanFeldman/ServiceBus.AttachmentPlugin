@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;net462</TargetFrameworks>
-    <Description />
   </PropertyGroup>
   
   <ItemGroup>
