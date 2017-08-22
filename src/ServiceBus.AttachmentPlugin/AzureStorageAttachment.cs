@@ -9,7 +9,6 @@
 
     class AzureStorageAttachment : ServiceBusPlugin
     {
-        const string NotForUseWarning = "This API exposed for the purposes of plugging into the Azure ServiceBus extensibility pipeline. It is not intended to be consumed by systems using this plugin.";
         const string MessageId = "_MessageId";
         internal const string ValidUntilUtc = "_ValidUntilUtc";
         internal const string DateFormat = "yyyy-MM-dd HH:mm:ss:ffffff Z";
