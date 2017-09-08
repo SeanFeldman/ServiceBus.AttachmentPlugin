@@ -5,7 +5,7 @@
 
     static class TokenGenerator
     {
-        static string GetBlobSasUri(CloudBlockBlob blob, TimeSpan timeSpan)
+        internal static string GetBlobSasUri(CloudBlockBlob blob, TimeSpan timeSpan)
         {
             //Set the expiry time and permissions for the blob.
             //In this case the start time is specified as a few minutes in the past, to mitigate clock skew.
