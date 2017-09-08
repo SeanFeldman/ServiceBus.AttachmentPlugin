@@ -22,7 +22,7 @@
         {
             Guard.AgainstEmpty(nameof(containerName), containerName);
             Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
-            Guard.AgainstNonPositive(nameof(sasTokenValidInSeconds), sasTokenValidInSeconds);
+            Guard.AgainstNegative(nameof(sasTokenValidInSeconds), sasTokenValidInSeconds);
             ConnectionString = connectionString;
             ContainerName = containerName;
             MessagePropertyForSasUri = sasUri;

@@ -19,9 +19,9 @@ namespace ServiceBus.AttachmentPlugin
             }
         }
 
-        public static void AgainstNonPositive(string argumentName, long value)
+        public static void AgainstNegative(string argumentName, long value)
         {
-            if (value <= 0)
+            if (value < 0)
             {
                 throw new ArgumentException(argumentName);
             }
