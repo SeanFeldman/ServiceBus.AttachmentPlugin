@@ -38,13 +38,19 @@
             var container = client.Value.GetContainerReference(configuration.ContainerName);
             await container.CreateIfNotExistsAsync().ConfigureAwait(false);
             var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
+            
             SetValidMessageId(blob, message.MessageId);
             SetValidUntil(blob, message.TimeToLive);
-
+            
             await blob.UploadFromByteArrayAsync(message.Body,0, message.Body.Length).ConfigureAwait(false);
 
             message.Body = null;
             message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob] = blob.Name;
+            if (configuration.SasTokensValidInSeconds > 0)
+            {
+                var sasUri = TokenGenerator.GetBlobSasUri(blob, TimeSpan.FromSeconds(configuration.SasTokensValidInSeconds));
+                message.UserProperties[configuration.MessagePropertyForSasUri] = sasUri;
+            }
             return message;
         }
 
