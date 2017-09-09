@@ -90,5 +90,23 @@
 
             Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
         }
+
+        [Fact]
+        public async Task Shoud_not_set_sas_uri_by_default()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes)
+            {
+                MessageId = Guid.NewGuid().ToString(),
+            };
+            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                connectionString: "UseDevelopmentStorage=true", containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
+            var result = await plugin.BeforeMessageSend(message);
+
+            Assert.Null(result.Body);
+            Assert.True(message.UserProperties.ContainsKey("attachment-id"));
+            Assert.False(message.UserProperties.ContainsKey("$attachment.sas.uri"));
+        }
     }
 }

@@ -19,7 +19,7 @@
         }
 
         [Fact]
-        public void Should_not_accept_invalid_arguments()
+        public void Should_not_accept_negative_token_validation_time()
         {
             Assert.Throws<ArgumentException>(() => new AzureStorageAttachmentConfiguration("connectionString", sasTokenValidInSeconds: -123));
         }
