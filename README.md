@@ -43,6 +43,7 @@ receiver.RegisterAzureStorageAttachmentPlugin(config);
 var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
 // msg will contain the original payload
 ```
+
 ### Sending a message without exposing the storage account to receivers
 
 Configuration and registration with SAS uri
