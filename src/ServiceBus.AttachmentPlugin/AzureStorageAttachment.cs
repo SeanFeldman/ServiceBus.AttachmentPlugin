@@ -1,6 +1,7 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
     using System;
+    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Core;
@@ -76,8 +77,24 @@
         public override async Task<Message> AfterMessageReceive(Message message)
         {
             var userProperties = message.UserProperties;
+
             if (!userProperties.ContainsKey(configuration.MessagePropertyToIdentifyAttachmentBlob))
             {
+                return message;
+            }
+            
+            //If the message contains a property with a SAS uri we download using that information
+            if (userProperties.ContainsKey(configuration.MessagePropertyForSasUri))
+            {
+                var blobFromSasUri = new CloudBlockBlob(new Uri(userProperties[configuration.MessagePropertyForSasUri].ToString()));
+                using (var ms = new MemoryStream())
+                {
+                    blobFromSasUri.DownloadToStream(ms);
+                    var data = new byte[ms.Length];
+                    ms.Position = 0;
+                    ms.Read(data, 0, data.Length);
+                    message.Body = data;
+                }
                 return message;
             }
 
