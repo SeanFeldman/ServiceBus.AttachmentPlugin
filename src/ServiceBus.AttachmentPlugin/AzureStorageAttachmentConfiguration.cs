@@ -10,13 +10,13 @@
         /// <param name="connectionString"></param>
         /// <param name="containerName"></param>
         /// <param name="messagePropertyToIdentifyAttachmentBlob"></param>
-        /// <param name="sasUri">The message user property to use for the generated sas uri.</param>
+        /// <param name="messagePropertyToIdentifySasUri">The message user property to use for the generated sas uri.</param>
         /// <param name="sasTokenValidInSeconds">In seconds, how long the generated sas uri should be valid.</param>
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
         public AzureStorageAttachmentConfiguration(string connectionString,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            string sasUri = "$attachment.sas.uri",
+            string messagePropertyToIdentifySasUri = "$attachment.sas.uri",
             long sasTokenValidInSeconds = 0,
             Func<Message, bool> messageMaxSizeReachedCriteria = null)
         {
@@ -25,7 +25,7 @@
             Guard.AgainstNegative(nameof(sasTokenValidInSeconds), sasTokenValidInSeconds);
             ConnectionString = connectionString;
             ContainerName = containerName;
-            MessagePropertyForSasUri = sasUri;
+            MessagePropertyForSasUri = messagePropertyToIdentifySasUri;
             SasTokensValidInSeconds = sasTokenValidInSeconds;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);

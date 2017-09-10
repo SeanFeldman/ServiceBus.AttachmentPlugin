@@ -50,7 +50,7 @@ Configuration and registration with SAS uri
 
 ```c#
 var sender = new MessageSender(connectionString, queueName);
-var config = new AzureStorageAttachmentConfiguration(storageConnectionString, sasTokenValidInSeconds: 60*60*24, sasUri:"myProperty");
+var config = new AzureStorageAttachmentConfiguration(storageConnectionString, sasTokenValidInSeconds: 60*60*24, messagePropertyToIdentifySasUri:"myProperty");
 sender.RegisterAzureStorageAttachmentPlugin(config);
 ```  
 

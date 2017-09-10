@@ -20,7 +20,7 @@ namespace ServiceBus.AttachmentPlugin.Tests
                 MessageId = Guid.NewGuid().ToString(),
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionString: "UseDevelopmentStorage=true", containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id", sasTokenValidInSeconds: 60*60*24, sasUri: "mySasUriProperty"));
+                connectionString: "UseDevelopmentStorage=true", containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id", sasTokenValidInSeconds: 60*60*24, messagePropertyToIdentifySasUri: "mySasUriProperty"));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.Null(result.Body);
