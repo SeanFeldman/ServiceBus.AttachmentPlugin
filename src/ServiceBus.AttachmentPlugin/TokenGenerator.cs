@@ -14,9 +14,8 @@
             {
                 SharedAccessStartTime = DateTime.UtcNow.AddMinutes(-5),
                 SharedAccessExpiryTime = DateTime.UtcNow.Add(timeSpan),
-                Permissions = SharedAccessBlobPermissions.Read
+                Permissions = SharedAccessBlobPermissions.Delete | SharedAccessBlobPermissions.Read
             };
-
             //Generate the shared access signature on the blob, setting the constraints directly on the signature.
             var sasBlobToken = blob.GetSharedAccessSignature(sasConstraints);
 

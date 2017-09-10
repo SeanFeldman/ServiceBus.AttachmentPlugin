@@ -10,8 +10,8 @@
         /// <param name="connectionString"></param>
         /// <param name="containerName"></param>
         /// <param name="messagePropertyToIdentifyAttachmentBlob"></param>
-        /// <param name="sasUri"></param>
-        /// <param name="sasTokenValidInSeconds"></param>
+        /// <param name="sasUri">The message user property to use for the generated sas uri.</param>
+        /// <param name="sasTokenValidInSeconds">In seconds, how long the generated sas uri should be valid.</param>
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
         public AzureStorageAttachmentConfiguration(string connectionString,
             string containerName = "attachments",
