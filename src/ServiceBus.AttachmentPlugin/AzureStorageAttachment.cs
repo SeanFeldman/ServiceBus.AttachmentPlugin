@@ -82,27 +82,21 @@
             {
                 return message;
             }
-            
-            //If the message contains a property with a SAS uri we download using that information
+
+            CloudBlockBlob blob;
+
             if (userProperties.ContainsKey(configuration.MessagePropertyForSasUri))
             {
-                var blobFromSasUri = new CloudBlockBlob(new Uri(userProperties[configuration.MessagePropertyForSasUri].ToString()));
-                using (var ms = new MemoryStream())
-                {
-                    blobFromSasUri.DownloadToStream(ms);
-                    var data = new byte[ms.Length];
-                    ms.Position = 0;
-                    ms.Read(data, 0, data.Length);
-                    message.Body = data;
-                }
-                return message;
+                blob = new CloudBlockBlob(new Uri(userProperties[configuration.MessagePropertyForSasUri].ToString()));
+            }
+            else
+            {
+                var container = client.Value.GetContainerReference(configuration.ContainerName);
+                await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+                var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
+                blob = container.GetBlockBlobReference(blobName);
             }
 
-            var container = client.Value.GetContainerReference(configuration.ContainerName);
-            await container.CreateIfNotExistsAsync().ConfigureAwait(false);
-            var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
-
-            var blob = container.GetBlockBlobReference(blobName);
             await blob.FetchAttributesAsync().ConfigureAwait(false);
             var fileByteLength = blob.Properties.Length;
             var bytes = new byte[fileByteLength];
