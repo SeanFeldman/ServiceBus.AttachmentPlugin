@@ -19,9 +19,9 @@ namespace ServiceBus.AttachmentPlugin
             }
         }
 
-        public static void AgainstNegative(string argumentName, long value)
+        public static void AgainstNegativeTime(string argumentName, TimeSpan? value)
         {
-            if (value < 0)
+            if (value?.Ticks <= 0)
             {
                 throw new ArgumentException(argumentName);
             }

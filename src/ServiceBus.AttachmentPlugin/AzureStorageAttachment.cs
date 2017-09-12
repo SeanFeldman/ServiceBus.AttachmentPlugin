@@ -1,7 +1,6 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
     using System;
-    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Core;
@@ -47,11 +46,9 @@
 
             message.Body = null;
             message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob] = blob.Name;
-            if (configuration.SasTokensValidInSeconds > 0)
-            {
-                var sasUri = TokenGenerator.GetBlobSasUri(blob, TimeSpan.FromSeconds(configuration.SasTokensValidInSeconds));
-                message.UserProperties[configuration.MessagePropertyForSasUri] = sasUri;
-            }
+            if (!configuration.SasTokenValidationTime.HasValue) return message;
+            var sasUri = TokenGenerator.GetBlobSasUri(blob, configuration.SasTokenValidationTime.Value);
+            message.UserProperties[configuration.MessagePropertyForSasUri] = sasUri;
             return message;
         }
 
@@ -85,7 +82,7 @@
 
             CloudBlockBlob blob;
 
-            if (userProperties.ContainsKey(configuration.MessagePropertyForSasUri))
+            if (configuration.MessagePropertyForSasUri != null && userProperties.ContainsKey(configuration.MessagePropertyForSasUri))
             {
                 blob = new CloudBlockBlob(new Uri(userProperties[configuration.MessagePropertyForSasUri].ToString()));
             }
