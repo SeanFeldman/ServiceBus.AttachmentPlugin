@@ -18,5 +18,13 @@ namespace ServiceBus.AttachmentPlugin
                 throw new ArgumentNullException(argumentName);
             }
         }
+
+        public static void AgainstNegativeTime(string argumentName, TimeSpan? value)
+        {
+            if (value?.Ticks <= 0)
+            {
+                throw new ArgumentException(argumentName);
+            }
+        }
     }
 }
