@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Microsoft Azure ServiceBus attachment plugin</Description>
     <AssemblyTitle>ServiceBus.AttachmentPlugin</AssemblyTitle>
-    <Version>1.0.2</Version>
+    <Version>1.1.0</Version>
     <Authors>Sean Feldman</Authors>
     <TargetFrameworks>net451;netstandard1.3</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
