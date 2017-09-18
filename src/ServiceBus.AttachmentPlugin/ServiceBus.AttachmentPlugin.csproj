@@ -20,7 +20,6 @@
     <RepositoryUrl>https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludePDBsInPackage</TargetsForTfmSpecificContentInPackage>
-    <NoWarn>$(NoWarn);CS0809</NoWarn>
   </PropertyGroup>
 
   <Target Name="IncludePDBsInPackage">
