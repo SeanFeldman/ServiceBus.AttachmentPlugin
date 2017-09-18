@@ -46,7 +46,12 @@
 
             message.Body = null;
             message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob] = blob.Name;
-            if (!configuration.SasTokenValidationTime.HasValue) return message;
+
+            if (!configuration.SasTokenValidationTime.HasValue)
+            {
+                return message;
+            }
+
             var sasUri = TokenGenerator.GetBlobSasUri(blob, configuration.SasTokenValidationTime.Value);
             message.UserProperties[configuration.MessagePropertyForSasUri] = sasUri;
             return message;

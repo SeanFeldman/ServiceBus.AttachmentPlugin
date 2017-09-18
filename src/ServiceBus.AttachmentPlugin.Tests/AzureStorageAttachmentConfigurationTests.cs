@@ -14,8 +14,8 @@
             Assert.Equal("connectionString", configuration.ConnectionString);
             Assert.NotEmpty(configuration.ContainerName);
             Assert.NotEmpty(configuration.MessagePropertyToIdentifyAttachmentBlob);
-            Assert.Equal(TimeSpan.FromDays(7).Days, configuration.SasTokenValidationTime.Value.Days);
-            Assert.Equal("$attachment.sas.uri", configuration.MessagePropertyForSasUri);
+            Assert.Equal(AzureStorageAttachmentConfigurationExtensions.DefaultSasTokenValidationTime.Days, configuration.SasTokenValidationTime.Value.Days);
+            Assert.Equal(AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri, configuration.MessagePropertyForSasUri);
             Assert.True(configuration.MessageMaxSizeReachedCriteria(new Message()));
         }
 

@@ -13,7 +13,5 @@
         {
             client.RegisterPlugin(new AzureStorageAttachment(configuration));
         }
-
-
     }
 }

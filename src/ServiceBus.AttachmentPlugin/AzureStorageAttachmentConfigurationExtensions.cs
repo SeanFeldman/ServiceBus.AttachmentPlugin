@@ -8,8 +8,8 @@
     /// </summary>
     public static class AzureStorageAttachmentConfigurationExtensions
     {
-        const string DefaultMessagePropertyToIdentitySasUri = "$attachment.sas.uri";
-        static TimeSpan DefaultSasTokenValidationTime = TimeSpan.FromDays(7);
+        internal const string DefaultMessagePropertyToIdentitySasUri = "$attachment.sas.uri";
+        internal static TimeSpan DefaultSasTokenValidationTime = TimeSpan.FromDays(7);
 
         /// <summary>
         /// Adds SAS uri configuration.
