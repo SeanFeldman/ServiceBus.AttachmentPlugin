@@ -99,7 +99,16 @@
                 blob = container.GetBlockBlobReference(blobName);
             }
 
-            await blob.FetchAttributesAsync().ConfigureAwait(false);
+            try
+            {
+                await blob.FetchAttributesAsync().ConfigureAwait(false);
+            }
+            catch (StorageException exception)
+            {
+                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.Container.Name}' cannot be found." 
+                    + $" Check {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.ContainerName)} or" 
+                    + $" {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.MessagePropertyToIdentifyAttachmentBlob)} for correct values.", exception);
+            }
             var fileByteLength = blob.Properties.Length;
             var bytes = new byte[fileByteLength];
             await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
