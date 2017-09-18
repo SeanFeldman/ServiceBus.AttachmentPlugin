@@ -1,6 +1,7 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
     using System;
+    using Microsoft.Azure.ServiceBus;
 
     /// <summary>
     /// Extension method for setting up the SAS uri configuration.
@@ -11,11 +12,11 @@
         static TimeSpan DefaultSasTokenValidationTime = TimeSpan.FromDays(7);
 
         /// <summary>
-        /// Adds sas uri configuration.
+        /// Adds SAS uri configuration.
         /// </summary>
         /// <param name="azureStorageAttachmentConfiguration"></param>
-        /// <param name="messagePropertyToIdentifySasUri">The message property where the sas uri is set.</param>
-        /// <param name="sasTokenValidationTime">The time the sas uri is valid.</param>
+        /// <param name="messagePropertyToIdentifySasUri">The <see cref="Message"/> user property used for SAS uri.</param>
+        /// <param name="sasTokenValidationTime">The time SAS uri is valid for.</param>
         /// <returns></returns>
         public static AzureStorageAttachmentConfiguration WithSasUri(
             this AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, 
@@ -26,7 +27,7 @@
             {
                 sasTokenValidationTime = DefaultSasTokenValidationTime;
             }
-            Guard.AgainstNegativeTime(nameof(sasTokenValidationTime), sasTokenValidationTime);
+            Guard.AgainstNegativeOrZeroTimeSpan(nameof(sasTokenValidationTime), sasTokenValidationTime);
 
             azureStorageAttachmentConfiguration.MessagePropertyForSasUri = messagePropertyToIdentifySasUri;
             azureStorageAttachmentConfiguration.SasTokenValidationTime = sasTokenValidationTime.Value;

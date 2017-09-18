@@ -19,7 +19,7 @@ namespace ServiceBus.AttachmentPlugin
             }
         }
 
-        public static void AgainstNegativeTime(string argumentName, TimeSpan? value)
+        public static void AgainstNegativeOrZeroTimeSpan(string argumentName, TimeSpan? value)
         {
             if (value?.Ticks <= 0)
             {

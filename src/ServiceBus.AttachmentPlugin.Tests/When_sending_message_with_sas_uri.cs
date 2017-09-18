@@ -1,8 +1,7 @@
-﻿using System;
-using System.Text;
-
-namespace ServiceBus.AttachmentPlugin.Tests
+﻿namespace ServiceBus.AttachmentPlugin.Tests
 {
+    using System;
+    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Xunit;
