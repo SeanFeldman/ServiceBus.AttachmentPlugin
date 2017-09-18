@@ -19,11 +19,10 @@ To Install from the Nuget Package Manager Console
 Configuration and registration
 
 ```c#
-
 var sender = new MessageSender(connectionString, queueName);
 var config = new AzureStorageAttachmentConfiguration(storageConnectionString);
 sender.RegisterAzureStorageAttachmentPlugin(config);
-```
+```        
 
 Sending
 
@@ -34,6 +33,7 @@ var payloadAsBytes = Encoding.UTF8.GetBytes(serialized);
 var message = new Message(payloadAsBytes);
 ```
 
+
 Receiving
 
 ```c#
@@ -43,7 +43,36 @@ var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
 // msg will contain the original payload
 ```
 
-### Configure blobs container name
+### Sending a message without exposing the storage account to receivers
+
+Configuration and registration with SAS uri
+
+```c#
+var sender = new MessageSender(connectionString, queueName);
+var config = new AzureStorageAttachmentConfiguration(storageConnectionString)
+	.WithSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty");
+sender.RegisterAzureStorageAttachmentPlugin(config);
+```  
+
+Sending
+
+```c#
+var payload = new MyMessage { ... }; 
+var serialized = JsonConvert.SerializeObject(payload);
+var payloadAsBytes = Encoding.UTF8.GetBytes(serialized);
+var message = new Message(payloadAsBytes);
+```
+
+Receive
+
+```c#
+var receiver = new MessageReceiver(connectionString, entityPath, ReceiveMode.ReceiveAndDelete);
+var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
+// msg will contain the original payload
+```
+
+
+### Configure blob container name
 
 Default container name is "attachments".
 
@@ -53,12 +82,19 @@ new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"
 
 ### Configure message property to identify attachment blob
 
-Default container name is "$attachment.blob".
+Default blob identifier property name is "$attachment.blob".
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, messagePropertyToIdentifyAttachmentBlob: "myblob");
 ```
 
+### Configure message property for SAS uri to attachment blob
+
+Default SAS uri property name is "$attachment.sas.uri".
+
+```c#
+new AzureStorageAttachmentConfiguration(storageConnectionString).WithSasUri(messagePropertyToIdentifySasUri: "mySasUriProperty");
+```
 
 ### Configure criteria for message max size identification
 

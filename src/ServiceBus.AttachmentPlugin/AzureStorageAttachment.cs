@@ -9,7 +9,6 @@
 
     class AzureStorageAttachment : ServiceBusPlugin
     {
-        const string NotForUseWarning = "This API exposed for the purposes of plugging into the Azure ServiceBus extensibility pipeline. It is not intended to be consumed by systems using this plugin.";
         const string MessageId = "_MessageId";
         internal const string ValidUntilUtc = "_ValidUntilUtc";
         internal const string DateFormat = "yyyy-MM-dd HH:mm:ss:ffffff Z";
@@ -39,13 +38,22 @@
             var container = client.Value.GetContainerReference(configuration.ContainerName);
             await container.CreateIfNotExistsAsync().ConfigureAwait(false);
             var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
+            
             SetValidMessageId(blob, message.MessageId);
             SetValidUntil(blob, message.TimeToLive);
-
+            
             await blob.UploadFromByteArrayAsync(message.Body,0, message.Body.Length).ConfigureAwait(false);
 
             message.Body = null;
             message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob] = blob.Name;
+
+            if (!configuration.SasTokenValidationTime.HasValue)
+            {
+                return message;
+            }
+
+            var sasUri = TokenGenerator.GetBlobSasUri(blob, configuration.SasTokenValidationTime.Value);
+            message.UserProperties[configuration.MessagePropertyForSasUri] = sasUri;
             return message;
         }
 
@@ -71,17 +79,36 @@
         public override async Task<Message> AfterMessageReceive(Message message)
         {
             var userProperties = message.UserProperties;
+
             if (!userProperties.ContainsKey(configuration.MessagePropertyToIdentifyAttachmentBlob))
             {
                 return message;
             }
 
-            var container = client.Value.GetContainerReference(configuration.ContainerName);
-            await container.CreateIfNotExistsAsync().ConfigureAwait(false);
-            var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
+            CloudBlockBlob blob;
 
-            var blob = container.GetBlockBlobReference(blobName);
-            await blob.FetchAttributesAsync().ConfigureAwait(false);
+            if (configuration.MessagePropertyForSasUri != null && userProperties.ContainsKey(configuration.MessagePropertyForSasUri))
+            {
+                blob = new CloudBlockBlob(new Uri(userProperties[configuration.MessagePropertyForSasUri].ToString()));
+            }
+            else
+            {
+                var container = client.Value.GetContainerReference(configuration.ContainerName);
+                await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+                var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
+                blob = container.GetBlockBlobReference(blobName);
+            }
+
+            try
+            {
+                await blob.FetchAttributesAsync().ConfigureAwait(false);
+            }
+            catch (StorageException exception)
+            {
+                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.Container.Name}' cannot be found." 
+                    + $" Check {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.ContainerName)} or" 
+                    + $" {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.MessagePropertyToIdentifyAttachmentBlob)} for correct values.", exception);
+            }
             var fileByteLength = blob.Properties.Length;
             var bytes = new byte[fileByteLength];
             await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);

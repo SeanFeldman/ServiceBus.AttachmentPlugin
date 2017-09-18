@@ -14,6 +14,7 @@
         public AzureStorageAttachmentConfiguration(string connectionString,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
+            
             Func<Message, bool> messageMaxSizeReachedCriteria = null)
         {
             Guard.AgainstEmpty(nameof(containerName), containerName);
@@ -23,7 +24,7 @@
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
         }
-
+        
         Func<Message, bool> GetMessageMaxSizeReachedCriteria(Func<Message, bool> messageMaxSizeReachedCriteria)
         {
             if (messageMaxSizeReachedCriteria == null)
@@ -46,6 +47,10 @@
         internal string ConnectionString { get; }
 
         internal string ContainerName { get; }
+
+        internal string MessagePropertyForSasUri { get; set; }
+
+        internal TimeSpan? SasTokenValidationTime { get; set; }
 
         internal string MessagePropertyToIdentifyAttachmentBlob { get; }
 
