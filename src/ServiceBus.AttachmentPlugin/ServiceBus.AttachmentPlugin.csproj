@@ -31,11 +31,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="1.0.0" />
-    <PackageReference Include="WindowsAzure.Storage" Version="8.3.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="8.4.0" />
   </ItemGroup>
 
   <ItemGroup Label="SourceLink to embed PDBs with the assembly">
-    <PackageReference Include="SourceLink.Create.GitHub" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Create.GitHub" Version="2.2.1" PrivateAssets="All" />
     <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="2.1.2" />
   </ItemGroup>
 
