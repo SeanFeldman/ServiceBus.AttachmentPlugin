@@ -19,7 +19,6 @@ To Install from the Nuget Package Manager Console
 Configuration and registration
 
 ```c#
-
 var sender = new MessageSender(connectionString, queueName);
 var config = new AzureStorageAttachmentConfiguration(storageConnectionString);
 sender.RegisterAzureStorageAttachmentPlugin(config);
@@ -69,12 +68,11 @@ Receive
 ```c#
 var receiver = new MessageReceiver(connectionString, entityPath, ReceiveMode.ReceiveAndDelete);
 var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
-//msg will contain a user property 'myProperty'
-//Receiver can use any http client to download the payload
+// msg will contain the original payload
 ```
 
 
-### Configure blobs container name
+### Configure blob container name
 
 Default container name is "attachments".
 
@@ -84,20 +82,19 @@ new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"
 
 ### Configure message property to identify attachment blob
 
-Default container name is "$attachment.blob".
+Default blob identifier property name is "$attachment.blob".
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, messagePropertyToIdentifyAttachmentBlob: "myblob");
 ```
 
-### Configure message property for sas uri to attachment blob
+### Configure message property for SAS uri to attachment blob
 
-Default sas uri name is "$attachment.sas.uri".
+Default SAS uri property name is "$attachment.sas.uri".
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString).WithSasUri(messagePropertyToIdentifySasUri: "mySasUriProperty");
 ```
-
 
 ### Configure criteria for message max size identification
 
