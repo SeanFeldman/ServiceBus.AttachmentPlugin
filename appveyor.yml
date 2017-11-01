@@ -9,7 +9,7 @@ image: Previous Visual Studio 2017 #Visual Studio 2017 #use workaround image unt
 environment:
   matrix:
     # First build
-    - DotNetRunTime: net462
+    - DotNetRunTime: net461
     # Second build
     - DotNetRunTime: netcoreapp2.0
 
