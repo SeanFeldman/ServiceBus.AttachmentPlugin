@@ -5,13 +5,13 @@ skip_commits:
     - images/*
 matrix:
   fast_finish: true 
-image: Visual Studio 2017
+image: Previous Visual Studio 2017 #Visual Studio 2017 #use workaround image until https://github.com/appveyor/ci/issues/1404 is resolved
 environment:
   matrix:
     # First build
-    - DotNetRunTime: net451
+    - DotNetRunTime: net462
     # Second build
-    - DotNetRunTime: netcoreapp1.0
+    - DotNetRunTime: netcoreapp2.0
 
 #---------------------------------#
 #       restore nuget packages    #
