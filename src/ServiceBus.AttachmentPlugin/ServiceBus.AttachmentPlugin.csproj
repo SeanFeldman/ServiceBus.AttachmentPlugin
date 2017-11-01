@@ -5,7 +5,7 @@
     <AssemblyTitle>ServiceBus.AttachmentPlugin</AssemblyTitle>
     <Version>2.0.0</Version>
     <Authors>Sean Feldman</Authors>
-    <TargetFrameworks>netstandard20;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard20;net462</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>ServiceBus.AttachmentPlugin</AssemblyName>
     <PackageId>ServiceBus.AttachmentPlugin</PackageId>

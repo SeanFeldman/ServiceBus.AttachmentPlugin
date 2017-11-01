@@ -9,7 +9,7 @@ image: Visual Studio 2017
 environment:
   matrix:
     # First build
-    - DotNetRunTime: net461
+    - DotNetRunTime: net462
     # Second build
     - DotNetRunTime: netcoreapp2.0
 
