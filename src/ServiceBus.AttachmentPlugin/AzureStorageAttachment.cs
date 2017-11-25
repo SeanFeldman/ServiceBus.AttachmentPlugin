@@ -38,10 +38,10 @@
             var container = client.Value.GetContainerReference(configuration.ContainerName);
             await container.CreateIfNotExistsAsync().ConfigureAwait(false);
             var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
-            
+
             SetValidMessageId(blob, message.MessageId);
             SetValidUntil(blob, message.TimeToLive);
-            
+
             await blob.UploadFromByteArrayAsync(message.Body,0, message.Body.Length).ConfigureAwait(false);
 
             message.Body = null;
@@ -105,8 +105,8 @@
             }
             catch (StorageException exception)
             {
-                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.Container.Name}' cannot be found." 
-                    + $" Check {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.ContainerName)} or" 
+                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.Container.Name}' cannot be found."
+                    + $" Check {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.ContainerName)} or"
                     + $" {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.MessagePropertyToIdentifyAttachmentBlob)} for correct values.", exception);
             }
             var fileByteLength = blob.Properties.Length;
