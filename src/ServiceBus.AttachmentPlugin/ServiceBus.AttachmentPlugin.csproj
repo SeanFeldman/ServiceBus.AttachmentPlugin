@@ -4,7 +4,7 @@
     <Description>Microsoft Azure ServiceBus attachment plugin</Description>
     <Version>2.0.1</Version>
     <Authors>Sean Feldman</Authors>
-    <TargetFrameworks>netstandard20;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <PackageTags>Azure;Service Bus;ServiceBus;.NET;AMQP;IoT;Queue;Topic;Attachment;Plugin</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/SeanFeldman/ServiceBus.AttachmentPlugin/master/images/project-icon.png</PackageIconUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/SeanFeldman/ServiceBus.AttachmentPlugin/master/LICENSE</PackageLicenseUrl>
