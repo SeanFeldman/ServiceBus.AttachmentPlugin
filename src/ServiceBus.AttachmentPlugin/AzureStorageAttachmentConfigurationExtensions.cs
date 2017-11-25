@@ -19,8 +19,8 @@
         /// <param name="sasTokenValidationTime">The time SAS uri is valid for.</param>
         /// <returns></returns>
         public static AzureStorageAttachmentConfiguration WithSasUri(
-            this AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, 
-            string messagePropertyToIdentifySasUri = DefaultMessagePropertyToIdentitySasUri, 
+            this AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration,
+            string messagePropertyToIdentifySasUri = DefaultMessagePropertyToIdentitySasUri,
             TimeSpan? sasTokenValidationTime = null)
         {
             if (sasTokenValidationTime == null)
