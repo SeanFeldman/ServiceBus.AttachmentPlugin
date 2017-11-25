@@ -10,10 +10,11 @@
             //Set the expiry time and permissions for the blob.
             //In this case the start time is specified as a few minutes in the past, to mitigate clock skew.
             //The shared access signature will be valid immediately.
+            var now = DateTime.UtcNow;
             var sasConstraints = new SharedAccessBlobPolicy
             {
-                SharedAccessStartTime = DateTime.UtcNow.AddMinutes(-5),
-                SharedAccessExpiryTime = DateTime.UtcNow.Add(timeSpan),
+                SharedAccessStartTime = now.AddMinutes(-5),
+                SharedAccessExpiryTime = now.Add(timeSpan),
                 Permissions = SharedAccessBlobPermissions.Delete | SharedAccessBlobPermissions.Read
             };
             //Generate the shared access signature on the blob, setting the constraints directly on the signature.
