@@ -5,6 +5,7 @@ namespace ServiceBus.AttachmentPlugin.Tests
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
+    using Microsoft.Azure.ServiceBus.Core;
     using Xunit;
 
     public class When_using_receive_only_plugin : IClassFixture<AzureStorageEmulatorFixture>
@@ -23,8 +24,9 @@ namespace ServiceBus.AttachmentPlugin.Tests
                     .WithSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty"));
             await plugin.BeforeMessageSend(message);
 
-
-            var receiveOnlyPlugin = new ReceiveOnlyAzureStorageAttachment("mySasUriProperty");
+            var messageReceiver = new MessageReceiver(new ServiceBusConnectionStringBuilder("sb://test.servicebus.windows.net/", "entity", "RootManageSharedAccessKey", "---"));
+            messageReceiver.RegisterAzureStorageAttachmentPluginForReceivingOnly("mySasUriProperty");
+            var receiveOnlyPlugin = messageReceiver.RegisteredPlugins[0];
             var result = await receiveOnlyPlugin.AfterMessageReceive(message);
 
             Assert.True(message.UserProperties.ContainsKey("mySasUriProperty"));
