@@ -71,6 +71,15 @@ var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
 // msg will contain the original payload
 ```
 
+Receiving only mode (w/o Storage account credentials)
+
+```c#
+// Overide message property used to identify SAS URI
+// .RegisterAzureStorageAttachmentPluginForReceivingOnly() is using "$attachment.sas.uri" by default
+var receiver = messageReceiver.RegisterAzureStorageAttachmentPluginForReceivingOnly("mySasUriProperty");
+var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
+```
+
 
 ### Configure blob container name
 
