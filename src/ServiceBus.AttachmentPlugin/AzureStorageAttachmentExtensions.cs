@@ -14,7 +14,7 @@
             client.RegisterPlugin(new AzureStorageAttachment(configuration));
         }
 
-        /// <summary>Initiate plugin for Receive-Only mode to retrieve attachment using SAS URI. </summary>
+        /// <summary>Initiate plugin for Receive-Only mode to retrieve attachments using SAS URI. </summary>
         /// <param name="client"><see cref="QueueClient"/>, <see cref="SubscriptionClient"/>, <see cref="QueueClient"/>, <see cref="MessageSender"/>, <see cref="MessageReceiver"/>, or <see cref="SessionClient"/> to register plugin with.</param>
         /// <param name="messagePropertyToIdentifySasUri">Message property name to be used to retrieve message SAS UI.</param>
         public static void RegisterAzureStorageAttachmentPluginForReceivingOnly(this ClientEntity client, string messagePropertyToIdentifySasUri = AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri)
