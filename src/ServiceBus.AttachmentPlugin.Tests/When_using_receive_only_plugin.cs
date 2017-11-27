@@ -20,11 +20,20 @@ namespace ServiceBus.AttachmentPlugin.Tests
                 MessageId = Guid.NewGuid().ToString(),
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                    connectionString: "UseDevelopmentStorage=true", containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id")
-                    .WithSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty"));
+                    connectionString: "UseDevelopmentStorage=true", 
+                    containerName: "attachments", 
+                    messagePropertyToIdentifyAttachmentBlob: 
+                    "attachment-id")
+                    .WithSasUri(
+                        sasTokenValidationTime: TimeSpan.FromHours(4), 
+                        messagePropertyToIdentifySasUri: "mySasUriProperty"));
             await plugin.BeforeMessageSend(message);
 
-            var messageReceiver = new MessageReceiver(new ServiceBusConnectionStringBuilder("sb://test.servicebus.windows.net/", "entity", "RootManageSharedAccessKey", "---"));
+            var messageReceiver = new MessageReceiver(new ServiceBusConnectionStringBuilder(
+                endpoint: "sb://test.servicebus.windows.net/", 
+                entityPath: "entity", 
+                sharedAccessKey: "---", 
+                sharedAccessKeyName: "RootManageSharedAccessKey"));
             messageReceiver.RegisterAzureStorageAttachmentPluginForReceivingOnly("mySasUriProperty");
             var receiveOnlyPlugin = messageReceiver.RegisteredPlugins[0];
             var result = await receiveOnlyPlugin.AfterMessageReceive(message);
