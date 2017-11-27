@@ -92,7 +92,7 @@
         }
 
         [Fact]
-        public async Task Shoud_not_set_sas_uri_by_default()
+        public async Task Should_not_set_sas_uri_by_default()
         {
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);

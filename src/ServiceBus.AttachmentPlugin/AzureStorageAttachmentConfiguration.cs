@@ -11,10 +11,10 @@
         /// <param name="containerName"></param>
         /// <param name="messagePropertyToIdentifyAttachmentBlob"></param>
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
-        public AzureStorageAttachmentConfiguration(string connectionString,
+        public AzureStorageAttachmentConfiguration(
+            string connectionString,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            
             Func<Message, bool> messageMaxSizeReachedCriteria = null)
         {
             Guard.AgainstEmpty(nameof(containerName), containerName);
@@ -24,7 +24,7 @@
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
         }
-        
+
         Func<Message, bool> GetMessageMaxSizeReachedCriteria(Func<Message, bool> messageMaxSizeReachedCriteria)
         {
             if (messageMaxSizeReachedCriteria == null)
