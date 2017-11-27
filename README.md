@@ -114,6 +114,12 @@ Default is to convert any body to attachment.
 new AzureStorageAttachmentConfiguration(storageConnectionString, message => message.Body.Length > 200 * 1024);
 ```
 
+## Who's trusting this add-in in production
+
+![Codit](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/using/Codit.png)
+
+Proudly list your company here if use this add-in in production
+
 ## Icon
 
 Created by Dinosoft Labs from the Noun Project.
