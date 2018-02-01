@@ -117,6 +117,7 @@ new AzureStorageAttachmentConfiguration(storageConnectionString, message => mess
 ## Who's trusting this add-in in production
 
 ![Codit](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/using/Codit.png)
+![RISC Software](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/RISC.software.png)
 
 Proudly list your company here if use this add-in in production
 
