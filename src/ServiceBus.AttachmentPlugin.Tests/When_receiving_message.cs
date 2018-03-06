@@ -28,8 +28,8 @@ namespace ServiceBus.AttachmentPlugin.Tests
                 connectionString: "UseDevelopmentStorage=true", containerName: "attachments-wrong-containers"));
 
             var exception = await Assert.ThrowsAsync<Exception>(() => receivingPlugin.AfterMessageReceive(message));
-            Assert.Contains("attachments-wrong-containers", exception.Message);
-            Assert.Contains(message.UserProperties["$attachment.blob"].ToString(), exception.Message);
+            Assert.Contains("attachments-wrong-containers", actualString: exception.Message);
+            Assert.Contains(message.UserProperties["$attachment.blob"].ToString(), actualString: exception.Message);
         }
     }
 }
