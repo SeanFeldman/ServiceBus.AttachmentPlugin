@@ -33,7 +33,7 @@
         {
             Guard.AgainstEmpty(nameof(containerName), containerName);
             Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
-            ConnectionString = connectionStringProvider;
+            ConnectionStringProvider = connectionStringProvider;
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
@@ -58,7 +58,7 @@
             };
         }
 
-        internal IProvideStorageConnectionString ConnectionString { get; }
+        internal IProvideStorageConnectionString ConnectionStringProvider { get; }
 
         internal string ContainerName { get; }
 
