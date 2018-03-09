@@ -114,6 +114,16 @@ Default is to convert any body to attachment.
 new AzureStorageAttachmentConfiguration(storageConnectionString, message => message.Body.Length > 200 * 1024);
 ```
 
+### Configuring connection string provider
+
+When Storage connection string needs to be retrieved rather than passed in as a plain text, `AzureStorageAttachmentConfiguration` accepts implementation of `IProvideStorageConnectionString`.
+The plugin comes with a `PlainTextConnectionStringProvider` and can be used in the following way.
+
+```c#
+var provider = new PlainTextConnectionStringProvider("connectionString");
+var config = new AzureStorageAttachmentConfiguration(provider);
+```
+
 ## Who's trusting this add-in in production
 
 ![Codit](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/using/Codit.png)
