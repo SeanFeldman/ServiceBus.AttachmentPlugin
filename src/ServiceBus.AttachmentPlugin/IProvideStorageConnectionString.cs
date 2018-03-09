@@ -1,5 +1,7 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Storage account connection string provider.
     /// </summary>
@@ -8,6 +10,6 @@
         /// <summary>
         /// Connection string for storage account to be used.
         /// </summary>
-        string GetConnectionString();
+        Task<string> GetConnectionString();
     }
 }

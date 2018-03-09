@@ -19,7 +19,10 @@
         public AzureStorageAttachment(AzureStorageAttachmentConfiguration configuration)
         {
             Guard.AgainstNull(nameof(configuration), configuration);
-            var account = CloudStorageAccount.Parse(configuration.ConnectionStringProvider.GetConnectionString());
+            // TODO: review this in next version to avoid .GetAwaiter().GetResult();
+            var connectionString = configuration.ConnectionStringProvider.GetConnectionString()
+                .GetAwaiter().GetResult();
+            var account = CloudStorageAccount.Parse(connectionString);
             client = new Lazy<CloudBlobClient>(() => account.CreateCloudBlobClient());
             this.configuration = configuration;
         }

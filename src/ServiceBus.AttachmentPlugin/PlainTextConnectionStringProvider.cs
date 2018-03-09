@@ -1,5 +1,7 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Static connection string provider.
     /// </summary>
@@ -17,9 +19,9 @@
         /// <summary>
         /// Return connection string for Storage account.
         /// </summary>
-        public string GetConnectionString()
+        public Task<string> GetConnectionString()
         {
-            return connectionString;
+            return Task.FromResult(connectionString);
         }
     }
 }

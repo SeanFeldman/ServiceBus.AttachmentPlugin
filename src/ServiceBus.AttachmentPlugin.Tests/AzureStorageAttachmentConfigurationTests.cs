@@ -1,17 +1,18 @@
 ﻿namespace ServiceBus.AttachmentPlugin.Tests
 {
     using System;
+    using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Xunit;
 
     public class AzureStorageAttachmentConfigurationTests
     {
         [Fact]
-        public void Should_apply_defaults_for_missing_arguments()
+        public async Task Should_apply_defaults_for_missing_arguments()
         {
             var configuration = new AzureStorageAttachmentConfiguration(new PlainTextConnectionStringProvider("connectionString"))
                 .WithSasUri();
-            Assert.Equal("connectionString", configuration.ConnectionStringProvider.GetConnectionString());
+            Assert.Equal("connectionString", await configuration.ConnectionStringProvider.GetConnectionString());
             Assert.NotEmpty(configuration.ContainerName);
             Assert.NotEmpty(configuration.MessagePropertyToIdentifyAttachmentBlob);
             Assert.Equal(AzureStorageAttachmentConfigurationExtensions.DefaultSasTokenValidationTime.Days, configuration.SasTokenValidationTime.Value.Days);
