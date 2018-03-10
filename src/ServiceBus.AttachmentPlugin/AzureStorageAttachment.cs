@@ -31,6 +31,7 @@
         public override async Task<Message> BeforeMessageSend(Message message)
         {
             await InitializeClient().ConfigureAwait(false);
+
             if (!configuration.MessageMaxSizeReachedCriteria(message))
             {
                 return message;
@@ -64,11 +65,14 @@
             {
                 return;
             }
+
             await semaphore.WaitAsync().ConfigureAwait(false);
+
             if (client != null)
             {
                 return;
             }
+
             try
             {
                 var connectionString = await configuration.ConnectionStringProvider.GetConnectionString().ConfigureAwait(false);
@@ -117,6 +121,8 @@
             }
             else
             {
+                await InitializeClient().ConfigureAwait(false);
+
                 var container = client.GetContainerReference(configuration.ContainerName);
                 await container.CreateIfNotExistsAsync().ConfigureAwait(false);
                 var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
