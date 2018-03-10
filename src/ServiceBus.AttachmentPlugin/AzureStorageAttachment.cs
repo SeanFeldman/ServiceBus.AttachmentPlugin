@@ -60,7 +60,15 @@
 
         async Task InitializeClient()
         {
+            if (client != null)
+            {
+                return;
+            }
             await semaphore.WaitAsync().ConfigureAwait(false);
+            if (client != null)
+            {
+                return;
+            }
             try
             {
                 var connectionString = await configuration.ConnectionStringProvider.GetConnectionString().ConfigureAwait(false);
