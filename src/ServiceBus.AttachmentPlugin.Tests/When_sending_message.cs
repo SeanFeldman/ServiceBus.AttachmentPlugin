@@ -19,7 +19,7 @@
                 MessageId = Guid.NewGuid().ToString(),
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionString:"UseDevelopmentStorage=true", containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id"));
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id"));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.Null(result.Body);
@@ -37,7 +37,7 @@
                 TimeToLive = TimeSpan.FromHours(1)
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionString:"UseDevelopmentStorage=true", containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id",
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id",
                 messageMaxSizeReachedCriteria:msg => msg.Body.Length > 100));
             var result = await plugin.BeforeMessageSend(message);
 
@@ -56,13 +56,13 @@
                 TimeToLive = TimeSpan.FromHours(1)
             };
             var dateTimeNowUtc = new DateTime(2017, 1, 2);
-            var configuration = new AzureStorageAttachmentConfiguration(connectionString:"UseDevelopmentStorage=true", containerName:"attachments",
+            var configuration = new AzureStorageAttachmentConfiguration(connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName:"attachments",
                 messagePropertyToIdentifyAttachmentBlob:"attachment-id");
             AzureStorageAttachment.DateTimeFunc = () => dateTimeNowUtc;
             var plugin = new AzureStorageAttachment(configuration);
             await plugin.BeforeMessageSend(message);
 
-            var account = CloudStorageAccount.Parse(configuration.ConnectionString);
+            var account = CloudStorageAccount.Parse(await configuration.ConnectionStringProvider.GetConnectionString());
             var client = account.CreateCloudBlobClient();
             var container = client.GetContainerReference(configuration.ContainerName);
             var blobName = (string)message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
@@ -79,7 +79,7 @@
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes);
             var configuration = new AzureStorageAttachmentConfiguration(
-                connectionString: "UseDevelopmentStorage=true", containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
             var plugin = new AzureStorageAttachment(configuration);
             await plugin.BeforeMessageSend(message);
@@ -101,7 +101,7 @@
                 MessageId = Guid.NewGuid().ToString(),
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionString: "UseDevelopmentStorage=true", containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.Null(result.Body);

@@ -1,6 +1,7 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Core;
@@ -9,18 +10,17 @@
 
     class AzureStorageAttachment : ServiceBusPlugin
     {
+        SemaphoreSlim semaphore= new SemaphoreSlim(1);
         const string MessageId = "_MessageId";
         internal const string ValidUntilUtc = "_ValidUntilUtc";
         internal const string DateFormat = "yyyy-MM-dd HH:mm:ss:ffffff Z";
 
-        Lazy<CloudBlobClient> client;
+        CloudBlobClient client;
         AzureStorageAttachmentConfiguration configuration;
 
         public AzureStorageAttachment(AzureStorageAttachmentConfiguration configuration)
         {
             Guard.AgainstNull(nameof(configuration), configuration);
-            var account = CloudStorageAccount.Parse(configuration.ConnectionString);
-            client = new Lazy<CloudBlobClient>(() => account.CreateCloudBlobClient());
             this.configuration = configuration;
         }
 
@@ -30,12 +30,14 @@
 
         public override async Task<Message> BeforeMessageSend(Message message)
         {
+            await InitializeClient().ConfigureAwait(false);
+
             if (!configuration.MessageMaxSizeReachedCriteria(message))
             {
                 return message;
             }
 
-            var container = client.Value.GetContainerReference(configuration.ContainerName);
+            var container = client.GetContainerReference(configuration.ContainerName);
             await container.CreateIfNotExistsAsync().ConfigureAwait(false);
             var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
 
@@ -55,6 +57,32 @@
             var sasUri = TokenGenerator.GetBlobSasUri(blob, configuration.SasTokenValidationTime.Value);
             message.UserProperties[configuration.MessagePropertyForSasUri] = sasUri;
             return message;
+        }
+
+        async Task InitializeClient()
+        {
+            if (client != null)
+            {
+                return;
+            }
+
+            await semaphore.WaitAsync().ConfigureAwait(false);
+
+            if (client != null)
+            {
+                return;
+            }
+
+            try
+            {
+                var connectionString = await configuration.ConnectionStringProvider.GetConnectionString().ConfigureAwait(false);
+                var account = CloudStorageAccount.Parse(connectionString);
+                client = account.CreateCloudBlobClient();
+            }
+            finally
+            {
+                semaphore.Release();
+            }
         }
 
         static void SetValidMessageId(ICloudBlob blob, string messageId)
@@ -93,7 +121,9 @@
             }
             else
             {
-                var container = client.Value.GetContainerReference(configuration.ContainerName);
+                await InitializeClient().ConfigureAwait(false);
+
+                var container = client.GetContainerReference(configuration.ContainerName);
                 await container.CreateIfNotExistsAsync().ConfigureAwait(false);
                 var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
                 blob = container.GetBlockBlobReference(blobName);

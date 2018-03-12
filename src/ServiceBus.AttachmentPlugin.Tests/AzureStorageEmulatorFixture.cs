@@ -9,6 +9,8 @@
 
     public class AzureStorageEmulatorFixture
     {
+        public static IProvideStorageConnectionString ConnectionStringProvider = new PlainTextConnectionStringProvider("UseDevelopmentStorage=true");
+
         public AzureStorageEmulatorFixture()
         {
             AzureStorageEmulatorManager.StartStorageEmulator();

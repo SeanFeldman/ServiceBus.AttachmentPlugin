@@ -9,7 +9,6 @@ namespace ServiceBus.AttachmentPlugin.Tests
 
     public class When_receiving_message : IClassFixture<AzureStorageEmulatorFixture>
     {
-
         [Fact]
         public async Task Should_throw_exception_with_blob_path_for_found_that_cant_be_found()
         {
@@ -21,15 +20,15 @@ namespace ServiceBus.AttachmentPlugin.Tests
             };
 
             var sendingPlugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionString: "UseDevelopmentStorage=true", containerName: "attachments"));
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments"));
             await sendingPlugin.BeforeMessageSend(message);
 
             var receivingPlugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionString: "UseDevelopmentStorage=true", containerName: "attachments-wrong-containers"));
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments-wrong-containers"));
 
             var exception = await Assert.ThrowsAsync<Exception>(() => receivingPlugin.AfterMessageReceive(message));
-            Assert.Contains("attachments-wrong-containers", exception.Message);
-            Assert.Contains(message.UserProperties["$attachment.blob"].ToString(), exception.Message);
+            Assert.Contains("attachments-wrong-containers", actualString: exception.Message);
+            Assert.Contains(message.UserProperties["$attachment.blob"].ToString(), actualString: exception.Message);
         }
     }
 }
