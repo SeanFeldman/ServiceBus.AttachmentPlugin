@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace ServiceBus.AttachmentPlugin
+﻿namespace ServiceBus.AttachmentPlugin
 {
+    using System;
+
     static class Guard
     {
         public static void AgainstEmpty(string argumentName, string value)

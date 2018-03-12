@@ -4,7 +4,14 @@
 
 Allows sending messages that exceed maximum size by implementing [Claim Check pattern](http://www.enterpriseintegrationpatterns.com/patterns/messaging/StoreInLibrary.html) with Azure Storage.
 
-### Nuget package [![NuGet Status](https://buildstats.info/nuget/ServiceBus.AttachmentPlugin?includePreReleases=true)](https://www.nuget.org/packages/ServiceBus.AttachmentPlugin/) [![Build Status](https://img.shields.io/appveyor/ci/seanfeldman/ServiceBus-AttachmentPlugin/master.svg?style=flat-square)](https://ci.appveyor.com/project/seanfeldman/ServiceBus-AttachmentPlugin) [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/LICENSE) [![Issues](https://img.shields.io/github/issues-raw/badges/shields/website.svg)](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/LICENSE)
+[![develop build status](https://ci.appveyor.com/api/projects/status/kpw7nfmr4femj29y/branch/develop.svg?style=flat-square&pendingText=develop%20%E2%80%A3%20pending&failingText=develop%20%E2%80%A3%20failing&passingText=develop%20%E2%80%A3%20passing)](https://ci.appveyor.com/project/seanfeldman/ServiceBus-AttachmentPlugin)
+[![master build status](https://ci.appveyor.com/api/projects/status/kpw7nfmr4femj29y/branch/master.svg?style=flat-square&pendingText=master%20%E2%80%A3%20pending&failingText=master%20%E2%80%A3%20failing&passingText=master%20%E2%80%A3%20passing)](https://ci.appveyor.com/project/seanfeldman/ServiceBus-AttachmentPlugin) 
+[![opened issues](https://img.shields.io/github/issues-raw/badges/shields/website.svg)](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin)
+
+### Nuget package
+
+[![NuGet Status](https://buildstats.info/nuget/ServiceBus.AttachmentPlugin?includePreReleases=true)](https://www.nuget.org/packages/ServiceBus.AttachmentPlugin/)
 
 Available here http://nuget.org/packages/ServiceBus.AttachmentPlugin
 
@@ -114,9 +121,20 @@ Default is to convert any body to attachment.
 new AzureStorageAttachmentConfiguration(storageConnectionString, message => message.Body.Length > 200 * 1024);
 ```
 
+### Configuring connection string provider
+
+When Storage connection string needs to be retrieved rather than passed in as a plain text, `AzureStorageAttachmentConfiguration` accepts implementation of `IProvideStorageConnectionString`.
+The plugin comes with a `PlainTextConnectionStringProvider` and can be used in the following way.
+
+```c#
+var provider = new PlainTextConnectionStringProvider("connectionString");
+var config = new AzureStorageAttachmentConfiguration(provider);
+```
+
 ## Who's trusting this add-in in production
 
 ![Codit](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/using/Codit.png)
+![RISC Software](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/RISC.software.png)
 
 Proudly list your company here if use this add-in in production
 

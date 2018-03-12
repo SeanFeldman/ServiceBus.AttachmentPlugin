@@ -20,7 +20,7 @@ namespace ServiceBus.AttachmentPlugin.Tests
                 MessageId = Guid.NewGuid().ToString(),
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                    connectionString: "UseDevelopmentStorage=true", 
+                    connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, 
                     containerName: "attachments", 
                     messagePropertyToIdentifyAttachmentBlob: 
                     "attachment-id")

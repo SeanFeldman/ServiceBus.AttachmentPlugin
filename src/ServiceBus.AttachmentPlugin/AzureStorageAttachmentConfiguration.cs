@@ -15,11 +15,25 @@
             string connectionString,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
+            Func<Message, bool> messageMaxSizeReachedCriteria = null) 
+            : this(new PlainTextConnectionStringProvider(connectionString), containerName, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
+        {
+        }
+
+        /// <summary>Constructor to create new configuration object.</summary>
+        /// <param name="connectionStringProvider">Provider to retrieve connection string such as <see cref="PlainTextConnectionStringProvider"/></param>
+        /// <param name="containerName">Storage container name</param>
+        /// <param name="messagePropertyToIdentifyAttachmentBlob">Message user property to use for blob URI</param>
+        /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
+        public AzureStorageAttachmentConfiguration(
+            IProvideStorageConnectionString connectionStringProvider,
+            string containerName = "attachments",
+            string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
             Func<Message, bool> messageMaxSizeReachedCriteria = null)
         {
             Guard.AgainstEmpty(nameof(containerName), containerName);
             Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
-            ConnectionString = connectionString;
+            ConnectionStringProvider = connectionStringProvider;
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
@@ -44,7 +58,7 @@
             };
         }
 
-        internal string ConnectionString { get; }
+        internal IProvideStorageConnectionString ConnectionStringProvider { get; }
 
         internal string ContainerName { get; }
 
