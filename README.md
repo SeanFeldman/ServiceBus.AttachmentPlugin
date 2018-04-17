@@ -131,6 +131,10 @@ var provider = new PlainTextConnectionStringProvider("connectionString");
 var config = new AzureStorageAttachmentConfiguration(provider);
 ```
 
+#### Additional providers
+
+* [ServiceBus.AttachmentPlugin.KeyVaultProvider](https://www.nuget.org/packages?q=ServiceBus.AttachmentPlugin.KeyVaultProvider)
+
 ## Who's trusting this add-in in production
 
 ![Codit](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/using/Codit.png)
