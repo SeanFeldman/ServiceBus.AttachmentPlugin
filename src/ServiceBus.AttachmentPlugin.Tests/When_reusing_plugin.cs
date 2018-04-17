@@ -26,6 +26,21 @@
             Assert.ThrowsAsync<ObjectDisposedException>(() => registeredPlugin.AfterMessageReceive(null));
         }
 
+        [Fact]
+        public async Task Should_not_throw_if_plugin_was_not_disposed()
+        {
+            var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
+
+            var configuration = new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+
+            var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPlugin(client, configuration);
+
+            var message = new Message(new byte[] {});
+            await registeredPlugin.BeforeMessageSend(message);
+            await registeredPlugin.AfterMessageReceive(message);
+        }
+
         class FakeClientEntity : ClientEntity
         {
             public FakeClientEntity(string clientTypeName, string postfix, RetryPolicy retryPolicy) : base(clientTypeName, postfix, retryPolicy)
