@@ -8,7 +8,7 @@
     using Microsoft.Azure.ServiceBus.Core;
     using Xunit;
 
-    public class When_reusing_plugin
+    public class When_reusing_plugin : IClassFixture<AzureStorageEmulatorFixture>
     {
         [Fact]
         public void Should_throw_if_plugin_was_disposed()

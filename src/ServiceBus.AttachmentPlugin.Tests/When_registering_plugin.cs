@@ -8,7 +8,7 @@
     using Microsoft.Azure.ServiceBus.Core;
     using Xunit;
 
-    public class When_registering_plugin
+    public class When_registering_plugin : IClassFixture<AzureStorageEmulatorFixture>
     {
         [Fact]
         public void Should_get_back_disposable_object_for_full_plugin()
