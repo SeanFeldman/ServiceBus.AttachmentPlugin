@@ -32,6 +32,8 @@
 
         public override async Task<Message> BeforeMessageSend(Message message)
         {
+            ThrowIfDisposed();
+
             if (!configuration.MessageMaxSizeReachedCriteria(message))
             {
                 return message;
@@ -108,6 +110,8 @@
 
         public override async Task<Message> AfterMessageReceive(Message message)
         {
+            ThrowIfDisposed();
+
             var userProperties = message.UserProperties;
 
             if (!userProperties.ContainsKey(configuration.MessagePropertyToIdentifyAttachmentBlob))
@@ -148,6 +152,14 @@
             return message;
         }
 
+        void ThrowIfDisposed()
+        {
+            if (disposed)
+            {
+                throw new ObjectDisposedException($"{nameof(AzureStorageAttachment)} has been already disposed.");
+            }
+        }
+
         public void Dispose()
         {
             if (Interlocked.Exchange(ref disposeSignaled, 1) != 0)
@@ -158,7 +170,7 @@
             var semaphorToDispose = Interlocked.Exchange(ref semaphore, null);
             if (semaphorToDispose != null)
             {
-                semaphore.Dispose();
+                semaphorToDispose.Dispose();
             }
 
             disposed = true;
