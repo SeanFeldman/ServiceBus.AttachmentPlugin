@@ -30,12 +30,12 @@
 
         public override async Task<Message> BeforeMessageSend(Message message)
         {
-            await InitializeClient().ConfigureAwait(false);
-
             if (!configuration.MessageMaxSizeReachedCriteria(message))
             {
                 return message;
             }
+
+            await InitializeClient().ConfigureAwait(false);
 
             var container = client.GetContainerReference(configuration.ContainerName);
             await container.CreateIfNotExistsAsync().ConfigureAwait(false);
