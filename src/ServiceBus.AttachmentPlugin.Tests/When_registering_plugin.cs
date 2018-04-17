@@ -11,17 +11,18 @@
     public class When_registering
     {
         [Fact]
-        public void Should_get_back_object_for_full_plugin()
+        public void Should_get_back_disposable_object_for_full_plugin()
         {
             var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
 
             var configuration = new AzureStorageAttachmentConfiguration(
                 connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
-            ServiceBusPlugin registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPlugin(client, configuration);
+            var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPlugin(client, configuration);
 
             Assert.Equal(registeredPlugin, client.RegisteredPlugins.First());
             Assert.IsAssignableFrom<ServiceBusPlugin>(registeredPlugin);
+            Assert.IsAssignableFrom<IDisposable>(registeredPlugin);
         }
 
         [Fact]
@@ -29,7 +30,7 @@
         {
             var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
 
-            ServiceBusPlugin registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPluginForReceivingOnly(client, "mySasUriProperty");
+            var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPluginForReceivingOnly(client, "mySasUriProperty");
 
             Assert.Equal(registeredPlugin, client.RegisteredPlugins.First());
             Assert.IsAssignableFrom<ServiceBusPlugin>(registeredPlugin);

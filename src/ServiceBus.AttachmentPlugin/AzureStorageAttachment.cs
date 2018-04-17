@@ -8,7 +8,7 @@
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
-    class AzureStorageAttachment : ServiceBusPlugin
+    class AzureStorageAttachment : ServiceBusPlugin, IDisposable
     {
         SemaphoreSlim semaphore= new SemaphoreSlim(1);
         const string MessageId = "_MessageId";
@@ -17,6 +17,8 @@
 
         CloudBlobClient client;
         AzureStorageAttachmentConfiguration configuration;
+        int disposeSignaled;
+        bool disposed;
 
         public AzureStorageAttachment(AzureStorageAttachmentConfiguration configuration)
         {
@@ -144,6 +146,22 @@
             await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
             message.Body = bytes;
             return message;
+        }
+
+        public void Dispose()
+        {
+            if (Interlocked.Exchange(ref disposeSignaled, 1) != 0)
+            {
+                return;
+            }
+
+            var semaphorToDispose = Interlocked.Exchange(ref semaphore, null);
+            if (semaphorToDispose != null)
+            {
+                semaphore.Dispose();
+            }
+
+            disposed = true;
         }
     }
 }
