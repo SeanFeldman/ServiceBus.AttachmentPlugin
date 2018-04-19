@@ -36,6 +36,10 @@
 
             var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPlugin(client, configuration);
 
+            var client2 = new FakeClientEntity("fake2", string.Empty, RetryPolicy.Default);
+
+            client2.RegisterPlugin(registeredPlugin);
+
             var message = new Message(new byte[] {});
             await registeredPlugin.BeforeMessageSend(message);
             await registeredPlugin.AfterMessageReceive(message);
