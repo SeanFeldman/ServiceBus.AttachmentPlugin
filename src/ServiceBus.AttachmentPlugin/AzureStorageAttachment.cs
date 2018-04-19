@@ -167,11 +167,7 @@
                 return;
             }
 
-            var semaphorToDispose = Interlocked.Exchange(ref semaphore, null);
-            if (semaphorToDispose != null)
-            {
-                semaphorToDispose.Dispose();
-            }
+            semaphore?.Dispose();
 
             disposed = true;
         }
