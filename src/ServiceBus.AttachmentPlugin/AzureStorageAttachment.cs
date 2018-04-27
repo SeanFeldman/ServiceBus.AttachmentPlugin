@@ -8,7 +8,7 @@
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
-    class AzureStorageAttachment : ServiceBusPlugin
+    class AzureStorageAttachment : ServiceBusPlugin, IDisposable
     {
         SemaphoreSlim semaphore= new SemaphoreSlim(1);
         const string MessageId = "_MessageId";
@@ -17,6 +17,8 @@
 
         CloudBlobClient client;
         AzureStorageAttachmentConfiguration configuration;
+        int disposeSignaled;
+        bool disposed;
 
         public AzureStorageAttachment(AzureStorageAttachmentConfiguration configuration)
         {
@@ -30,6 +32,8 @@
 
         public override async Task<Message> BeforeMessageSend(Message message)
         {
+            ThrowIfDisposed();
+
             if (!configuration.MessageMaxSizeReachedCriteria(message))
             {
                 return message;
@@ -106,6 +110,8 @@
 
         public override async Task<Message> AfterMessageReceive(Message message)
         {
+            ThrowIfDisposed();
+
             var userProperties = message.UserProperties;
 
             if (!userProperties.ContainsKey(configuration.MessagePropertyToIdentifyAttachmentBlob))
@@ -144,6 +150,26 @@
             await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
             message.Body = bytes;
             return message;
+        }
+
+        void ThrowIfDisposed()
+        {
+            if (disposed)
+            {
+                throw new ObjectDisposedException($"{nameof(AzureStorageAttachment)} has been already disposed.");
+            }
+        }
+
+        public void Dispose()
+        {
+            if (Interlocked.Exchange(ref disposeSignaled, 1) != 0)
+            {
+                return;
+            }
+
+            semaphore?.Dispose();
+
+            disposed = true;
         }
     }
 }
