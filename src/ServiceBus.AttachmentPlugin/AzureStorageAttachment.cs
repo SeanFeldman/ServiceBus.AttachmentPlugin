@@ -1,6 +1,7 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
@@ -34,6 +35,11 @@
         {
             ThrowIfDisposed();
 
+            if (AttachmentBlobAssociated(message.UserProperties))
+            {
+                return message;
+            }
+
             if (!configuration.MessageMaxSizeReachedCriteria(message))
             {
                 return message;
@@ -62,6 +68,9 @@
             message.UserProperties[configuration.MessagePropertyForSasUri] = sasUri;
             return message;
         }
+
+        bool AttachmentBlobAssociated(IDictionary<string, object> messageUserProperties) => 
+            messageUserProperties.TryGetValue(configuration.MessagePropertyToIdentifyAttachmentBlob, out var _);
 
         async Task InitializeClient()
         {

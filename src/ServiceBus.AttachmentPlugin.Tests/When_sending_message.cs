@@ -92,6 +92,27 @@
         }
 
         [Fact]
+        public async Task Should_not_reupload_blob_if_one_is_already_assigned()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes);
+            var configuration = new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+
+            var plugin = new AzureStorageAttachment(configuration);
+
+            var processedMessage = await plugin.BeforeMessageSend(message);
+
+            var blobId = processedMessage.UserProperties["attachment-id"];
+
+            var reprocessedMessage = await plugin.BeforeMessageSend(message);
+
+            Assert.Equal(blobId, reprocessedMessage.UserProperties["attachment-id"]);
+        }
+
+
+        [Fact]
         public async Task Should_not_set_sas_uri_by_default()
         {
             var payload = "payload";
