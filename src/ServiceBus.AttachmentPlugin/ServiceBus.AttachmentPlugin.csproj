@@ -24,8 +24,9 @@
   </ItemGroup>
 
   <ItemGroup Label="SourceLink to embed PDBs with the assembly">
-    <PackageReference Include="SourceLink.Create.GitHub" Version="2.8.1" PrivateAssets="All" />
-    <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="2.8.1" />
+    <PackageReference Include="SourceLink.Create.GitHub" Version="2.8.3" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Copy.PdbFiles" Version="2.8.3" PrivateAssets="All" />
+    <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="2.8.3" />
   </ItemGroup>
 
 </Project>
