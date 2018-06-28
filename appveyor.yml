@@ -67,7 +67,7 @@ notifications:
 deploy:
   provider: NuGet
   api_key: 
-    secure: 3f1NaZZwxam7Q62aYMzCbOCBxiTnBuZqZpSwAZbOsbLWsM5gDbFfpuHQbltWETBK # encrypted ServiceBus.AttachmentPlugin API key
+    secure: V0wf6IZuvS9d8cJrjEopB+2/4i1z4TrlUhC27y9r+RRt+HYhtxNwK9E+Htkm76bi # encrypted ServiceBus.AttachmentPlugin API key
   artifact: /.*\.nupkg/
   on:
     branch: master
