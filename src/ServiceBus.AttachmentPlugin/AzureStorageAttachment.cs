@@ -49,7 +49,7 @@
 
             var container = client.GetContainerReference(configuration.ContainerName);
             
-            if (! await container.ExistsAsync())
+            if (! await container.ExistsAsync().ConfigureAwait(false))
             {
                 await container.CreateIfNotExistsAsync().ConfigureAwait(false);
             }
@@ -144,7 +144,7 @@
 
                 var container = client.GetContainerReference(configuration.ContainerName);
                 
-                if (! await container.ExistsAsync())
+                if (! await container.ExistsAsync().ConfigureAwait(false))
                 {
                     await container.CreateIfNotExistsAsync().ConfigureAwait(false);
                 }
