@@ -38,7 +38,10 @@
             await InitializeClient().ConfigureAwait(false);
 
             var container = client.GetContainerReference(configuration.ContainerName);
-            await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+            if (!await container.ExistsAsync().ConfigureAwait(false))
+            {
+                await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+            }
             var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
 
             SetValidMessageId(blob, message.MessageId);
@@ -124,7 +127,10 @@
                 await InitializeClient().ConfigureAwait(false);
 
                 var container = client.GetContainerReference(configuration.ContainerName);
-                await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+                if (!await container.ExistsAsync().ConfigureAwait(false))
+                {
+                    await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+                }
                 var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
                 blob = container.GetBlockBlobReference(blobName);
             }
