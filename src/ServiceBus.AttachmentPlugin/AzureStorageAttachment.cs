@@ -1,6 +1,7 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
@@ -8,7 +9,7 @@
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
-    class AzureStorageAttachment : ServiceBusPlugin
+    class AzureStorageAttachment : ServiceBusPlugin, IDisposable
     {
         SemaphoreSlim semaphore= new SemaphoreSlim(1);
         const string MessageId = "_MessageId";
@@ -17,6 +18,8 @@
 
         CloudBlobClient client;
         AzureStorageAttachmentConfiguration configuration;
+        int disposeSignaled;
+        bool disposed;
 
         public AzureStorageAttachment(AzureStorageAttachmentConfiguration configuration)
         {
@@ -30,6 +33,13 @@
 
         public override async Task<Message> BeforeMessageSend(Message message)
         {
+            ThrowIfDisposed();
+
+            if (AttachmentBlobAssociated(message.UserProperties))
+            {
+                return message;
+            }
+
             if (!configuration.MessageMaxSizeReachedCriteria(message))
             {
                 return message;
@@ -38,7 +48,11 @@
             await InitializeClient().ConfigureAwait(false);
 
             var container = client.GetContainerReference(configuration.ContainerName);
-            await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+            
+            if (! await container.ExistsAsync().ConfigureAwait(false))
+            {
+                await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+            }
             var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
 
             SetValidMessageId(blob, message.MessageId);
@@ -58,6 +72,9 @@
             message.UserProperties[configuration.MessagePropertyForSasUri] = sasUri;
             return message;
         }
+
+        bool AttachmentBlobAssociated(IDictionary<string, object> messageUserProperties) => 
+            messageUserProperties.TryGetValue(configuration.MessagePropertyToIdentifyAttachmentBlob, out var _);
 
         async Task InitializeClient()
         {
@@ -106,6 +123,8 @@
 
         public override async Task<Message> AfterMessageReceive(Message message)
         {
+            ThrowIfDisposed();
+
             var userProperties = message.UserProperties;
 
             if (!userProperties.ContainsKey(configuration.MessagePropertyToIdentifyAttachmentBlob))
@@ -124,7 +143,11 @@
                 await InitializeClient().ConfigureAwait(false);
 
                 var container = client.GetContainerReference(configuration.ContainerName);
-                await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+                
+                if (! await container.ExistsAsync().ConfigureAwait(false))
+                {
+                    await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+                }
                 var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
                 blob = container.GetBlockBlobReference(blobName);
             }
@@ -144,6 +167,26 @@
             await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
             message.Body = bytes;
             return message;
+        }
+
+        void ThrowIfDisposed()
+        {
+            if (disposed)
+            {
+                throw new ObjectDisposedException($"{nameof(AzureStorageAttachment)} has been already disposed.");
+            }
+        }
+
+        public void Dispose()
+        {
+            if (Interlocked.Exchange(ref disposeSignaled, 1) != 0)
+            {
+                return;
+            }
+
+            semaphore?.Dispose();
+
+            disposed = true;
         }
     }
 }
