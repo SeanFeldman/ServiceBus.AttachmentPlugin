@@ -23,7 +23,7 @@
                 .WithSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty"));
             var result = await plugin.BeforeMessageSend(message);
 
-            Assert.Null(result.Body);
+            Assert.Equal(new byte[0], result.Body);
             Assert.True(message.UserProperties.ContainsKey("attachment-id"));
             Assert.True(message.UserProperties.ContainsKey("mySasUriProperty"));
         }
