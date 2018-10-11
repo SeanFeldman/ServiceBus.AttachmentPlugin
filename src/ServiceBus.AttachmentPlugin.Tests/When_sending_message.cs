@@ -22,7 +22,7 @@
                 connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id"));
             var result = await plugin.BeforeMessageSend(message);
 
-            Assert.Null(result.Body);
+            Assert.Equal(new byte[0], result.Body);
             Assert.True(message.UserProperties.ContainsKey("attachment-id"));
         }
 
@@ -84,7 +84,7 @@
             var plugin = new AzureStorageAttachment(configuration);
             await plugin.BeforeMessageSend(message);
 
-            Assert.Null(message.Body);
+            Assert.Equal(new byte[0], message.Body);
 
             var receivedMessage = await plugin.AfterMessageReceive(message);
 
@@ -125,7 +125,7 @@
                 connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
             var result = await plugin.BeforeMessageSend(message);
 
-            Assert.Null(result.Body);
+            Assert.Equal(new byte[0], result.Body);
             Assert.True(message.UserProperties.ContainsKey("attachment-id"));
             Assert.False(message.UserProperties.ContainsKey("$attachment.sas.uri"));
         }
