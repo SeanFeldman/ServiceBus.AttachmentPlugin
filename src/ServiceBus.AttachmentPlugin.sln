@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{2295CF61-70EF-43B4-8747-7C01493D607C}"
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
@@ -30,5 +31,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {413939FB-E5A8-47F4-9351-EE9D28067B29}
 	EndGlobalSection
 EndGlobal
