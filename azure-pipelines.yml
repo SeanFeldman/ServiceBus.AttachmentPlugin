@@ -28,12 +28,13 @@ steps:
     sqllocaldb create MSSQLLocalDB
     sqllocaldb start MSSQLLocalDB
     sqllocaldb info MSSQLLocalDB
-  displayName: 'Enabling sqllocaldb '
+  displayName: 'Enabling MSSQLLocalDB'
 
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+  displayName: '.NET Framework tests'
 
 - task: DotNetCoreCLI@2
   inputs:
