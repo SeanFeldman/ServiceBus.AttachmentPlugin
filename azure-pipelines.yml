@@ -23,6 +23,7 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+  displayName: 'Build'
 
 - script: |
     sqllocaldb create MSSQLLocalDB
@@ -41,3 +42,16 @@ steps:
     command: test
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+- script: echo System.DefaultWorkingDirectory $(System.DefaultWorkingDirectory)
+
+- powershell: |
+    Write-Host "Hello World from $Env:AGENT_NAME."
+    Write-Host "My ID is $Env:AGENT_ID."
+    Write-Host "AGENT_WORKFOLDER contents:"
+    gci $Env:AGENT_WORKFOLDER
+    Write-Host "AGENT_BUILDDIRECTORY contents:"
+    gci $Env:AGENT_BUILDDIRECTORY
+    Write-Host "BUILD_SOURCESDIRECTORY contents:"
+    gci $Env:BUILD_SOURCESDIRECTORY
+    Write-Host "Over and out."
