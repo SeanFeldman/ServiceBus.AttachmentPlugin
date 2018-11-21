@@ -31,16 +31,17 @@ steps:
     sqllocaldb info MSSQLLocalDB
   displayName: 'Enabling MSSQLLocalDB'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-  displayName: '.NET Framework tests'
+#- task: VSTest@2
+#  inputs:
+#    platform: '$(buildPlatform)'
+#    configuration: '$(buildConfiguration)'
+#  displayName: '.NET Framework tests'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: test
     projects: '**/*Tests/*.csproj'
-    arguments: '--no-build --framework netcoreapp2.0 --configuration $(buildConfiguration) --collect "Code coverage"'
+    arguments: '--no-build --configuration $(buildConfiguration) --collect "Code coverage"'
+#    arguments: '--no-build --framework netcoreapp2.0 --configuration $(buildConfiguration) --collect "Code coverage"'
 
 - script: echo System.DefaultWorkingDirectory $(System.DefaultWorkingDirectory)
