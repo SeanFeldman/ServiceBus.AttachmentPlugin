@@ -24,6 +24,12 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- script: |
+    sqllocaldb create MSSQLLocalDB
+    sqllocaldb start MSSQLLocalDB
+    sqllocaldb info MSSQLLocalDB
+  displayName: 'Enabling sqllocaldb '
+
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
