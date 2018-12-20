@@ -48,7 +48,7 @@ after_build:
 
 artifacts:
   - path: '**\*.nupkg'
-    name: 'ServiceBusExplorer-%GitVersion_MajorMinorPatch%'
+    name: 'ServiceBus.AttachmentPlugin%GitVersion_MajorMinorPatch%.nupkg'
 
 #---------------------------------#
 #     GitHub PR notifications     #
