@@ -6,7 +6,7 @@
     public class ApiApprovals
     {
         [Fact]
-        public void CompressionPlugin()
+        public void AzureStorageAttachmentPlugin()
         {
             var publicApi = ApiGenerator.GeneratePublicApi(typeof(AzureStorageAttachment).Assembly,
                 whitelistedNamespacePrefixes: new[] { "Microsoft.Azure.ServiceBus." },
