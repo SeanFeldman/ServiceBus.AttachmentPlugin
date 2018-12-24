@@ -1,7 +1,6 @@
-﻿namespace ServiceBus.AttachmentPlugin
+﻿namespace Microsoft.Azure.ServiceBus
 {
     using System;
-    using Microsoft.Azure.ServiceBus;
 
     /// <summary>
     /// Extension method for setting up the SAS uri configuration.

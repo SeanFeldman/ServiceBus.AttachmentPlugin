@@ -6,6 +6,7 @@
     using System.Net;
     using System.Net.NetworkInformation;
     using System.Threading;
+    using Microsoft.Azure.ServiceBus;
 
     public class AzureStorageEmulatorFixture
     {

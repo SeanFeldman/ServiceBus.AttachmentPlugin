@@ -4,14 +4,14 @@ skip_commits:
     - '**/*.md'
     - images/*
 matrix:
-  fast_finish: true 
+  fast_finish: true
 image: Previous Visual Studio 2017 #Visual Studio 2017 #use workaround image until https://github.com/appveyor/ci/issues/1404 is resolved
 environment:
   matrix:
     # First build
     - DotNetRunTime: net461
     # Second build
-    - DotNetRunTime: netcoreapp2.0
+    - DotNetRunTime: netcoreapp2.1
 
 #---------------------------------#
 #       restore nuget packages    #
@@ -19,14 +19,14 @@ environment:
 before_build:
   - cmd: dotnet restore src\ServiceBus.AttachmentPlugin.sln
   - cmd: echo %appveyor_build_version%
-  
+
 #---------------------------------#
 #       build configuration       #
 #---------------------------------#
 
 # build Configuration, i.e. Debug, Release, etc.
 configuration: Release
- 
+
 build:
   parallel: true                     # enable MSBuild parallel builds
   project: src\ServiceBus.AttachmentPlugin.sln # path to Visual Studio project
@@ -48,7 +48,7 @@ after_build:
 
 artifacts:
   - path: '**\*.nupkg'
-    name: 'ServiceBusExplorer-%GitVersion_MajorMinorPatch%'
+    name: 'ServiceBus.AttachmentPlugin%GitVersion_MajorMinorPatch%.nupkg'
 
 #---------------------------------#
 #     GitHub PR notifications     #
@@ -66,7 +66,7 @@ notifications:
 
 deploy:
   provider: NuGet
-  api_key: 
+  api_key:
     secure: V0wf6IZuvS9d8cJrjEopB+2/4i1z4TrlUhC27y9r+RRt+HYhtxNwK9E+Htkm76bi # encrypted ServiceBus.AttachmentPlugin API key
   artifact: /.*\.nupkg/
   on:

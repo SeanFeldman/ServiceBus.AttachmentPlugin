@@ -1,7 +1,7 @@
-﻿namespace ServiceBus.AttachmentPlugin
+﻿namespace Microsoft.Azure.ServiceBus
 {
-    using Microsoft.Azure.ServiceBus;
-    using Microsoft.Azure.ServiceBus.Core;
+    using Core;
+    using global::ServiceBus.AttachmentPlugin;
 
     /// <summary>Service Bus plugin to send large messages using attachments stored as Azure Storage blobs.</summary>
     public static class AzureStorageAttachmentExtensions

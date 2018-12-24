@@ -48,7 +48,7 @@
             await InitializeClient().ConfigureAwait(false);
 
             var container = client.GetContainerReference(configuration.ContainerName);
-            
+
             if (! await container.ExistsAsync().ConfigureAwait(false))
             {
                 await container.CreateIfNotExistsAsync().ConfigureAwait(false);
@@ -73,7 +73,7 @@
             return message;
         }
 
-        bool AttachmentBlobAssociated(IDictionary<string, object> messageUserProperties) => 
+        bool AttachmentBlobAssociated(IDictionary<string, object> messageUserProperties) =>
             messageUserProperties.TryGetValue(configuration.MessagePropertyToIdentifyAttachmentBlob, out var _);
 
         async Task InitializeClient()
@@ -143,7 +143,7 @@
                 await InitializeClient().ConfigureAwait(false);
 
                 var container = client.GetContainerReference(configuration.ContainerName);
-                
+
                 if (! await container.ExistsAsync().ConfigureAwait(false))
                 {
                     await container.CreateIfNotExistsAsync().ConfigureAwait(false);
