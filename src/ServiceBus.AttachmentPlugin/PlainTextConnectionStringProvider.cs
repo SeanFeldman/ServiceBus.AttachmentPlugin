@@ -1,4 +1,4 @@
-﻿namespace ServiceBus.AttachmentPlugin
+﻿namespace Microsoft.Azure.ServiceBus
 {
     using System.Threading.Tasks;
 

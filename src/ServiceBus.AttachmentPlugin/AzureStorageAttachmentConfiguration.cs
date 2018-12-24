@@ -1,9 +1,8 @@
-﻿namespace ServiceBus.AttachmentPlugin
+﻿namespace Microsoft.Azure.ServiceBus
 {
     using System;
-    using Microsoft.Azure.ServiceBus;
 
-    /// <summary>Runtime configuration for <see cref="AzureStorageAttachment"/> plugin.</summary>
+    /// <summary>Runtime configuration for Azure Storage Attachment plugin.</summary>
     public class AzureStorageAttachmentConfiguration
     {
         /// <summary>Constructor to create new configuration object.</summary>
@@ -15,7 +14,7 @@
             string connectionString,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            Func<Message, bool> messageMaxSizeReachedCriteria = null) 
+            Func<Message, bool> messageMaxSizeReachedCriteria = null)
             : this(new PlainTextConnectionStringProvider(connectionString), containerName, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
         {
         }
