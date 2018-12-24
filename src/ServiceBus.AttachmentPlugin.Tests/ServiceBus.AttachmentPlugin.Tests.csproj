@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
+    <RootNamespace>ServiceBus.AttachmentPlugin.Tests</RootNamespace>
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +15,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ServiceBus.AttachmentPlugin\ServiceBus.AttachmentPlugin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Label="API Approvals">
+    <PackageReference Include="PublicApiGenerator" Version="8.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="[12.0.1, 13.0.0)" />
+    <None Remove="ApprovalFiles\ApiApprovals.CompressionPlugin.received.txt" />
+  </ItemGroup>
+
+  <ItemGroup Label="Force the latest of the transitive dependency">
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="3.2.1" />
   </ItemGroup>
 
 </Project>

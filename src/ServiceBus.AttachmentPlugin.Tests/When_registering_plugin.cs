@@ -54,7 +54,9 @@
                 RegisteredPlugins.Remove(toRemove);
             }
 
+            public override string Path { get; }
             public override TimeSpan OperationTimeout { get; set; }
+            public override ServiceBusConnection ServiceBusConnection { get; }
             public override IList<ServiceBusPlugin> RegisteredPlugins { get; }
 
             protected override Task OnClosingAsync()
