@@ -6,7 +6,10 @@
     using System.Net;
     using System.Net.NetworkInformation;
     using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
 
     public class AzureStorageEmulatorFixture
     {
@@ -36,6 +39,46 @@
             {
                 throw new Exception("Storage emulator failed to start after 10 seconds.");
             }
+        }
+
+        public string GetContainerUri(string containerName)
+        {
+            return $"{CloudStorageAccount.DevelopmentStorageAccount.BlobStorageUri.PrimaryUri}/{containerName}";
+        }
+
+        public async Task<string> GetContainerSasQueryString(string containerName)
+        {
+            // get container
+            var blobClient = CloudStorageAccount.DevelopmentStorageAccount.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference(containerName);
+            if (!await container.ExistsAsync())
+            {
+                await container.CreateIfNotExistsAsync();
+            }
+
+            // create access policy and store it
+            var permissions = await container.GetPermissionsAsync();
+
+            var accessPolicyId = "test-policy";
+
+            // if already exists, delete firs and re-create
+            if (permissions.SharedAccessPolicies.ContainsKey(accessPolicyId))
+            {
+                permissions.SharedAccessPolicies.Remove(accessPolicyId);
+                await container.SetPermissionsAsync(permissions);
+            }
+
+            var accessPolicy = new SharedAccessBlobPolicy
+            {
+                Permissions = SharedAccessBlobPermissions.Add | SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write,
+                SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddDays(1)
+            };
+
+            permissions.SharedAccessPolicies.Add(accessPolicyId, accessPolicy);
+            await container.SetPermissionsAsync(permissions);
+
+            // create SAS with policy
+            return container.GetSharedAccessSignature(null, accessPolicyId);
         }
     }
 }
