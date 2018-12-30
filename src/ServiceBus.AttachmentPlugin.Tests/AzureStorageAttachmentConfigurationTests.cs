@@ -26,6 +26,6 @@
 
         [Fact]
         public void Should_throw_when_embedded_SAS_option_is_used_with_container_SAS() =>
-            Assert.Throws<Exception>(() => new AzureStorageAttachmentConfiguration(new SharedAccessSignature("?qs")).WithSasUri());
+            Assert.Throws<Exception>(() => new AzureStorageAttachmentConfiguration(new SharedAccessSignature("https://container", "?qs")).WithSasUri());
     }
 }

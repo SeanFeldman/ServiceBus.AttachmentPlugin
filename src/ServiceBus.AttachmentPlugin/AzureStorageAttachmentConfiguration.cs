@@ -20,18 +20,17 @@
         }
 
         /// <summary>Constructor to create new configuration object.</summary>
+        /// <remarks>Container name is not required as it's included in the SharedAccessSignature.</remarks>
         /// <param name="sharedAccessSignature"></param>
-        /// <param name="containerName"></param>
         /// <param name="messagePropertyToIdentifyAttachmentBlob"></param>
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
         public AzureStorageAttachmentConfiguration(
             SharedAccessSignature sharedAccessSignature,
-            string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
             Func<Message, bool> messageMaxSizeReachedCriteria = null)
-            : this(new PlainTextConnectionStringProvider(sharedAccessSignature.QueryString), containerName, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
+            : this(new PlainTextConnectionStringProvider(sharedAccessSignature.QueryString), null, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
         {
-            this.UsingContainerSas = true;
+            this.SharedAccessSignature = sharedAccessSignature;
         }
 
         /// <summary>Constructor to create new configuration object.</summary>
@@ -84,6 +83,8 @@
 
         internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
 
-        internal bool UsingContainerSas { get; }
+        internal SharedAccessSignature SharedAccessSignature { get; }
+
+        internal bool UsingContainerSas => SharedAccessSignature != null;
     }
 }

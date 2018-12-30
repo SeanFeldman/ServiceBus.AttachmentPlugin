@@ -43,7 +43,7 @@
         {
             var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
 
-            var azureStorageAttachmentConfiguration = new AzureStorageAttachmentConfiguration(new SharedAccessSignature("?qs"));
+            var azureStorageAttachmentConfiguration = new AzureStorageAttachmentConfiguration(new SharedAccessSignature("https://container", "?qs"));
 
             var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPlugin(client, azureStorageAttachmentConfiguration);
 
