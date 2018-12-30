@@ -43,8 +43,8 @@
                 MessageId = Guid.NewGuid().ToString(),
                 TimeToLive = TimeSpan.FromHours(1)
             };
-            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id",
+            var sas = new SharedAccessSignature(fixture.GetContainerUri("attachments"), await fixture.GetContainerSasQueryString("attachments"));
+            var plugin = new SasBasedAzureStorageAttachment(new AzureStorageAttachmentConfiguration(sas, messagePropertyToIdentifyAttachmentBlob:"attachment-id",
                 messageMaxSizeReachedCriteria:msg => msg.Body.Length > 100));
             var result = await plugin.BeforeMessageSend(message);
 
@@ -62,16 +62,16 @@
                 MessageId = Guid.NewGuid().ToString(),
                 TimeToLive = TimeSpan.FromHours(1)
             };
+            var sas = new SharedAccessSignature(fixture.GetContainerUri("attachments"), await fixture.GetContainerSasQueryString("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(sas, messagePropertyToIdentifyAttachmentBlob:"attachment-id");
             var dateTimeNowUtc = new DateTime(2017, 1, 2);
-            var configuration = new AzureStorageAttachmentConfiguration(connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName:"attachments",
-                messagePropertyToIdentifyAttachmentBlob:"attachment-id");
-            AzureStorageAttachment.DateTimeFunc = () => dateTimeNowUtc;
-            var plugin = new AzureStorageAttachment(configuration);
+            SasBasedAzureStorageAttachment.DateTimeFunc = () => dateTimeNowUtc;
+            var plugin = new SasBasedAzureStorageAttachment(configuration);
             await plugin.BeforeMessageSend(message);
 
-            var account = CloudStorageAccount.Parse(await configuration.ConnectionStringProvider.GetConnectionString());
+            var account = CloudStorageAccount.Parse(await AzureStorageEmulatorFixture.ConnectionStringProvider.GetConnectionString());
             var client = account.CreateCloudBlobClient();
-            var container = client.GetContainerReference(configuration.ContainerName);
+            var container = client.GetContainerReference("attachments");
             var blobName = (string)message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
             var blob = container.GetBlockBlobReference(blobName);
             await blob.FetchAttributesAsync();
@@ -85,10 +85,10 @@
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes);
-            var configuration = new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+            var sas = new SharedAccessSignature(fixture.GetContainerUri("attachments"), await fixture.GetContainerSasQueryString("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(sas, messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
-            var plugin = new AzureStorageAttachment(configuration);
+            var plugin = new SasBasedAzureStorageAttachment(configuration);
             await plugin.BeforeMessageSend(message);
 
             Assert.Null(message.Body);
@@ -104,10 +104,10 @@
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes);
-            var configuration = new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+            var sas = new SharedAccessSignature(fixture.GetContainerUri("attachments"), await fixture.GetContainerSasQueryString("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(sas, messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
-            var plugin = new AzureStorageAttachment(configuration);
+            var plugin = new SasBasedAzureStorageAttachment(configuration);
 
             var processedMessage = await plugin.BeforeMessageSend(message);
 
@@ -120,7 +120,7 @@
 
 
         [Fact]
-        public async Task Should_not_set_sas_uri_by_default()
+        public async Task Should_not_set_embedded_sas_uri_by_default()
         {
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
@@ -128,8 +128,8 @@
             {
                 MessageId = Guid.NewGuid().ToString(),
             };
-            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
+            var sas = new SharedAccessSignature(fixture.GetContainerUri("attachments"), await fixture.GetContainerSasQueryString("attachments"));
+            var plugin = new SasBasedAzureStorageAttachment(new AzureStorageAttachmentConfiguration(sas, messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.Null(result.Body);
@@ -138,9 +138,25 @@
         }
 
         [Fact]
-        public void Should_be_able_to_receive_using_storage_connection_string()
+        public async Task Should_be_able_to_receive_using_storage_connection_string()
         {
-            Assert.True(false, "not implemented yet");
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes);
+            var sas = new SharedAccessSignature(fixture.GetContainerUri("attachments"), await fixture.GetContainerSasQueryString("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(sas, messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+
+            var plugin = new SasBasedAzureStorageAttachment(configuration);
+            await plugin.BeforeMessageSend(message);
+
+            Assert.Null(message.Body);
+
+            var receivePlugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
+
+            var receivedMessage = await receivePlugin.AfterMessageReceive(message);
+
+            Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
         }
     }
 }
