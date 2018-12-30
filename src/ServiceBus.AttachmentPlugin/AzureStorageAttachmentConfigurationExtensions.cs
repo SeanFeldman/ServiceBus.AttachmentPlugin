@@ -22,6 +22,11 @@
             string messagePropertyToIdentifySasUri = DefaultMessagePropertyToIdentitySasUri,
             TimeSpan? sasTokenValidationTime = null)
         {
+            if (azureStorageAttachmentConfiguration.UsingContainerSas)
+            {
+                throw new Exception("Invalid configuration: .WithSasUri() requires account key and cannot be used with container Shared Access Signature.");
+            }
+
             if (sasTokenValidationTime == null)
             {
                 sasTokenValidationTime = DefaultSasTokenValidationTime;

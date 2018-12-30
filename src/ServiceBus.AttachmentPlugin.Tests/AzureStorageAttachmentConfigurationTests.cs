@@ -21,10 +21,11 @@
         }
 
         [Fact]
-        public void Should_not_accept_negative_token_validation_time()
-        {
-            Assert.Throws<ArgumentException>(() =>
-                new AzureStorageAttachmentConfiguration(new PlainTextConnectionStringProvider("connectionString")).WithSasUri(sasTokenValidationTime: TimeSpan.FromHours(-4)));
-        }
+        public void Should_not_accept_negative_token_validation_time() =>
+            Assert.Throws<ArgumentException>(() => new AzureStorageAttachmentConfiguration(new PlainTextConnectionStringProvider("connectionString")).WithSasUri(sasTokenValidationTime: TimeSpan.FromHours(-4)));
+
+        [Fact]
+        public void Should_throw_when_embedded_SAS_option_is_used_with_container_SAS() =>
+            Assert.Throws<Exception>(() => new AzureStorageAttachmentConfiguration(new SharedAccessSignature("?qs")).WithSasUri());
     }
 }
