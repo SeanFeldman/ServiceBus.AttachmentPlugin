@@ -7,7 +7,7 @@
     using Microsoft.WindowsAzure.Storage;
     using Xunit;
 
-    public class When_sending_message : IClassFixture<AzureStorageEmulatorFixture>
+    public class When_sending_message_using_account_key : IClassFixture<AzureStorageEmulatorFixture>
     {
         [Fact]
         public async Task Should_nullify_body_when_body_should_be_sent_as_attachment()
