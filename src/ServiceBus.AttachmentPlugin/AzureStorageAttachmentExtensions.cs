@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Azure.ServiceBus
 {
+    using System.Threading.Tasks;
     using Core;
     using global::ServiceBus.AttachmentPlugin;
 
@@ -12,7 +13,16 @@
         /// <returns>Registered plugin as <see cref="ServiceBusPlugin"/>.</returns>
         public static ServiceBusPlugin RegisterAzureStorageAttachmentPlugin(this ClientEntity client, AzureStorageAttachmentConfiguration configuration)
         {
-            ServiceBusPlugin plugin = new AzureStorageAttachment(configuration);
+            ServiceBusPlugin plugin;
+
+            if (!configuration.UsingContainerSas)
+            {
+                plugin = new AzureStorageAttachment(configuration);
+            }
+            else
+            {
+                plugin = new SasBasedAzureStorageAttachment(configuration);
+            }
 
             client.RegisterPlugin(plugin);
 
@@ -30,6 +40,32 @@
             client.RegisterPlugin(plugin);
 
             return plugin;
+        }
+    }
+
+    internal class SasBasedAzureStorageAttachment : ServiceBusPlugin
+    {
+        readonly AzureStorageAttachmentConfiguration configuration;
+
+        public SasBasedAzureStorageAttachment(AzureStorageAttachmentConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        // TODO: should the name be the same name for all permutations? looks like a bug
+        public override string Name => nameof(SasBasedAzureStorageAttachment);
+
+        // TODO: need to review this. looks like a bug. If plugin is failing, should throw.
+        //public override bool ShouldContinueOnException { get; }
+
+        public override Task<Message> BeforeMessageSend(Message message)
+        {
+            return base.BeforeMessageSend(message);
+        }
+
+        public override Task<Message> AfterMessageReceive(Message message)
+        {
+            return base.AfterMessageReceive(message);
         }
     }
 }

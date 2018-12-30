@@ -26,15 +26,42 @@
         }
 
         [Fact]
-        public void Should_get_back_object_for_receive_only_plugin()
+        public void Should_get_back_AzureStorageAttachment_for_connection_string_based_configuration()
+        {
+            var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
+
+            var azureStorageAttachmentConfiguration = new AzureStorageAttachmentConfiguration("connectionString");
+
+            var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPlugin(client, azureStorageAttachmentConfiguration);
+
+            Assert.Equal(registeredPlugin, client.RegisteredPlugins.First());
+            Assert.IsAssignableFrom<AzureStorageAttachment>(registeredPlugin);
+        }
+
+        [Fact]
+        public void Should_get_back_SasBasedAzureStorageAttachment_for_container_sas_based_configuration()
+        {
+            var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
+
+            var azureStorageAttachmentConfiguration = new AzureStorageAttachmentConfiguration(new SharedAccessSignature("?qs"));
+
+            var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPlugin(client, azureStorageAttachmentConfiguration);
+
+            Assert.Equal(registeredPlugin, client.RegisteredPlugins.First());
+            Assert.IsAssignableFrom<SasBasedAzureStorageAttachment>(registeredPlugin);
+        }
+
+        [Fact]
+        public void Should_get_back_ReceiveOnlyAzureStorageAttachment_for_receive_only_plugin()
         {
             var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
 
             var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPluginForReceivingOnly(client, "mySasUriProperty");
 
             Assert.Equal(registeredPlugin, client.RegisteredPlugins.First());
-            Assert.IsAssignableFrom<ServiceBusPlugin>(registeredPlugin);
+            Assert.IsAssignableFrom<ReceiveOnlyAzureStorageAttachment>(registeredPlugin);
         }
+
 
         class FakeClientEntity : ClientEntity
         {
