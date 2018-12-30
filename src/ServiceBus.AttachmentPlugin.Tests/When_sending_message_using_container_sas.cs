@@ -9,6 +9,13 @@
 
     public class When_sending_message_using_container_sas : IClassFixture<AzureStorageEmulatorFixture>
     {
+        readonly AzureStorageEmulatorFixture fixture;
+
+        public When_sending_message_using_container_sas(AzureStorageEmulatorFixture fixture)
+        {
+            this.fixture = fixture;
+        }
+
         [Fact]
         public async Task Should_nullify_body_when_body_should_be_sent_as_attachment()
         {
@@ -18,8 +25,8 @@
             {
                 MessageId = Guid.NewGuid().ToString(),
             };
-            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName:"attachments", messagePropertyToIdentifyAttachmentBlob:"attachment-id"));
+            var sas = new SharedAccessSignature(fixture.GetContainerUri("attachments"), await fixture.GetContainerSasQueryString("attachments"));
+            var plugin = new SasBasedAzureStorageAttachment(new AzureStorageAttachmentConfiguration(sas, messagePropertyToIdentifyAttachmentBlob:"attachment-id"));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.Null(result.Body);

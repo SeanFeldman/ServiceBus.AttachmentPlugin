@@ -39,7 +39,7 @@
             }
 
             var blobName = Guid.NewGuid().ToString();
-            var uri = new Uri($"{configuration.SharedAccessSignature.ContainerUri}/{blobName}?{configuration.SharedAccessSignature.QueryString}");
+            var uri = new Uri($"{configuration.SharedAccessSignature.ContainerUri}/{blobName}{configuration.SharedAccessSignature.QueryString}");
             var blob = new CloudBlockBlob(uri);
 
             SetValidMessageId(blob, message.MessageId);
