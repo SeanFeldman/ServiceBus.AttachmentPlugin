@@ -12,7 +12,7 @@
     class AzureStorageAttachment : ServiceBusPlugin, IDisposable
     {
         SemaphoreSlim semaphore= new SemaphoreSlim(1);
-        const string MessageId = "_MessageId";
+        internal const string MessageId = "_MessageId";
         internal const string ValidUntilUtc = "_ValidUntilUtc";
         internal const string DateFormat = "yyyy-MM-dd HH:mm:ss:ffffff Z";
 
