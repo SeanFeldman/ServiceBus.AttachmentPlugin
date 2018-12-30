@@ -7,7 +7,7 @@
     using Microsoft.WindowsAzure.Storage;
     using Xunit;
 
-    public class When_sending_message_using_account_key : IClassFixture<AzureStorageEmulatorFixture>
+    public class When_sending_message_using_container_sas : IClassFixture<AzureStorageEmulatorFixture>
     {
         [Fact]
         public async Task Should_nullify_body_when_body_should_be_sent_as_attachment()
@@ -73,7 +73,7 @@
         }
 
         [Fact]
-        public async Task Should_receive_it()
+        public async Task Should_receive_it_using_container_sas()
         {
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
@@ -128,6 +128,12 @@
             Assert.Null(result.Body);
             Assert.True(message.UserProperties.ContainsKey("attachment-id"));
             Assert.False(message.UserProperties.ContainsKey("$attachment.sas.uri"));
+        }
+
+        [Fact]
+        public void Should_be_able_to_receive_using_storage_connection_string()
+        {
+            Assert.True(false, "not implemented yet");
         }
     }
 }
