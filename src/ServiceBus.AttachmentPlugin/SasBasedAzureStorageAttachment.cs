@@ -98,7 +98,7 @@
             }
 
             var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
-            var uri = new Uri($"{configuration.SharedAccessSignature.ContainerUri}/{blobName}?{configuration.SharedAccessSignature.QueryString}");
+            var uri = new Uri($"{configuration.SharedAccessSignature.ContainerUri}/{blobName}{configuration.SharedAccessSignature.QueryString}");
             var blob = new CloudBlockBlob(uri);
 
             try
