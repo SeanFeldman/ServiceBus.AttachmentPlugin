@@ -118,7 +118,6 @@
             Assert.Equal(blobId, reprocessedMessage.UserProperties["attachment-id"]);
         }
 
-
         [Fact]
         public async Task Should_not_set_embedded_sas_uri_by_default()
         {

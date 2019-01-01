@@ -62,7 +62,6 @@
             Assert.IsAssignableFrom<ReceiveOnlyAzureStorageAttachment>(registeredPlugin);
         }
 
-
         class FakeClientEntity : ClientEntity
         {
             public FakeClientEntity(string clientTypeName, string postfix, RetryPolicy retryPolicy) : base(clientTypeName, postfix, retryPolicy)
