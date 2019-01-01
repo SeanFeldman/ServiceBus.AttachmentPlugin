@@ -100,12 +100,13 @@
             }
             catch (StorageException exception)
             {
-                if (exception.RequestInformation.HttpStatusCode == (int)HttpStatusCode.Forbidden)
-                {
-                    Console.WriteLine("forbidden");
-                }
-                Console.WriteLine(exception.RequestInformation.ExtendedErrorInformation.ErrorCode);
-                Console.WriteLine(exception.Message);
+                // TODO: should Forbidden be handled differently?
+//                if (exception.RequestInformation.HttpStatusCode == (int)HttpStatusCode.Forbidden)
+//                {
+//                    Console.WriteLine("forbidden");
+//                }
+//                Console.WriteLine(exception.RequestInformation.ExtendedErrorInformation.ErrorCode);
+//                Console.WriteLine(exception.Message);
 
                 // TODO: different exception is needed here - the sas uri should be reported back
                 throw new Exception($"Blob with name '{blob.Name}' under container '{blob.Container.Name}' cannot be found."
