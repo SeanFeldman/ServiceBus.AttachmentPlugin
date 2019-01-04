@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Azure.ServiceBus
 {
     using System;
+    using WindowsAzure.Storage.Auth;
 
     /// <summary>Runtime configuration for Azure Storage Attachment plugin.</summary>
     public class AzureStorageAttachmentConfiguration
@@ -21,16 +22,21 @@
 
         /// <summary>Constructor to create new configuration object.</summary>
         /// <remarks>Container name is not required as it's included in the SharedAccessSignature.</remarks>
-        /// <param name="sharedAccessSignature"></param>
+        /// <param name="storageCredentials"></param>
+        /// <param name="accountUri"></param>
+        /// <param name="containerName"></param>
         /// <param name="messagePropertyToIdentifyAttachmentBlob"></param>
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
         public AzureStorageAttachmentConfiguration(
-            SharedAccessSignature sharedAccessSignature,
+            StorageCredentials storageCredentials,
+            string accountUri,
+            string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
             Func<Message, bool> messageMaxSizeReachedCriteria = null)
-            : this(new PlainTextConnectionStringProvider(sharedAccessSignature.QueryString), null, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
+            : this(new PlainTextConnectionStringProvider(storageCredentials.SASToken), containerName, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
         {
-            this.SharedAccessSignature = sharedAccessSignature;
+            StorageCredentials = storageCredentials;
+            AccountUri = accountUri;
         }
 
         /// <summary>Constructor to create new configuration object.</summary>
@@ -83,8 +89,10 @@
 
         internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
 
-        internal SharedAccessSignature SharedAccessSignature { get; }
+        internal StorageCredentials StorageCredentials { get; }
 
-        internal bool UsingContainerSas => SharedAccessSignature != null;
+        internal bool UsingContainerSas => StorageCredentials != null;
+
+        internal string AccountUri { get; }
     }
 }

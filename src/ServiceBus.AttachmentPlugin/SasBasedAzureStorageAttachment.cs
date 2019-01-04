@@ -39,7 +39,7 @@
             }
 
             var blobName = Guid.NewGuid().ToString();
-            var uri = new Uri($"{configuration.SharedAccessSignature.ContainerUri}/{blobName}{configuration.SharedAccessSignature.QueryString}");
+            var uri = new Uri($"{configuration.AccountUri}/{configuration.ContainerName}/{blobName}{configuration.StorageCredentials.SASToken}");
             var blob = new CloudBlockBlob(uri);
 
             SetValidMessageId(blob, message.MessageId);
@@ -91,7 +91,7 @@
             }
 
             var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
-            var uri = new Uri($"{configuration.SharedAccessSignature.ContainerUri}/{blobName}{configuration.SharedAccessSignature.QueryString}");
+            var uri = new Uri($"{configuration.AccountUri}/{configuration.ContainerName}/{blobName}{configuration.StorageCredentials.SASToken}");
             var blob = new CloudBlockBlob(uri);
 
             try
@@ -109,9 +109,10 @@
                 Console.WriteLine(exception.Message);
 
                 // TODO: different exception is needed here - the sas uri should be reported back
-                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.Container.Name}' cannot be found."
+                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.Container.Name}' account '{configuration.AccountUri}' cannot be found."
                     + $" Check {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.ContainerName)} or"
-                    + $" {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.MessagePropertyToIdentifyAttachmentBlob)} for correct values.", exception);
+                    + $" {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.MessagePropertyToIdentifyAttachmentBlob)} for correct values."
+                    + " Ensure SAS token is valid.", exception);
             }
             var fileByteLength = blob.Properties.Length;
             var bytes = new byte[fileByteLength];

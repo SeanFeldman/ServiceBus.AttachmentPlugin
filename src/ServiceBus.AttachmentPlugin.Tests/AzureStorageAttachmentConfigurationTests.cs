@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
+    using Microsoft.WindowsAzure.Storage.Auth;
     using Xunit;
 
     public class AzureStorageAttachmentConfigurationTests
@@ -26,6 +27,6 @@
 
         [Fact]
         public void Should_throw_when_embedded_SAS_option_is_used_with_container_SAS() =>
-            Assert.Throws<Exception>(() => new AzureStorageAttachmentConfiguration(new SharedAccessSignature("https://container", "?qs")).WithSasUri());
+            Assert.Throws<Exception>(() => new AzureStorageAttachmentConfiguration(new StorageCredentials("?sv=2018-03-28&sr=c&sig=5XxlRKoP4yEmibM2HhJlQuV7MG3rYgQXD89mLpNp%2F24%3D"), "devstoreaccount1").WithSasUri());
     }
 }

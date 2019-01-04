@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Auth;
     using Xunit;
 
     public class When_sending_message_using_connection_string : IClassFixture<AzureStorageEmulatorFixture>
@@ -150,8 +151,8 @@
 
             Assert.Null(message.Body);
 
-            var sas = new SharedAccessSignature(fixture.GetContainerUri("attachments"), await fixture.GetContainerSasQueryString("attachments"));
-            var receiveConfiguration = new AzureStorageAttachmentConfiguration(sas, messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+            var credentials = new StorageCredentials(await fixture.GetContainerSasQueryString("attachments"));
+            var receiveConfiguration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobStorageUri(), messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
             var receivePlugin = new SasBasedAzureStorageAttachment(receiveConfiguration);
 

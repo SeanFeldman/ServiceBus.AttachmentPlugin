@@ -4,7 +4,7 @@ namespace Microsoft.Azure.ServiceBus
     public class AzureStorageAttachmentConfiguration
     {
         public AzureStorageAttachmentConfiguration(string connectionString, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
-        public AzureStorageAttachmentConfiguration(Microsoft.Azure.ServiceBus.SharedAccessSignature sharedAccessSignature, string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
+        public AzureStorageAttachmentConfiguration(Microsoft.WindowsAzure.Storage.Auth.StorageCredentials storageCredentials, string accountUri, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
         public AzureStorageAttachmentConfiguration(Microsoft.Azure.ServiceBus.IProvideStorageConnectionString connectionStringProvider, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
     }
     public class static AzureStorageAttachmentConfigurationExtensions
@@ -24,11 +24,5 @@ namespace Microsoft.Azure.ServiceBus
     {
         public PlainTextConnectionStringProvider(string connectionString) { }
         public System.Threading.Tasks.Task<string> GetConnectionString() { }
-    }
-    public class SharedAccessSignature
-    {
-        public SharedAccessSignature(string containerUri, string queryString) { }
-        public string ContainerUri { get; }
-        public string QueryString { get; }
     }
 }

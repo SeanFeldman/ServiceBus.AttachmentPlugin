@@ -41,9 +41,9 @@
             }
         }
 
-        public string GetContainerUri(string containerName)
+        public string GetBlobStorageUri()
         {
-            return $"{CloudStorageAccount.DevelopmentStorageAccount.BlobStorageUri.PrimaryUri}/{containerName}";
+            return CloudStorageAccount.DevelopmentStorageAccount.BlobStorageUri.PrimaryUri.ToString();
         }
 
         public async Task<string> GetContainerSasQueryString(string containerName)
