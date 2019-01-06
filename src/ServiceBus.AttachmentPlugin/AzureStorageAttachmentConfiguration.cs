@@ -41,22 +41,21 @@
             Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
 
             StorageCredentials = storageCredentials;
-            BlobEndpoint = new Uri(blobEndpoint);
-
-            // Emulator blob endpoint doesn't end with slash
-            // TODO: remove duplication
-            if (!blobEndpoint.EndsWith("/", StringComparison.OrdinalIgnoreCase))
-            {
-                BlobEndpoint = new Uri(blobEndpoint + "/");
-            }
-            else
-            {
-                BlobEndpoint = new Uri(blobEndpoint);
-            }
-
+            BlobEndpoint = EnsureBlobEndpointEndsWithSlash(blobEndpoint);
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
+        }
+
+        static Uri EnsureBlobEndpointEndsWithSlash(string blobEndpoint)
+        {
+            if (blobEndpoint.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+            {
+                return new Uri(blobEndpoint);
+            }
+
+            // Emulator blob endpoint doesn't end with slash
+            return new Uri(blobEndpoint + "/");
         }
 
         /// <summary>Constructor to create new configuration object.</summary>
@@ -79,19 +78,7 @@
 
             ConnectionStringProvider = connectionStringProvider;
             StorageCredentials = account.Credentials;
-
-            var blobEndpointAsString = account.BlobEndpoint.ToString();
-            // Emulator blob endpoint doesn't end with slash
-            // TODO: remove duplication
-            if (!blobEndpointAsString.EndsWith("/", StringComparison.OrdinalIgnoreCase))
-            {
-                BlobEndpoint = new Uri(blobEndpointAsString + "/");
-            }
-            else
-            {
-                BlobEndpoint = account.BlobEndpoint;
-            }
-
+            BlobEndpoint = EnsureBlobEndpointEndsWithSlash(account.BlobEndpoint.ToString());
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
@@ -132,6 +119,6 @@
 
         internal bool UsingSas => StorageCredentials.IsSAS;
 
-        internal Uri BlobEndpoint { get; }
+        internal Uri BlobEndpoint { get; set; }
     }
 }
