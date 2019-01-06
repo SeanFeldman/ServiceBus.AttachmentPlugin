@@ -154,7 +154,7 @@
             var credentials = new StorageCredentials(await fixture.GetContainerSasQueryString("attachments"));
             var receiveConfiguration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobStorageUri(), messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
-            var receivePlugin = new SasBasedAzureStorageAttachment(receiveConfiguration);
+            var receivePlugin = new AzureStorageAttachment(receiveConfiguration);
 
             var receivedMessage = await receivePlugin.AfterMessageReceive(message);
 

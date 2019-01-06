@@ -14,13 +14,13 @@
         {
             ServiceBusPlugin plugin;
 
-            if (!configuration.UsingContainerSas)
+            if (!configuration.UsingSas)
             {
                 plugin = new AzureStorageAttachment(configuration);
             }
             else
             {
-                plugin = new SasBasedAzureStorageAttachment(configuration);
+                plugin = new AzureStorageAttachment(configuration);
             }
 
             client.RegisterPlugin(plugin);

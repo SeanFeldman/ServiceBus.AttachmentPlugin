@@ -22,7 +22,7 @@
             string messagePropertyToIdentifySasUri = DefaultMessagePropertyToIdentitySasUri,
             TimeSpan? sasTokenValidationTime = null)
         {
-            if (azureStorageAttachmentConfiguration.UsingContainerSas)
+            if (azureStorageAttachmentConfiguration.UsingSas)
             {
                 throw new Exception("Invalid configuration: .WithSasUri() requires account key and cannot be used with container Shared Access Signature.");
             }
@@ -33,8 +33,8 @@
             }
             Guard.AgainstNegativeOrZeroTimeSpan(nameof(sasTokenValidationTime), sasTokenValidationTime);
 
-            azureStorageAttachmentConfiguration.MessagePropertyForSasUri = messagePropertyToIdentifySasUri;
-            azureStorageAttachmentConfiguration.SasTokenValidationTime = sasTokenValidationTime.Value;
+            azureStorageAttachmentConfiguration.MessagePropertyForBlobSasUri = messagePropertyToIdentifySasUri;
+            azureStorageAttachmentConfiguration.BlobSasTokenValidationTime = sasTokenValidationTime.Value;
 
             return azureStorageAttachmentConfiguration;
         }

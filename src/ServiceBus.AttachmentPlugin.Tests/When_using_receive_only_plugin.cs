@@ -11,7 +11,7 @@ namespace ServiceBus.AttachmentPlugin.Tests
     public class When_using_receive_only_plugin : IClassFixture<AzureStorageEmulatorFixture>
     {
         [Fact]
-        public async Task Should_download_attachment_using_provided_from_sas_uri()
+        public async Task Should_download_attachment_using_provided_blob_sas_uri()
         {
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);

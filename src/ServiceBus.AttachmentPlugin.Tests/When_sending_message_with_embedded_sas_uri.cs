@@ -6,7 +6,7 @@
     using Microsoft.Azure.ServiceBus;
     using Xunit;
 
-    public class When_sending_message_with_embedded_sas_uri : IClassFixture<AzureStorageEmulatorFixture>
+    public class When_sending_message_with_embedded_block_sas_uri : IClassFixture<AzureStorageEmulatorFixture>
     {
         [Fact]
         public async Task Should_set_sas_uri_when_specified()

@@ -9,17 +9,14 @@
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
-    class AzureStorageAttachment : ServiceBusPlugin, IDisposable
+    class AzureStorageAttachment : ServiceBusPlugin
     {
-        SemaphoreSlim semaphore= new SemaphoreSlim(1);
+        SemaphoreSlim semaphore = new SemaphoreSlim(1);
         internal const string MessageId = "_MessageId";
         internal const string ValidUntilUtc = "_ValidUntilUtc";
         internal const string DateFormat = "yyyy-MM-dd HH:mm:ss:ffffff Z";
 
-        CloudBlobClient client;
         AzureStorageAttachmentConfiguration configuration;
-        int disposeSignaled;
-        bool disposed;
 
         public AzureStorageAttachment(AzureStorageAttachmentConfiguration configuration)
         {
@@ -33,8 +30,6 @@
 
         public override async Task<Message> BeforeMessageSend(Message message)
         {
-            ThrowIfDisposed();
-
             if (AttachmentBlobAssociated(message.UserProperties))
             {
                 return message;
@@ -45,62 +40,38 @@
                 return message;
             }
 
-            await InitializeClient().ConfigureAwait(false);
+            var containerUri = new Uri($"{configuration.BlobEndpoint}{configuration.ContainerName}");
+            var container = new CloudBlobContainer(containerUri, configuration.StorageCredentials);
 
-            var container = client.GetContainerReference(configuration.ContainerName);
-
-            if (! await container.ExistsAsync().ConfigureAwait(false))
+            if (configuration.StorageCredentials.IsSharedKey && !await container.ExistsAsync().ConfigureAwait(false))
             {
                 await container.CreateIfNotExistsAsync().ConfigureAwait(false);
             }
-            var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
+            var blobUri = new Uri($"{containerUri}/{Guid.NewGuid().ToString()}");
+            var blob = new CloudBlockBlob(blobUri, configuration.StorageCredentials);
 
             SetValidMessageId(blob, message.MessageId);
             SetValidUntil(blob, message.TimeToLive);
 
-            await blob.UploadFromByteArrayAsync(message.Body,0, message.Body.Length).ConfigureAwait(false);
+            await blob.UploadFromByteArrayAsync(message.Body, 0, message.Body.Length).ConfigureAwait(false);
 
             message.Body = null;
             message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob] = blob.Name;
 
-            if (!configuration.SasTokenValidationTime.HasValue)
+            if (!configuration.BlobSasTokenValidationTime.HasValue)
             {
                 return message;
             }
 
-            var sasUri = TokenGenerator.GetBlobSasUri(blob, configuration.SasTokenValidationTime.Value);
-            message.UserProperties[configuration.MessagePropertyForSasUri] = sasUri;
+            // TODO: only possible if connection string is used
+            // configuration.StorageCredentials.IsSharedKey
+            var sasUri = TokenGenerator.GetBlobSasUri(blob, configuration.BlobSasTokenValidationTime.Value);
+            message.UserProperties[configuration.MessagePropertyForBlobSasUri] = sasUri;
             return message;
         }
 
         bool AttachmentBlobAssociated(IDictionary<string, object> messageUserProperties) =>
             messageUserProperties.TryGetValue(configuration.MessagePropertyToIdentifyAttachmentBlob, out var _);
-
-        async Task InitializeClient()
-        {
-            if (client != null)
-            {
-                return;
-            }
-
-            await semaphore.WaitAsync().ConfigureAwait(false);
-
-            if (client != null)
-            {
-                return;
-            }
-
-            try
-            {
-                var connectionString = await configuration.ConnectionStringProvider.GetConnectionString().ConfigureAwait(false);
-                var account = CloudStorageAccount.Parse(connectionString);
-                client = account.CreateCloudBlobClient();
-            }
-            finally
-            {
-                semaphore.Release();
-            }
-        }
 
         static void SetValidMessageId(ICloudBlob blob, string messageId)
         {
@@ -123,8 +94,6 @@
 
         public override async Task<Message> AfterMessageReceive(Message message)
         {
-            ThrowIfDisposed();
-
             var userProperties = message.UserProperties;
 
             if (!userProperties.ContainsKey(configuration.MessagePropertyToIdentifyAttachmentBlob))
@@ -134,22 +103,15 @@
 
             CloudBlockBlob blob;
 
-            if (configuration.MessagePropertyForSasUri != null && userProperties.ContainsKey(configuration.MessagePropertyForSasUri))
+            if (configuration.MessagePropertyForBlobSasUri != null && userProperties.ContainsKey(configuration.MessagePropertyForBlobSasUri))
             {
-                blob = new CloudBlockBlob(new Uri(userProperties[configuration.MessagePropertyForSasUri].ToString()));
+                blob = new CloudBlockBlob(new Uri(userProperties[configuration.MessagePropertyForBlobSasUri].ToString()));
             }
             else
             {
-                await InitializeClient().ConfigureAwait(false);
-
-                var container = client.GetContainerReference(configuration.ContainerName);
-
-                if (! await container.ExistsAsync().ConfigureAwait(false))
-                {
-                    await container.CreateIfNotExistsAsync().ConfigureAwait(false);
-                }
                 var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
-                blob = container.GetBlockBlobReference(blobName);
+                var blobUri = new Uri($"{configuration.BlobEndpoint}{configuration.ContainerName}/{blobName}");
+                blob = new CloudBlockBlob(blobUri, configuration.StorageCredentials);
             }
 
             try
@@ -167,26 +129,6 @@
             await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
             message.Body = bytes;
             return message;
-        }
-
-        void ThrowIfDisposed()
-        {
-            if (disposed)
-            {
-                throw new ObjectDisposedException($"{nameof(AzureStorageAttachment)} has been already disposed.");
-            }
-        }
-
-        public void Dispose()
-        {
-            if (Interlocked.Exchange(ref disposeSignaled, 1) != 0)
-            {
-                return;
-            }
-
-            semaphore?.Dispose();
-
-            disposed = true;
         }
     }
 }

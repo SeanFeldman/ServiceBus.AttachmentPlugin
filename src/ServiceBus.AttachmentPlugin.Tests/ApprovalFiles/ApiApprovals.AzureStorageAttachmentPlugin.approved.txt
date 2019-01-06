@@ -4,7 +4,7 @@ namespace Microsoft.Azure.ServiceBus
     public class AzureStorageAttachmentConfiguration
     {
         public AzureStorageAttachmentConfiguration(string connectionString, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
-        public AzureStorageAttachmentConfiguration(Microsoft.WindowsAzure.Storage.Auth.StorageCredentials storageCredentials, string accountUri, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
+        public AzureStorageAttachmentConfiguration(Microsoft.WindowsAzure.Storage.Auth.StorageCredentials storageCredentials, string blobEndpoint, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
         public AzureStorageAttachmentConfiguration(Microsoft.Azure.ServiceBus.IProvideStorageConnectionString connectionStringProvider, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
     }
     public class static AzureStorageAttachmentConfigurationExtensions
