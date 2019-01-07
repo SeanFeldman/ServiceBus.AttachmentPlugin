@@ -43,10 +43,17 @@
             var containerUri = new Uri($"{configuration.BlobEndpoint}{configuration.ContainerName}");
             var container = new CloudBlobContainer(containerUri, configuration.StorageCredentials);
 
-            // Will only work for Shared Key or Account SAS. For Container SAS will throw an exception.
-            if (! await container.ExistsAsync().ConfigureAwait(false))
+            try
             {
-                await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+                // Will only work for Shared Key or Account SAS. For Container SAS will throw an exception.
+                if (! await container.ExistsAsync().ConfigureAwait(false))
+                {
+                    await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+                }
+            }
+            catch (StorageException)
+            {
+                // swallow in case a container SAS is used
             }
 
             var blobUri = new Uri($"{containerUri}/{Guid.NewGuid().ToString()}");

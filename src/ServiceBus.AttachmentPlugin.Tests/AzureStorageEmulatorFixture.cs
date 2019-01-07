@@ -41,12 +41,12 @@
             }
         }
 
-        public string GetBlobStorageUri()
+        public string GetBlobEndpoint()
         {
             return CloudStorageAccount.DevelopmentStorageAccount.BlobEndpoint.ToString();
         }
 
-        public async Task<string> GetContainerSasQueryString(string containerName)
+        public async Task<string> GetContainerSas(string containerName)
         {
             // get container
             var blobClient = CloudStorageAccount.DevelopmentStorageAccount.CreateCloudBlobClient();
@@ -79,6 +79,25 @@
 
             // create SAS with policy
             return container.GetSharedAccessSignature(null, accessPolicyId);
+        }
+
+        public async Task CreateContainer(string containerName)
+        {
+            var containerUri = new Uri($"{CloudStorageAccount.DevelopmentStorageAccount.BlobEndpoint}/{containerName}");
+            var container = new CloudBlobContainer(containerUri, CloudStorageAccount.DevelopmentStorageAccount.Credentials);
+            if (!await container.ExistsAsync())
+            {
+                await container.CreateIfNotExistsAsync();
+            }
+        }
+        public async Task DeleteContainer(string containerName)
+        {
+            var containerUri = new Uri($"{CloudStorageAccount.DevelopmentStorageAccount.BlobEndpoint}/{containerName}");
+            var container = new CloudBlobContainer(containerUri, CloudStorageAccount.DevelopmentStorageAccount.Credentials);
+            if (await container.ExistsAsync())
+            {
+                await container.DeleteIfExistsAsync();
+            }
         }
     }
 }

@@ -151,8 +151,8 @@
 
             Assert.Null(message.Body);
 
-            var credentials = new StorageCredentials(await fixture.GetContainerSasQueryString("attachments"));
-            var receiveConfiguration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobStorageUri(), messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
+            var receiveConfiguration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint(), messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
             var receivePlugin = new AzureStorageAttachment(receiveConfiguration);
 
@@ -160,5 +160,27 @@
 
             Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
         }
+
+        [Fact]
+        public async Task Should_be_able_to_send_if_container_was_not_found()
+        {
+            await fixture.DeleteContainer("attachments");
+
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes);
+            var configuration = new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+
+            var plugin = new AzureStorageAttachment(configuration);
+            await plugin.BeforeMessageSend(message);
+
+            Assert.Null(message.Body);
+
+            var receivedMessage = await plugin.AfterMessageReceive(message);
+
+            Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
+        }
+
     }
 }
