@@ -11,10 +11,14 @@
     public class When_sending_message_using_connection_string : IClassFixture<AzureStorageEmulatorFixture>
     {
         readonly AzureStorageEmulatorFixture fixture;
+        string containerSas;
+        string blobEndpoint;
 
         public When_sending_message_using_connection_string(AzureStorageEmulatorFixture fixture)
         {
             this.fixture = fixture;
+            containerSas = fixture.GetContainerSas("attachments").GetAwaiter().GetResult();
+            blobEndpoint = fixture.GetBlobEndpoint();
         }
 
         [Fact]
@@ -151,8 +155,8 @@
 
             Assert.Null(message.Body);
 
-            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
-            var receiveConfiguration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint(), messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+            var credentials = new StorageCredentials(containerSas);
+            var receiveConfiguration = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint, messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
             var receivePlugin = new AzureStorageAttachment(receiveConfiguration);
 
@@ -165,6 +169,7 @@
         public async Task Should_be_able_to_send_if_container_was_not_found()
         {
             await fixture.DeleteContainer("attachments");
+            await Task.Delay(TimeSpan.FromSeconds(10));
 
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
@@ -181,6 +186,5 @@
 
             Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
         }
-
     }
 }
