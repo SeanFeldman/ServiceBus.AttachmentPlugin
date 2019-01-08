@@ -9,6 +9,9 @@ namespace Microsoft.Azure.ServiceBus
     }
     public class static AzureStorageAttachmentConfigurationExtensions
     {
+        public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration WithBlobSasUri(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, string messagePropertyToIdentifySasUri = "$attachment.sas.uri", System.Nullable<System.TimeSpan> sasTokenValidationTime = null) { }
+        [System.ObsoleteAttribute("Will be deprecated in version 5. Use replacement API \'.WithBlobSasUri()\' instead." +
+            "", false)]
         public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration WithSasUri(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, string messagePropertyToIdentifySasUri = "$attachment.sas.uri", System.Nullable<System.TimeSpan> sasTokenValidationTime = null) { }
     }
     public class static AzureStorageAttachmentExtensions

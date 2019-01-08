@@ -14,7 +14,7 @@
         public async Task Should_apply_defaults_for_missing_arguments()
         {
             var configuration = new AzureStorageAttachmentConfiguration(new PlainTextConnectionStringProvider(ConnectionString))
-                .WithSasUri();
+                .WithBlobSasUri();
             Assert.Equal(ConnectionString, await configuration.ConnectionStringProvider.GetConnectionString());
             Assert.NotEmpty(configuration.ContainerName);
             Assert.NotEmpty(configuration.MessagePropertyToIdentifyAttachmentBlob);
@@ -26,11 +26,11 @@
         [Fact]
         public void Should_not_accept_negative_token_validation_time() =>
             Assert.Throws<ArgumentException>(() => new AzureStorageAttachmentConfiguration(new PlainTextConnectionStringProvider(ConnectionString))
-                .WithSasUri(sasTokenValidationTime: TimeSpan.FromHours(-4)));
+                .WithBlobSasUri(sasTokenValidationTime: TimeSpan.FromHours(-4)));
 
         [Fact]
         public void Should_throw_when_embedded_SAS_option_is_used_with_container_SAS() =>
             Assert.Throws<Exception>(() => new AzureStorageAttachmentConfiguration(
-                new StorageCredentials("?sv=2018-03-28&sr=c&sig=5XxlRKoP4yEmibM2HhJlQuV7MG3rYgQXD89mLpNp%2F24%3D"), "http://127.0.0.1:10000/devstoreaccount1", "devstoreaccount1").WithSasUri());
+                new StorageCredentials("?sv=2018-03-28&sr=c&sig=5XxlRKoP4yEmibM2HhJlQuV7MG3rYgQXD89mLpNp%2F24%3D"), "http://127.0.0.1:10000/devstoreaccount1", "devstoreaccount1").WithBlobSasUri());
     }
 }

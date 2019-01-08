@@ -24,7 +24,7 @@ namespace ServiceBus.AttachmentPlugin.Tests
                     containerName: "attachments",
                     messagePropertyToIdentifyAttachmentBlob:
                     "attachment-id")
-                    .WithSasUri(
+                    .WithBlobSasUri(
                         sasTokenValidationTime: TimeSpan.FromHours(4),
                         messagePropertyToIdentifySasUri: "mySasUriProperty"));
             await plugin.BeforeMessageSend(message);
