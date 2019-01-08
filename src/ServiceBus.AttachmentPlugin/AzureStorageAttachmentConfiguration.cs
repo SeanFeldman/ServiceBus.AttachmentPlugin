@@ -119,6 +119,6 @@
 
         internal bool UsingSas => StorageCredentials.IsSAS;
 
-        internal Uri BlobEndpoint { get; set; }
+        internal Uri BlobEndpoint { get; }
     }
 }
