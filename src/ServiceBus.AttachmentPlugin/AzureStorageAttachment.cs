@@ -22,6 +22,8 @@
             this.configuration = configuration;
         }
 
+        public override bool ShouldContinueOnException { get; } = false;
+
         public override string Name => nameof(AzureStorageAttachment);
 
         internal static Func<DateTime> DateTimeFunc = () => DateTime.UtcNow;

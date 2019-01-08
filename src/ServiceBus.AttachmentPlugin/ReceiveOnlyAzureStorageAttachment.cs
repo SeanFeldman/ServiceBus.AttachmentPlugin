@@ -16,6 +16,8 @@
             this.messagePropertyToIdentifySasUri = messagePropertyToIdentifySasUri;
         }
 
+        public override bool ShouldContinueOnException { get; } = false;
+
         public override string Name { get; } = nameof(AzureStorageAttachment);
 
         public override async Task<Message> AfterMessageReceive(Message message)
