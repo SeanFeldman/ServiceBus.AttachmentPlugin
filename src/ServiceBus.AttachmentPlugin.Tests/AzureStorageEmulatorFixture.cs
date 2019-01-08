@@ -32,12 +32,12 @@
                 var endpoints = properties.GetActiveTcpListeners();
                 emulatorStarted = endpoints.Any(x => x.Port == 10000 && Equals(x.Address, IPAddress.Loopback));
                 Console.WriteLine("waiting for emulator to start...");
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             } while (emulatorStarted == false && stopwatch.Elapsed < TimeSpan.FromSeconds(60));
 
             if (emulatorStarted == false)
             {
-                throw new Exception("Storage emulator failed to start after 10 seconds.");
+                throw new Exception("Storage emulator failed to start after 60 seconds.");
             }
         }
 
