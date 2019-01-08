@@ -32,7 +32,7 @@
                 var endpoints = properties.GetActiveTcpListeners();
                 emulatorStarted = endpoints.Any(x => x.Port == 10000 && Equals(x.Address, IPAddress.Loopback));
                 Console.WriteLine("waiting for emulator to start...");
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
             } while (emulatorStarted == false && stopwatch.Elapsed < TimeSpan.FromSeconds(60));
 
             if (emulatorStarted == false)
