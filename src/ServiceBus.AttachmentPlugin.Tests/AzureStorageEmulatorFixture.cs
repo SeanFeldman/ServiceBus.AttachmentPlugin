@@ -70,6 +70,7 @@
                     new SharedAccessBlobPolicy
                     {
                         Permissions = SharedAccessBlobPermissions.Add | SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write,
+                        SharedAccessStartTime = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromMinutes(1)),
                         SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddDays(1)
                     }
                 }}
