@@ -56,17 +56,15 @@
                 await container.CreateIfNotExistsAsync();
             }
 
+            await container.FetchAttributesAsync();
+
             // create access policy and store it
-            var permissions = await container.GetPermissionsAsync();
+            var permissions = new BlobContainerPermissions
+            {
+                PublicAccess = BlobContainerPublicAccessType.Off
+            };
 
             var accessPolicyId = "test-policy";
-
-            // if already exists, delete firs and re-create
-            if (permissions.SharedAccessPolicies.ContainsKey(accessPolicyId))
-            {
-                permissions.SharedAccessPolicies.Remove(accessPolicyId);
-                await container.SetPermissionsAsync(permissions);
-            }
 
             var accessPolicy = new SharedAccessBlobPolicy
             {
