@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Core;
@@ -11,7 +10,6 @@
 
     class AzureStorageAttachment : ServiceBusPlugin
     {
-        SemaphoreSlim semaphore = new SemaphoreSlim(1);
         internal const string MessageId = "_MessageId";
         internal const string ValidUntilUtc = "_ValidUntilUtc";
         internal const string DateFormat = "yyyy-MM-dd HH:mm:ss:ffffff Z";
