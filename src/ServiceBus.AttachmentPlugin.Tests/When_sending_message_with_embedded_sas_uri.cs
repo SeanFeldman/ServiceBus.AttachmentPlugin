@@ -6,9 +6,8 @@
     using Microsoft.Azure.ServiceBus;
     using Xunit;
 
-    public class When_sending_message_with_sas_uri : IClassFixture<AzureStorageEmulatorFixture>
+    public class When_sending_message_with_embedded_block_sas_uri : IClassFixture<AzureStorageEmulatorFixture>
     {
-
         [Fact]
         public async Task Should_set_sas_uri_when_specified()
         {
@@ -20,7 +19,7 @@
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
                 connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id")
-                .WithSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty"));
+                .WithBlobSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty"));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.Null(result.Body);

@@ -4,10 +4,14 @@ namespace Microsoft.Azure.ServiceBus
     public class AzureStorageAttachmentConfiguration
     {
         public AzureStorageAttachmentConfiguration(string connectionString, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
+        public AzureStorageAttachmentConfiguration(Microsoft.WindowsAzure.Storage.Auth.StorageCredentials storageCredentials, string blobEndpoint, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
         public AzureStorageAttachmentConfiguration(Microsoft.Azure.ServiceBus.IProvideStorageConnectionString connectionStringProvider, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool> messageMaxSizeReachedCriteria = null) { }
     }
     public class static AzureStorageAttachmentConfigurationExtensions
     {
+        public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration WithBlobSasUri(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, string messagePropertyToIdentifySasUri = "$attachment.sas.uri", System.Nullable<System.TimeSpan> sasTokenValidationTime = null) { }
+        [System.ObsoleteAttribute("Will be deprecated in version 5. Use replacement API \'.WithBlobSasUri()\' instead." +
+            "", false)]
         public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration WithSasUri(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, string messagePropertyToIdentifySasUri = "$attachment.sas.uri", System.Nullable<System.TimeSpan> sasTokenValidationTime = null) { }
     }
     public class static AzureStorageAttachmentExtensions
