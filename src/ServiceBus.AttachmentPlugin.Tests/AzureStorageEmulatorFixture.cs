@@ -57,26 +57,32 @@
             }
 
             await container.FetchAttributesAsync();
+            var permissionsFound = await container.GetPermissionsAsync();
 
             // create access policy and store it
             var accessPolicyId = "test-policy";
 
-            var permissions = new BlobContainerPermissions
+            if (!permissionsFound.SharedAccessPolicies.ContainsKey(accessPolicyId))
             {
-                PublicAccess = BlobContainerPublicAccessType.Off,
-                SharedAccessPolicies = {
+                var permissions = new BlobContainerPermissions
                 {
-                    accessPolicyId,
-                    new SharedAccessBlobPolicy
+                    PublicAccess = BlobContainerPublicAccessType.Off,
+                    SharedAccessPolicies =
                     {
-                        Permissions = SharedAccessBlobPermissions.Add | SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write,
-                        SharedAccessStartTime = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromMinutes(1)),
-                        SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddDays(1)
+                        {
+                            accessPolicyId,
+                            new SharedAccessBlobPolicy
+                            {
+                                Permissions = SharedAccessBlobPermissions.Add | SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write,
+                                SharedAccessStartTime = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromMinutes(1)),
+                                SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddDays(1)
+                            }
+                        }
                     }
-                }}
-            };
+                };
 
-            await container.SetPermissionsAsync(permissions);
+                await container.SetPermissionsAsync(permissions);
+            }
 
             // create SAS with policy
             return container.GetSharedAccessSignature(null, accessPolicyId);
