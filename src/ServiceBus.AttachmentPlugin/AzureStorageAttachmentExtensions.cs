@@ -12,16 +12,7 @@
         /// <returns>Registered plugin as <see cref="ServiceBusPlugin"/>.</returns>
         public static ServiceBusPlugin RegisterAzureStorageAttachmentPlugin(this ClientEntity client, AzureStorageAttachmentConfiguration configuration)
         {
-            ServiceBusPlugin plugin;
-
-            if (!configuration.UsingSas)
-            {
-                plugin = new AzureStorageAttachment(configuration);
-            }
-            else
-            {
-                plugin = new AzureStorageAttachment(configuration);
-            }
+            var plugin = new AzureStorageAttachment(configuration);
 
             client.RegisterPlugin(plugin);
 
@@ -34,7 +25,7 @@
         /// <returns>Registered plugin as <see cref="ServiceBusPlugin"/>.</returns>
         public static ServiceBusPlugin RegisterAzureStorageAttachmentPluginForReceivingOnly(this ClientEntity client, string messagePropertyToIdentifySasUri = AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri)
         {
-            ServiceBusPlugin plugin = new ReceiveOnlyAzureStorageAttachment(messagePropertyToIdentifySasUri);
+            var plugin = new ReceiveOnlyAzureStorageAttachment(messagePropertyToIdentifySasUri);
 
             client.RegisterPlugin(plugin);
 
