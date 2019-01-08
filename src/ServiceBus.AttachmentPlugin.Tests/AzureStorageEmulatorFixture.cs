@@ -59,20 +59,22 @@
             await container.FetchAttributesAsync();
 
             // create access policy and store it
-            var permissions = new BlobContainerPermissions
-            {
-                PublicAccess = BlobContainerPublicAccessType.Off
-            };
-
             var accessPolicyId = "test-policy";
 
-            var accessPolicy = new SharedAccessBlobPolicy
+            var permissions = new BlobContainerPermissions
             {
-                Permissions = SharedAccessBlobPermissions.Add | SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write,
-                SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddDays(1)
+                PublicAccess = BlobContainerPublicAccessType.Off,
+                SharedAccessPolicies = {
+                {
+                    accessPolicyId,
+                    new SharedAccessBlobPolicy
+                    {
+                        Permissions = SharedAccessBlobPermissions.Add | SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write,
+                        SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddDays(1)
+                    }
+                }}
             };
 
-            permissions.SharedAccessPolicies.Add(accessPolicyId, accessPolicy);
             await container.SetPermissionsAsync(permissions);
 
             // create SAS with policy
