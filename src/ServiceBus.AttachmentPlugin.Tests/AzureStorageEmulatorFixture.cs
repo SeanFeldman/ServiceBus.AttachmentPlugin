@@ -83,6 +83,11 @@
 
                 await container.SetPermissionsAsync(permissions);
             }
+            else
+            {
+                permissionsFound.SharedAccessPolicies[accessPolicyId].SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddDays(1);
+                await container.SetPermissionsAsync(permissionsFound);
+            }
 
             // create SAS with policy
             return container.GetSharedAccessSignature(null, accessPolicyId);
