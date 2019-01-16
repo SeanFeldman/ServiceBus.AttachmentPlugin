@@ -10,13 +10,11 @@
 
     public class When_sending_message_using_container_sas : IClassFixture<AzureStorageEmulatorFixture>
     {
-        string containerSas;
-        string blobEndpoint;
+        readonly AzureStorageEmulatorFixture fixture;
 
         public When_sending_message_using_container_sas(AzureStorageEmulatorFixture fixture)
         {
-            containerSas = fixture.GetContainerSas("attachments").GetAwaiter().GetResult();
-            blobEndpoint = fixture.GetBlobEndpoint();
+            this.fixture = fixture;
         }
 
         [Fact]
@@ -28,8 +26,8 @@
             {
                 MessageId = Guid.NewGuid().ToString(),
             };
-            var credentials = new StorageCredentials(containerSas);
-            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(credentials, blobEndpoint, messagePropertyToIdentifyAttachmentBlob:"attachment-id"));
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
+            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint(), messagePropertyToIdentifyAttachmentBlob:"attachment-id"));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.Null(result.Body);
@@ -46,7 +44,7 @@
                 MessageId = Guid.NewGuid().ToString(),
                 TimeToLive = TimeSpan.FromHours(1)
             };
-            var credentials = new StorageCredentials(containerSas);
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(credentials, "http://127.0.0.1:10000/devstoreaccount1", messagePropertyToIdentifyAttachmentBlob:"attachment -id",
                 messageMaxSizeReachedCriteria:msg => msg.Body.Length > 100));
             var result = await plugin.BeforeMessageSend(message);
@@ -65,8 +63,8 @@
                 MessageId = Guid.NewGuid().ToString(),
                 TimeToLive = TimeSpan.FromHours(1)
             };
-            var credentials = new StorageCredentials(containerSas);
-            var configuration = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint, messagePropertyToIdentifyAttachmentBlob:"attachment-id");
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint(), messagePropertyToIdentifyAttachmentBlob:"attachment-id");
             var dateTimeNowUtc = new DateTime(2017, 1, 2);
             AzureStorageAttachment.DateTimeFunc = () => dateTimeNowUtc;
             var plugin = new AzureStorageAttachment(configuration);
@@ -88,8 +86,8 @@
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes);
-            var credentials = new StorageCredentials(containerSas);
-            var configuration = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint, messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint(), messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
             var plugin = new AzureStorageAttachment(configuration);
             await plugin.BeforeMessageSend(message);
@@ -107,8 +105,8 @@
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes);
-            var credentials = new StorageCredentials(containerSas);
-            var configuration = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint, messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint(), messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
             var plugin = new AzureStorageAttachment(configuration);
 
@@ -130,8 +128,8 @@
             {
                 MessageId = Guid.NewGuid().ToString(),
             };
-            var credentials = new StorageCredentials(containerSas);
-            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(credentials, blobEndpoint, messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
+            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint(), messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.Null(result.Body);
@@ -145,8 +143,8 @@
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes);
-            var credentials = new StorageCredentials(containerSas);
-            var configuration = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint, messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint(), messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
             var plugin = new AzureStorageAttachment(configuration);
             await plugin.BeforeMessageSend(message);
