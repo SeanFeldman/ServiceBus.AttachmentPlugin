@@ -10,7 +10,7 @@ namespace ServiceBus.AttachmentPlugin.Tests
     public class When_receiving_message : IClassFixture<AzureStorageEmulatorFixture>
     {
         [Fact]
-        public async Task Should_throw_exception_with_blob_path_for_found_that_cant_be_found()
+        public async Task Should_throw_exception_with_blob_path_for_blob_that_cant_be_found()
         {
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);

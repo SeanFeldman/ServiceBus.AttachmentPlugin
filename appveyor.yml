@@ -13,6 +13,14 @@ environment:
     # Second build
     - DotNetRunTime: netcoreapp2.1
 
+# ensure Azure Storage emulator 5.9 is installed
+install:
+  - ps: |
+        $msiPath = "$($env:USERPROFILE)\MicrosoftAzureStorageEmulator.msi"
+        (New-Object Net.WebClient).DownloadFile('https://download.visualstudio.microsoft.com/download/pr/e9476781-1f65-40e4-b7fd-e6b49840c7de/7028682de076b2dbc1aa5f1e02ec420a/microsoftazurestorageemulator.msi', $msiPath)
+        cmd /c start /wait msiexec /i $msiPath /quiet
+        del $msiPath
+
 #---------------------------------#
 #       restore nuget packages    #
 #---------------------------------#

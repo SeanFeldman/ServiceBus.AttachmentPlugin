@@ -1,6 +1,6 @@
 ![Icon](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/project-icon.png)
 
-### This is an add-in for [Microsoft.Azure.ServiceBus client](https://github.com/Azure/azure-service-bus-dotnet/) 
+### This is a plugin for [Microsoft.Azure.ServiceBus client](https://github.com/Azure/azure-service-bus-dotnet/) 
 
 Allows sending messages that exceed maximum size by implementing [Claim Check pattern](http://www.enterpriseintegrationpatterns.com/patterns/messaging/StoreInLibrary.html) with Azure Storage.
 
@@ -51,12 +51,12 @@ var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
 
 ### Sending a message without exposing the storage account to receivers
 
-Configuration and registration with SAS uri
+Configuration and registration with blob SAS URI
 
 ```c#
 var sender = new MessageSender(connectionString, queueName);
 var config = new AzureStorageAttachmentConfiguration(storageConnectionString)
-	.WithSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty");
+	.WithBlobSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty");
 sender.RegisterAzureStorageAttachmentPlugin(config);
 ```  
 
@@ -67,14 +67,6 @@ var payload = new MyMessage { ... };
 var serialized = JsonConvert.SerializeObject(payload);
 var payloadAsBytes = Encoding.UTF8.GetBytes(serialized);
 var message = new Message(payloadAsBytes);
-```
-
-Receive
-
-```c#
-var receiver = new MessageReceiver(connectionString, entityPath, ReceiveMode.ReceiveAndDelete);
-var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
-// msg will contain the original payload
 ```
 
 Receiving only mode (w/o Storage account credentials)
@@ -130,16 +122,26 @@ var provider = new PlainTextConnectionStringProvider("connectionString");
 var config = new AzureStorageAttachmentConfiguration(provider);
 ```
 
+### Configuring plugin using StorageCredentials (Service or Container SAS)
+
+```c#
+var credentials = new StorageCredentials(/*Shared key OR Service SAS OR Container SAS*/);
+var config = new AzureStorageAttachmentConfiguration(credentials);
+
+See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.windowsazure.storage.auth.storagecredentials) for more details.
+```
+
+
 #### Additional providers
 
 * [ServiceBus.AttachmentPlugin.KeyVaultProvider](https://www.nuget.org/packages?q=ServiceBus.AttachmentPlugin.KeyVaultProvider)
 
-## Who's trusting this add-in in production
+## Who's trusting this plugin in production
 
 ![Microsoft](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/microsoft.png)
 ![Codit](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/using/Codit.png)
 
-Proudly list your company here if use this add-in in production
+Proudly list your company here if use this plugin in production
 
 ## Icon
 

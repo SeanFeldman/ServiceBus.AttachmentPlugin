@@ -10,9 +10,18 @@ namespace ServiceBus.AttachmentPlugin.Tests
 
     public class When_using_receive_only_plugin : IClassFixture<AzureStorageEmulatorFixture>
     {
-        [Fact]
-        public async Task Should_download_attachment_using_provided_from_sas_uri()
+        readonly AzureStorageEmulatorFixture fixture;
+
+        public When_using_receive_only_plugin(AzureStorageEmulatorFixture fixture)
         {
+            this.fixture = fixture;
+        }
+
+        [Fact]
+        public async Task Should_download_attachment_using_provided_blob_sas_uri()
+        {
+            await fixture.CreateContainer("attachments-sendonly");
+
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes)
@@ -21,10 +30,10 @@ namespace ServiceBus.AttachmentPlugin.Tests
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
                     connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider,
-                    containerName: "attachments",
+                    containerName: "attachments-sendonly",
                     messagePropertyToIdentifyAttachmentBlob:
                     "attachment-id")
-                    .WithSasUri(
+                    .WithBlobSasUri(
                         sasTokenValidationTime: TimeSpan.FromHours(4),
                         messagePropertyToIdentifySasUri: "mySasUriProperty"));
             await plugin.BeforeMessageSend(message);
