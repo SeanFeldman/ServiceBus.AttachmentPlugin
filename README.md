@@ -127,9 +127,9 @@ var config = new AzureStorageAttachmentConfiguration(provider);
 ```c#
 var credentials = new StorageCredentials(/*Shared key OR Service SAS OR Container SAS*/);
 var config = new AzureStorageAttachmentConfiguration(credentials);
+```
 
 See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.windowsazure.storage.auth.storagecredentials) for more details.
-```
 
 
 #### Additional providers
