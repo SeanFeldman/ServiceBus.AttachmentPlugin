@@ -136,6 +136,10 @@ See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft
 
 * [ServiceBus.AttachmentPlugin.KeyVaultProvider](https://www.nuget.org/packages?q=ServiceBus.AttachmentPlugin.KeyVaultProvider)
 
+## Cleanup
+
+The plugin does **NOT** implement cleanup for the reasons stated [here](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/issues/86#issuecomment-458541694). When cleanup is required, there are a few [options available](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/issues/86#issue-404101630) depending on the use case.
+
 ## Who's trusting this plugin in production
 
 ![Microsoft](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/microsoft.png)
