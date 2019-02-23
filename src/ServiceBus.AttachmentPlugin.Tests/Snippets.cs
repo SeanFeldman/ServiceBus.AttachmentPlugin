@@ -40,8 +40,8 @@ class Snippets
 
         var receiver = new MessageReceiver(connectionString, entityPath, ReceiveMode.ReceiveAndDelete);
         receiver.RegisterAzureStorageAttachmentPlugin(config);
-        var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
-        // msg will contain the original payload
+        var message = await receiver.ReceiveAsync().ConfigureAwait(false);
+        // message will contain the original payload
 
         #endregion
     }
@@ -117,9 +117,9 @@ class Snippets
 
         #endregion
     }
-}
 
-class MyMessage
-{
-    public string MyProperty { get; set; }
+    class MyMessage
+    {
+        public string MyProperty { get; set; }
+    }
 }
