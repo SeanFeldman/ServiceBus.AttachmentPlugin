@@ -104,24 +104,13 @@
         public override async Task<Message> AfterMessageReceive(Message message)
         {
             var userProperties = message.UserProperties;
-
-            if (!userProperties.ContainsKey(configuration.MessagePropertyToIdentifyAttachmentBlob))
+            
+            if (!userProperties.TryGetValue(configuration.MessagePropertyToIdentifyAttachmentBlob, out var blobNameObject))
             {
                 return message;
             }
 
-            CloudBlockBlob blob;
-
-            if (configuration.MessagePropertyForBlobSasUri != null && userProperties.ContainsKey(configuration.MessagePropertyForBlobSasUri))
-            {
-                blob = new CloudBlockBlob(new Uri(userProperties[configuration.MessagePropertyForBlobSasUri].ToString()));
-            }
-            else
-            {
-                var blobName = (string)userProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
-                var blobUri = new Uri($"{configuration.BlobEndpoint}{configuration.ContainerName}/{blobName}");
-                blob = new CloudBlockBlob(blobUri, configuration.StorageCredentials);
-            }
+            var blob = BuildBlob(userProperties, blobNameObject);
 
             try
             {
@@ -138,6 +127,21 @@
             await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
             message.Body = bytes;
             return message;
+        }
+
+        CloudBlockBlob BuildBlob(IDictionary<string, object> userProperties, object blobNameObject)
+        {
+            if (configuration.MessagePropertyForBlobSasUri != null)
+            {
+                if (userProperties.TryGetValue(configuration.MessagePropertyForBlobSasUri, out var propertyForBlobSasUri))
+                {
+                    return new CloudBlockBlob(new Uri((string)propertyForBlobSasUri));
+                }
+            }
+
+            var blobName = (string) blobNameObject;
+            var blobUri = new Uri($"{configuration.BlobEndpoint}{configuration.ContainerName}/{blobName}");
+            return new CloudBlockBlob(blobUri, configuration.StorageCredentials);
         }
     }
 }
