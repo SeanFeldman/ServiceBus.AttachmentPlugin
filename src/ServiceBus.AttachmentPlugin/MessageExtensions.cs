@@ -35,7 +35,6 @@
             return await plugin.AfterMessageReceive(message).ConfigureAwait(false);
         }
 
-
         /// <summary>Download attachment from Azure Storage blob without registering plugin, with custom message property to identify SAS URI.</summary>
         /// <param name="message"><see cref="Message"/></param>
         /// <param name="messagePropertyToIdentifySasUri">Message property which contains the SAS URI used to fetch message body from blob.</param>
