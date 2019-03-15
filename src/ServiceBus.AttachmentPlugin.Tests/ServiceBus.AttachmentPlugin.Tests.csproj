@@ -4,6 +4,8 @@
     <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
     <RootNamespace>ServiceBus.AttachmentPlugin.Tests</RootNamespace>
     <Optimize>false</Optimize>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
