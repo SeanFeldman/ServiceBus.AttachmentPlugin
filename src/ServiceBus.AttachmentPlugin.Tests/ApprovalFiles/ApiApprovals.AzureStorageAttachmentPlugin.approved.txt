@@ -23,6 +23,12 @@ namespace Microsoft.Azure.ServiceBus
     {
         System.Threading.Tasks.Task<string> GetConnectionString();
     }
+    public class static MessageExtensions
+    {
+        public static System.Threading.Tasks.Task<Microsoft.Azure.ServiceBus.Message> DownloadAzureStorageAttachment(this Microsoft.Azure.ServiceBus.Message message, Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration configuration) { }
+        public static System.Threading.Tasks.Task<Microsoft.Azure.ServiceBus.Message> DownloadAzureStorageAttachment(this Microsoft.Azure.ServiceBus.Message message, string messagePropertyToIdentifySasUri = "$attachment.sas.uri") { }
+        public static System.Threading.Tasks.Task<Microsoft.Azure.ServiceBus.Message> UploadAzureStorageAttachment(this Microsoft.Azure.ServiceBus.Message message, Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration configuration) { }
+    }
     public class PlainTextConnectionStringProvider : Microsoft.Azure.ServiceBus.IProvideStorageConnectionString
     {
         public PlainTextConnectionStringProvider(string connectionString) { }

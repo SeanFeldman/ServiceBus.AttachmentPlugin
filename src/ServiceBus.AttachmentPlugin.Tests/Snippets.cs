@@ -118,6 +118,31 @@ class Snippets
         #endregion
     }
 
+    async Task Upload_attachment_without_registering_plugin(Message message, AzureStorageAttachmentConfiguration config)
+    {
+        #region Upload_attachment_without_registering_plugin
+
+        //To make it possible to use SAS URI when downloading, use WithBlobSasUri() when creating configuration object
+        await message.UploadAzureStorageAttachment(config);
+
+        #endregion
+    }
+    async Task Download_attachment_without_registering_plugin(Message message, AzureStorageAttachmentConfiguration config)
+    {
+        #region Download_attachment_without_registering_plugin
+
+        //Using SAS URI with default message property ($attachment.sas.uri)
+        await message.DownloadAzureStorageAttachment();
+
+        //Using SAS URI with custom message property 
+        await message.DownloadAzureStorageAttachment("$custom-attachment.sas.uri");
+        
+        //Using configuration object
+        await message.DownloadAzureStorageAttachment(config);
+
+        #endregion
+    }
+
     class MyMessage
     {
         public string MyProperty { get; set; }

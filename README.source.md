@@ -91,6 +91,19 @@ snippet: Configuring_plugin_using_StorageCredentials
 
 See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.windowsazure.storage.auth.storagecredentials) for more details.
 
+### Using attachments with Azure Functions
+
+Azure Functions currently has no way to register plugins, these extension methods are a workaround until this feature is added. 
+
+To use the extensions, your Function must return (send) or take as parameter (receive) an instance of [`Message`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.servicebus.message).
+
+Upload attachment to Azure Storage blob
+
+snippet: Upload_attachment_without_registering_plugin
+
+Download attachment from Azure Storage blob
+
+snippet: Download_attachment_without_registering_plugin
 
 #### Additional providers
 
