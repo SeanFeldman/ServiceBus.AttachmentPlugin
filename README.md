@@ -1,6 +1,12 @@
+<!--
+This file was generate by the MarkdownSnippets.
+Source File: \README.source.md
+To change this file edit the source file and then re-run the generation using either the dotnet global tool (https://github.com/SimonCropp/MarkdownSnippets#githubmarkdownsnippets) or using the api (https://github.com/SimonCropp/MarkdownSnippets#running-as-a-unit-test).
+-->
+
 ![Icon](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/project-icon.png)
 
-### This is a plugin for [Microsoft.Azure.ServiceBus client](https://github.com/Azure/azure-service-bus-dotnet/) 
+### This is a plugin for [Microsoft.Azure.ServiceBus client](https://github.com/Azure/azure-service-bus-dotnet/)
 
 Allows sending messages that exceed maximum size by implementing [Claim Check pattern](http://www.enterpriseintegrationpatterns.com/patterns/messaging/StoreInLibrary.html) with Azure Storage.
 
@@ -15,7 +21,7 @@ Allows sending messages that exceed maximum size by implementing [Claim Check pa
 Available here http://nuget.org/packages/ServiceBus.AttachmentPlugin
 
 To Install from the Nuget Package Manager Console 
-    
+
     PM> Install-Package ServiceBus.AttachmentPlugin
 
 ## Examples
@@ -24,60 +30,84 @@ To Install from the Nuget Package Manager Console
 
 Configuration and registration
 
-```c#
+<!-- snippet: ConfigurationAndRegistration -->
+```cs
 var sender = new MessageSender(connectionString, queueName);
 var config = new AzureStorageAttachmentConfiguration(storageConnectionString);
 sender.RegisterAzureStorageAttachmentPlugin(config);
-```        
+```
+<sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L13-L19)</sup>
+<!-- endsnippet -->
 
 Sending
 
-```c#
-var payload = new MyMessage { ... }; 
+<!-- snippet: AttachmentSending -->
+```cs
+var payload = new MyMessage
+{
+    MyProperty = "The Value"
+};
 var serialized = JsonConvert.SerializeObject(payload);
 var payloadAsBytes = Encoding.UTF8.GetBytes(serialized);
 var message = new Message(payloadAsBytes);
 ```
-
+<sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L24-L34)</sup>
+<!-- endsnippet -->
 
 Receiving
 
-```c#
+<!-- snippet: AttachmentReceiving -->
+```cs
 var receiver = new MessageReceiver(connectionString, entityPath, ReceiveMode.ReceiveAndDelete);
 receiver.RegisterAzureStorageAttachmentPlugin(config);
 var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
 // msg will contain the original payload
 ```
+<sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L39-L46)</sup>
+<!-- endsnippet -->
 
 ### Sending a message without exposing the storage account to receivers
 
 Configuration and registration with blob SAS URI
 
-```c#
+<!-- snippet: ConfigurationAndRegistrationSas -->
+```cs
 var sender = new MessageSender(connectionString, queueName);
 var config = new AzureStorageAttachmentConfiguration(storageConnectionString)
-	.WithBlobSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty");
+    .WithBlobSasUri(
+        sasTokenValidationTime: TimeSpan.FromHours(4),
+        messagePropertyToIdentifySasUri: "mySasUriProperty");
 sender.RegisterAzureStorageAttachmentPlugin(config);
-```  
+```
+<sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L51-L60)</sup>
+<!-- endsnippet -->
 
 Sending
 
-```c#
-var payload = new MyMessage { ... }; 
+<!-- snippet: AttachmentSendingSas -->
+```cs
+var payload = new MyMessage
+{
+    MyProperty = "The Value"
+};
 var serialized = JsonConvert.SerializeObject(payload);
 var payloadAsBytes = Encoding.UTF8.GetBytes(serialized);
 var message = new Message(payloadAsBytes);
 ```
+<sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L65-L75)</sup>
+<!-- endsnippet -->
 
 Receiving only mode (w/o Storage account credentials)
 
-```c#
-// Overide message property used to identify SAS URI
+<!-- snippet: AttachmentReceivingSas -->
+```cs
+// Override message property used to identify SAS URI
 // .RegisterAzureStorageAttachmentPluginForReceivingOnly() is using "$attachment.sas.uri" by default
-var receiver = messageReceiver.RegisterAzureStorageAttachmentPluginForReceivingOnly("mySasUriProperty");
-var msg = await receiver.ReceiveAsync().ConfigureAwait(false);
+messageReceiver.RegisterAzureStorageAttachmentPluginForReceivingOnly("mySasUriProperty");
+var message = await messageReceiver.ReceiveAsync().ConfigureAwait(false);
 ```
-
+<sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L80-L87)</sup>
+<!-- endsnippet -->
 
 ### Configure blob container name
 
@@ -107,34 +137,48 @@ new AzureStorageAttachmentConfiguration(storageConnectionString).WithSasUri(mess
 
 Default is to convert any body to attachment.
 
-```c#
+<!-- snippet: Configure_criteria_for_message_max_size_identification -->
+```cs
 // messages with body > 200KB should be converted to use attachments
-new AzureStorageAttachmentConfiguration(storageConnectionString, message => message.Body.Length > 200 * 1024);
+new AzureStorageAttachmentConfiguration(storageConnectionString,
+    messageMaxSizeReachedCriteria: message => message.Body.Length > 200 * 1024);
 ```
+<sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L92-L98)</sup>
+<!-- endsnippet -->
 
 ### Configuring connection string provider
 
 When Storage connection string needs to be retrieved rather than passed in as a plain text, `AzureStorageAttachmentConfiguration` accepts implementation of `IProvideStorageConnectionString`.
 The plugin comes with a `PlainTextConnectionStringProvider` and can be used in the following way.
 
-```c#
-var provider = new PlainTextConnectionStringProvider("connectionString");
+<!-- snippet: Configuring_connection_string_provider -->
+```cs
+var provider = new PlainTextConnectionStringProvider(connectionString);
 var config = new AzureStorageAttachmentConfiguration(provider);
 ```
+<sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L102-L106)</sup>
+<!-- endsnippet -->
 
 ### Configuring plugin using StorageCredentials (Service or Container SAS)
 
-```c#
-var credentials = new StorageCredentials(/*Shared key OR Service SAS OR Container SAS*/);
-var config = new AzureStorageAttachmentConfiguration(credentials);
+<!-- snippet: Configuring_plugin_using_StorageCredentials -->
+```cs
+var credentials = new StorageCredentials( /*Shared key OR Service SAS OR Container SAS*/);
+var config = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint);
+```
+<sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L111-L116)</sup>
+<!-- endsnippet -->
 
 See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.windowsazure.storage.auth.storagecredentials) for more details.
-```
 
 
 #### Additional providers
 
 * [ServiceBus.AttachmentPlugin.KeyVaultProvider](https://www.nuget.org/packages?q=ServiceBus.AttachmentPlugin.KeyVaultProvider)
+
+## Cleanup
+
+The plugin does **NOT** implement cleanup for the reasons stated [here](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/issues/86#issuecomment-458541694). When cleanup is required, there are a few [options available](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/issues/86#issue-404101630) depending on the use case.
 
 ## Who's trusting this plugin in production
 

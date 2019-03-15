@@ -1,4 +1,4 @@
-[assembly: System.Runtime.CompilerServices.InternalsVisibleToAttribute("ServiceBus.AttachmentPlugin.Tests")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleToAttribute(@"ServiceBus.AttachmentPlugin.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5a2fefe7a1f74bb526125b1630af3f5e30b3961640926ea3b20cdb9a803487af798b02fd52a8d265c3fe7174027dd3f738f0e24213cb26b21189ada2d85d74a3cd2c944c7e57c76c5cba3aa45928fc3c300f9744cfaab92c24ac98d15ec2fe05c0500121be04644881448dd06f15f5cd5a4db3dbb8e9d78e63436045bbe8db5")]
 namespace Microsoft.Azure.ServiceBus
 {
     public class AzureStorageAttachmentConfiguration
@@ -10,8 +10,7 @@ namespace Microsoft.Azure.ServiceBus
     public class static AzureStorageAttachmentConfigurationExtensions
     {
         public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration WithBlobSasUri(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, string messagePropertyToIdentifySasUri = "$attachment.sas.uri", System.Nullable<System.TimeSpan> sasTokenValidationTime = null) { }
-        [System.ObsoleteAttribute("Will be deprecated in version 5. Use replacement API \'.WithBlobSasUri()\' instead." +
-            "", false)]
+        [System.ObsoleteAttribute("Will be removed in version 6. Use replacement API \'.WithBlobSasUri()\' instead.", true)]
         public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration WithSasUri(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, string messagePropertyToIdentifySasUri = "$attachment.sas.uri", System.Nullable<System.TimeSpan> sasTokenValidationTime = null) { }
     }
     public class static AzureStorageAttachmentExtensions
@@ -22,6 +21,12 @@ namespace Microsoft.Azure.ServiceBus
     public interface IProvideStorageConnectionString
     {
         System.Threading.Tasks.Task<string> GetConnectionString();
+    }
+    public class static MessageExtensions
+    {
+        public static System.Threading.Tasks.Task<Microsoft.Azure.ServiceBus.Message> DownloadAzureStorageAttachment(this Microsoft.Azure.ServiceBus.Message message, Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration configuration) { }
+        public static System.Threading.Tasks.Task<Microsoft.Azure.ServiceBus.Message> DownloadAzureStorageAttachment(this Microsoft.Azure.ServiceBus.Message message, string messagePropertyToIdentifySasUri = "$attachment.sas.uri") { }
+        public static System.Threading.Tasks.Task<Microsoft.Azure.ServiceBus.Message> UploadAzureStorageAttachment(this Microsoft.Azure.ServiceBus.Message message, Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration configuration) { }
     }
     public class PlainTextConnectionStringProvider : Microsoft.Azure.ServiceBus.IProvideStorageConnectionString
     {

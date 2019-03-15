@@ -4,10 +4,13 @@
     <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
     <RootNamespace>ServiceBus.AttachmentPlugin.Tests</RootNamespace>
     <Optimize>false</Optimize>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="MarkdownSnippets" Version="9.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta2-build3683" />
