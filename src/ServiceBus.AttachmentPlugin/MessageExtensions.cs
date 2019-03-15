@@ -36,3 +36,4 @@
             return await plugin.AfterMessageReceive(message).ConfigureAwait(false);
         }
     }
+}
