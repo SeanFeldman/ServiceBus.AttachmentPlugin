@@ -7,6 +7,7 @@
 
     public class When_using_message_extensions : IClassFixture<AzureStorageEmulatorFixture>
     {
+        // ReSharper disable once NotAccessedField.Local
         readonly AzureStorageEmulatorFixture fixture;
 
         public When_using_message_extensions(AzureStorageEmulatorFixture fixture)
@@ -57,7 +58,7 @@
             var payload = "payload";
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes);
-            string customSasUri = "$custom-attachment.sas.uri";
+            var customSasUri = "$custom-attachment.sas.uri";
             var configuration = new AzureStorageAttachmentConfiguration(
                 connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id")
             .WithBlobSasUri(customSasUri);
