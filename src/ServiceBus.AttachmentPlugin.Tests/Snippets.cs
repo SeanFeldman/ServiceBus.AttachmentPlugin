@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
@@ -19,6 +20,7 @@ class Snippets
         #endregion
     }
 
+    [SuppressMessage("ReSharper", "UnusedVariable")]
     void AttachmentSending()
     {
         #region AttachmentSending
@@ -34,6 +36,7 @@ class Snippets
         #endregion
     }
 
+    [SuppressMessage("ReSharper", "UnusedVariable")]
     async Task AttachmentReceiving(string connectionString, string entityPath, AzureStorageAttachmentConfiguration config)
     {
         #region AttachmentReceiving
@@ -60,6 +63,7 @@ class Snippets
         #endregion
     }
 
+    [SuppressMessage("ReSharper", "UnusedVariable")]
     void AttachmentSendingSas()
     {
         #region AttachmentSendingSas
@@ -75,6 +79,7 @@ class Snippets
         #endregion
     }
 
+    [SuppressMessage("ReSharper", "UnusedVariable")]
     async Task AttachmentReceivingSas(MessageReceiver messageReceiver)
     {
         #region AttachmentReceivingSas
@@ -98,6 +103,7 @@ class Snippets
         #endregion
     }
 
+    [SuppressMessage("ReSharper", "UnusedVariable")]
     void Configuring_connection_string_provider(string connectionString)
     {
         #region Configuring_connection_string_provider
@@ -108,6 +114,7 @@ class Snippets
         #endregion
     }
 
+    [SuppressMessage("ReSharper", "UnusedVariable")]
     void Configuring_plugin_using_StorageCredentials(string connectionString, string blobEndpoint)
     {
         #region Configuring_plugin_using_StorageCredentials
@@ -134,9 +141,9 @@ class Snippets
         //Using SAS URI with default message property ($attachment.sas.uri)
         await message.DownloadAzureStorageAttachment();
 
-        //Using SAS URI with custom message property 
+        //Using SAS URI with custom message property
         await message.DownloadAzureStorageAttachment("$custom-attachment.sas.uri");
-        
+
         //Using configuration object
         await message.DownloadAzureStorageAttachment(config);
 
