@@ -10,7 +10,7 @@
         /// <param name="client"><see cref="QueueClient"/>, <see cref="SubscriptionClient"/>, <see cref="QueueClient"/>, <see cref="MessageSender"/>, <see cref="MessageReceiver"/>, or <see cref="SessionClient"/> to register plugin with.</param>
         /// <param name="configuration"><see cref="AzureStorageAttachmentConfiguration"/> object.</param>
         /// <returns>Registered plugin as <see cref="ServiceBusPlugin"/>.</returns>
-        public static ServiceBusPlugin RegisterAzureStorageAttachmentPlugin(this IClientEntity client, AzureStorageAttachmentConfiguration configuration)
+        public static ServiceBusPlugin RegisterAzureStorageAttachmentPlugin(this ClientEntity client, AzureStorageAttachmentConfiguration configuration)
         {
             var plugin = new AzureStorageAttachment(configuration);
 
@@ -23,7 +23,7 @@
         /// <param name="client"><see cref="QueueClient"/>, <see cref="SubscriptionClient"/>, <see cref="QueueClient"/>, <see cref="MessageSender"/>, <see cref="MessageReceiver"/>, or <see cref="SessionClient"/> to register plugin with.</param>
         /// <param name="messagePropertyToIdentifySasUri">Message property name to be used to retrieve message SAS UI.</param>
         /// <returns>Registered plugin as <see cref="ServiceBusPlugin"/>.</returns>
-        public static ServiceBusPlugin RegisterAzureStorageAttachmentPluginForReceivingOnly(this IClientEntity client, string messagePropertyToIdentifySasUri = AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri)
+        public static ServiceBusPlugin RegisterAzureStorageAttachmentPluginForReceivingOnly(this ClientEntity client, string messagePropertyToIdentifySasUri = AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri)
         {
             var plugin = new ReceiveOnlyAzureStorageAttachment(messagePropertyToIdentifySasUri);
 
