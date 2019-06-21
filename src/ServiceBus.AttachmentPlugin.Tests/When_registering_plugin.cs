@@ -16,7 +16,7 @@
         [Fact]
         public void Should_get_back_AzureStorageAttachment_for_connection_string_based_configuration()
         {
-            var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
+            IClientEntity client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
 
             var azureStorageAttachmentConfiguration = new AzureStorageAttachmentConfiguration(ConnectionString);
 
@@ -29,7 +29,7 @@
         [Fact]
         public void Should_get_back_AzureStorageAttachment_for_container_sas_based_configuration()
         {
-            var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
+            IClientEntity client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
 
             var azureStorageAttachmentConfiguration = new AzureStorageAttachmentConfiguration(new StorageCredentials("?sv=2018-03-28&sr=c&sig=5XxlRKoP4yEmibM2HhJlQuV7MG3rYgQXD89mLpNp%2F24%3D"), "http://127.0.0.1:10000/devstoreaccount1");
 
@@ -42,7 +42,7 @@
         [Fact]
         public void Should_get_back_ReceiveOnlyAzureStorageAttachment_for_receive_only_plugin()
         {
-            var client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
+            IClientEntity client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
 
             var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPluginForReceivingOnly(client, "mySasUriProperty");
 
