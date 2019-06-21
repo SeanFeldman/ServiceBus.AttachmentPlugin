@@ -16,7 +16,9 @@ namespace Microsoft.Azure.ServiceBus
     public class static AzureStorageAttachmentExtensions
     {
         public static Microsoft.Azure.ServiceBus.Core.ServiceBusPlugin RegisterAzureStorageAttachmentPlugin(this Microsoft.Azure.ServiceBus.ClientEntity client, Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration configuration) { }
+        public static Microsoft.Azure.ServiceBus.Core.ServiceBusPlugin RegisterAzureStorageAttachmentPlugin(this Microsoft.Azure.ServiceBus.IClientEntity client, Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration configuration) { }
         public static Microsoft.Azure.ServiceBus.Core.ServiceBusPlugin RegisterAzureStorageAttachmentPluginForReceivingOnly(this Microsoft.Azure.ServiceBus.ClientEntity client, string messagePropertyToIdentifySasUri = "$attachment.sas.uri") { }
+        public static Microsoft.Azure.ServiceBus.Core.ServiceBusPlugin RegisterAzureStorageAttachmentPluginForReceivingOnly(this Microsoft.Azure.ServiceBus.IClientEntity client, string messagePropertyToIdentifySasUri = "$attachment.sas.uri") { }
     }
     public interface IProvideStorageConnectionString
     {
