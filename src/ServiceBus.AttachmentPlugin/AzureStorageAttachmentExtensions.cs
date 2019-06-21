@@ -12,11 +12,7 @@
         /// <returns>Registered plugin as <see cref="ServiceBusPlugin"/>.</returns>
         public static ServiceBusPlugin RegisterAzureStorageAttachmentPlugin(this ClientEntity client, AzureStorageAttachmentConfiguration configuration)
         {
-            var plugin = new AzureStorageAttachment(configuration);
-
-            client.RegisterPlugin(plugin);
-
-            return plugin;
+            return RegisterAzureStorageAttachmentPlugin((IClientEntity)client, configuration);
         }
 
         /// <summary>Initiate plugin for Receive-Only mode to retrieve attachments using SAS URI. </summary>
@@ -25,11 +21,7 @@
         /// <returns>Registered plugin as <see cref="ServiceBusPlugin"/>.</returns>
         public static ServiceBusPlugin RegisterAzureStorageAttachmentPluginForReceivingOnly(this ClientEntity client, string messagePropertyToIdentifySasUri = AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri)
         {
-            var plugin = new ReceiveOnlyAzureStorageAttachment(messagePropertyToIdentifySasUri);
-
-            client.RegisterPlugin(plugin);
-
-            return plugin;
+            return RegisterAzureStorageAttachmentPluginForReceivingOnly((IClientEntity)client, messagePropertyToIdentifySasUri);
         }
 
         /// <summary>Instantiate plugin with the required configuration.</summary>
