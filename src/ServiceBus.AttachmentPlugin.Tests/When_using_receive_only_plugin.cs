@@ -38,7 +38,7 @@ namespace ServiceBus.AttachmentPlugin.Tests
                         messagePropertyToIdentifySasUri: "mySasUriProperty"));
             await plugin.BeforeMessageSend(message);
 
-            var messageReceiver = new MessageReceiver(new ServiceBusConnectionStringBuilder(
+            IClientEntity messageReceiver = new MessageReceiver(new ServiceBusConnectionStringBuilder(
                 endpoint: "sb://test.servicebus.windows.net/",
                 entityPath: "entity",
                 sharedAccessKey: "---",
