@@ -25,6 +25,25 @@ To Install from the Nuget Package Manager Console
 
     PM> Install-Package ServiceBus.AttachmentPlugin
 
+<!-- toc -->
+## Contents
+
+  * [Examples](#examples)
+    * [Convert body into attachment, no matter how big it is](#convert-body-into-attachment-no-matter-how-big-it-is)
+    * [Sending a message without exposing the storage account to receivers](#sending-a-message-without-exposing-the-storage-account-to-receivers)
+    * [Configure blob container name](#configure-blob-container-name)
+    * [Configure message property to identify attachment blob](#configure-message-property-to-identify-attachment-blob)
+    * [Configure message property for SAS uri to attachment blob](#configure-message-property-for-sas-uri-to-attachment-blob)
+    * [Configure criteria for message max size identification](#configure-criteria-for-message-max-size-identification)
+    * [Configuring connection string provider](#configuring-connection-string-provider)
+    * [Configuring plugin using StorageCredentials (Service or Container SAS)](#configuring-plugin-using-storagecredentials-service-or-container-sas)
+    * [Using attachments with Azure Functions](#using-attachments-with-azure-functions)
+  * [Cleanup](#cleanup)
+  * [Who's trusting this plugin in production](#whos-trusting-this-plugin-in-production)
+  * [Icon](#icon)
+<!-- endtoc -->
+
+
 ## Examples
 
 ### Convert body into attachment, no matter how big it is
