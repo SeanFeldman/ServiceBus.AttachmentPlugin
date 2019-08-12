@@ -18,7 +18,7 @@ Allows sending messages that exceed maximum size by implementing [Claim Check pa
 <!-- toc -->
 ## Contents
 
-    * [Nuget package](#nuget-package)
+  * [Nuget package](#nuget-package)
   * [Examples](#examples)
     * [Convert body into attachment, no matter how big it is](#convert-body-into-attachment-no-matter-how-big-it-is)
     * [Sending a message without exposing the storage account to receivers](#sending-a-message-without-exposing-the-storage-account-to-receivers)
@@ -35,7 +35,7 @@ Allows sending messages that exceed maximum size by implementing [Claim Check pa
 <!-- endtoc -->
 
 
-### Nuget package
+## Nuget package
 
 [![NuGet Status](https://buildstats.info/nuget/ServiceBus.AttachmentPlugin?includePreReleases=true)](https://www.nuget.org/packages/ServiceBus.AttachmentPlugin/)
 

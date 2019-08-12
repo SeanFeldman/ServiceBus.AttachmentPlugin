@@ -10,7 +10,7 @@ Allows sending messages that exceed maximum size by implementing [Claim Check pa
 
 toc
 
-### Nuget package
+## Nuget package
 
 [![NuGet Status](https://buildstats.info/nuget/ServiceBus.AttachmentPlugin?includePreReleases=true)](https://www.nuget.org/packages/ServiceBus.AttachmentPlugin/)
 
