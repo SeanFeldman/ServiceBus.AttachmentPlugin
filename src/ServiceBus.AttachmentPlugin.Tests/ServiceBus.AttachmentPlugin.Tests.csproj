@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Force the latest of the transitive dependency">
-    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="3.2.1" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.0" />
   </ItemGroup>
 
 </Project>
