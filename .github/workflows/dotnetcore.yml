@@ -1,0 +1,39 @@
+name: Build and Test
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+on: [push]
+
+jobs:
+#  Print:
+#    runs-on: windows-latest
+#    steps:
+#    - run: |
+#        echo %GITHUB_WORKSPACE%
+#        exit 1234
+#      shell: cmd
+  Build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+    - name: Build
+      run: dotnet build src --configuration Release
+  Test:
+    needs: [Build]
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        tfm: ['netcoreapp2.1', 'net461']
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run tests (target framework ${{ matrix.tfm }})
+      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release --framework ${{ matrix.tfm }} --list-tests
+  Deploy:
+    needs: [Build, Test]
+    runs-on: windows-latest
+    steps:
+      - shell: cmd
+        run:
+          echo deploying...
