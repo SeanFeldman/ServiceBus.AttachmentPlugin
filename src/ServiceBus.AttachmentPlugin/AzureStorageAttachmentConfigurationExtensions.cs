@@ -14,20 +14,6 @@
         /// Adds blob SAS URI configuration.
         /// </summary>
         /// <param name="azureStorageAttachmentConfiguration"></param>
-        /// <param name="messagePropertyToIdentifySasUri">The <see cref="Message"/> user property used for SAS uri.</param>
-        /// <param name="sasTokenValidationTime">The time SAS uri is valid for.</param>
-        /// <returns></returns>
-        [Obsolete("Will be removed in version 6. Use replacement API '." + nameof(WithBlobSasUri) + "()' instead.", true)]
-        public static AzureStorageAttachmentConfiguration WithSasUri(
-            this AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration,
-            string messagePropertyToIdentifySasUri = DefaultMessagePropertyToIdentitySasUri,
-            TimeSpan? sasTokenValidationTime = null)
-            => throw new Exception("Deprecated with error. See documentation for all configuration options.");
-
-        /// <summary>
-        /// Adds blob SAS URI configuration.
-        /// </summary>
-        /// <param name="azureStorageAttachmentConfiguration"></param>
         /// <param name="messagePropertyToIdentifySasUri">The <see cref="Message"/> user property used for blob SAS URI.</param>
         /// <param name="sasTokenValidationTime">The time blob SAS URI is valid for.</param>
         /// <returns></returns>
