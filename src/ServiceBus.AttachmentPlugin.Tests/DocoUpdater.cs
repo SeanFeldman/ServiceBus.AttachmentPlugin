@@ -1,11 +1,15 @@
-﻿using MarkdownSnippets;
-using Xunit;
-
-public class DocoUpdater
+﻿namespace ServiceBus.AttachmentPlugin.Tests
 {
-    [Fact]
-    public void Run()
+    using MarkdownSnippets;
+    using Xunit;
+
+    public class DocoUpdater
     {
-        new DirectoryMarkdownProcessor(GitRepoDirectoryFinder.FindForFilePath()).Run();
+        [Fact]
+        public void Run()
+        {
+            new DirectoryMarkdownProcessor(GitRepoDirectoryFinder.FindForFilePath()).Run();
+        }
     }
+
 }

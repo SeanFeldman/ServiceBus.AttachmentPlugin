@@ -3,7 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
-    using Microsoft.WindowsAzure.Storage.Auth;
+    using Microsoft.Azure.Storage.Auth;
     using Xunit;
 
     public class AzureStorageAttachmentConfigurationTests

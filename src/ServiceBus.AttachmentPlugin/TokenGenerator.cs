@@ -1,7 +1,7 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
     using System;
-    using Microsoft.WindowsAzure.Storage.Blob;
+    using Microsoft.Azure.Storage.Blob;
 
     static class TokenGenerator
     {

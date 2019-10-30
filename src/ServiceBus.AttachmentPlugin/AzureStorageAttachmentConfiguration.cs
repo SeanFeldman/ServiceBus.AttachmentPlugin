@@ -1,8 +1,8 @@
 ﻿namespace Microsoft.Azure.ServiceBus
 {
     using System;
-    using WindowsAzure.Storage;
-    using WindowsAzure.Storage.Auth;
+    using Storage;
+    using Storage.Auth;
 
     /// <summary>Runtime configuration for Azure Storage Attachment plugin.</summary>
     public class AzureStorageAttachmentConfiguration
