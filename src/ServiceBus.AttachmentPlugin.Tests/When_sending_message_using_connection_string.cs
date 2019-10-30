@@ -4,8 +4,9 @@
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Auth;
+    using Microsoft.Azure.Storage;
+    using Microsoft.Azure.Storage.Auth;
+    using Microsoft.Azure.Storage.Blob;
     using Xunit;
 
     public class When_sending_message_using_connection_string : IClassFixture<AzureStorageEmulatorFixture>

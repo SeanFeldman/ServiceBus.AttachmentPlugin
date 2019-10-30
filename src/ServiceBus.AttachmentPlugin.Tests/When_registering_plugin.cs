@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Core;
-    using Microsoft.WindowsAzure.Storage.Auth;
+    using Microsoft.Azure.Storage.Auth;
     using Xunit;
 
     public class When_registering_plugin : IClassFixture<AzureStorageEmulatorFixture>
