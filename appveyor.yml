@@ -5,13 +5,13 @@ skip_commits:
     - images/*
 matrix:
   fast_finish: true
-image: Previous Visual Studio 2017 #Visual Studio 2017 #use workaround image until https://github.com/appveyor/ci/issues/1404 is resolved
+image: Visual Studio 2019
 environment:
   matrix:
     # First build
     - DotNetRunTime: net461
     # Second build
-    - DotNetRunTime: netcoreapp2.1
+    - DotNetRunTime: netcoreapp3.0
 
 # ensure Azure Storage emulator 5.9 is installed
 install:
