@@ -33,7 +33,7 @@
             string blobEndpoint,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            Func<Message, bool>? messageMaxSizeReachedCriteria = null)
+            Func<Message, bool>? messageMaxSizeReachedCriteria = default)
         {
             Guard.AgainstNull(nameof(storageCredentials), storageCredentials);
             Guard.AgainstEmpty(nameof(blobEndpoint), blobEndpoint);
@@ -67,7 +67,7 @@
             IProvideStorageConnectionString connectionStringProvider,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            Func<Message, bool>? messageMaxSizeReachedCriteria = null)
+            Func<Message, bool>? messageMaxSizeReachedCriteria = default)
         {
             Guard.AgainstNull(nameof(connectionStringProvider), connectionStringProvider);
             Guard.AgainstEmpty(nameof(containerName), containerName);
