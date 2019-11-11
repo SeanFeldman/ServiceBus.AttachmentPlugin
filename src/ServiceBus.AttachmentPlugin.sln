@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{2295CF61-70EF-43B4-8747-7C01493D607C}"
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
+		Directory.Build.props = Directory.Build.props
 		..\README.md = ..\README.md
 		..\README.source.md = ..\README.source.md
 	EndProjectSection
