@@ -5,9 +5,6 @@
     <Version>6.0.0-preview01</Version>
     <Authors>Sean Feldman</Authors>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageTags>Azure;Service Bus;ServiceBus;.NET;AMQP;IoT;Queue;Topic;Attachment;Plugin</PackageTags>
     <PackageIcon>project-icon.png</PackageIcon>
     <PackageLicenseFile Condition="'$(PackageLicenseFile)' == ''">LICENSE.md</PackageLicenseFile>
@@ -29,7 +26,7 @@
 
   <ItemGroup>
     <Content Remove="../../images/project-icon.png" />
-    <Content Include="../../images/project-icon.png" Pack="true" PackagePath=""/>
+    <Content Include="../../images/project-icon.png" Pack="true" PackagePath="" />
     <None Include="..\..\$(PackageLicenseFile)" Condition="Exists('..\..\$(PackageLicenseFile)')" Pack="true" PackagePath="$(PackageLicenseFile)" Visible="false" />
   </ItemGroup>
 
