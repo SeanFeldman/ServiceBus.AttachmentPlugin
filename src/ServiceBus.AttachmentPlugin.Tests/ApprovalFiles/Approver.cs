@@ -18,10 +18,10 @@ namespace Xunit
         {
             get
             {
-                var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+                var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly()!.CodeBase!);
                 var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
                 var dirPath = Path.GetDirectoryName(codeBasePath);
-                return Path.Combine(dirPath, "..", "..", "..", "ApprovalFiles");
+                return Path.Combine(dirPath!, "..", "..", "..", "ApprovalFiles");
             }
         }
 
@@ -44,13 +44,13 @@ namespace Xunit
         /// <param name="value">The string to verify.</param>
         /// <param name="scrubber">A delegate that modifies the received string before comparing it to the approval file.</param>
         /// <param name="scenario">A value that will be added to the name of the approval file.</param>
-        public static void Verify(string value, Func<string, string> scrubber = null, string scenario = null)
+        public static void Verify(string value, Func<string, string>? scrubber = null, string? scenario = null)
         {
             var st = new StackTrace();
             var sf = st.GetFrame(1);
-            var currentMethodName = sf.GetMethod();
+            var currentMethodName = sf!.GetMethod();
 
-            var className = currentMethodName.DeclaringType.Name;
+            var className = currentMethodName!.DeclaringType!.Name;
             var methodName = currentMethodName.Name;
             var scenarioName = string.IsNullOrEmpty(scenario) ? "" : scenario + ".";
 
@@ -79,7 +79,7 @@ namespace Xunit
         /// <param name="value">The object to verify.</param>
         /// <param name="scrubber">A delegate that modifies the received object, after it has been serialized, before comparing it to the approval file.</param>
         /// <param name="scenario">A value that will be added to the name of the approval file.</param>
-        public static void Verify(object value, Func<string, string> scrubber = null, string scenario = null)
+        public static void Verify(object value, Func<string, string>? scrubber = null, string? scenario = null)
         {
             var json = JsonConvert.SerializeObject(value, jsonSerializerSettings);
 
