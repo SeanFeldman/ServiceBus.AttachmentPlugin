@@ -5,8 +5,8 @@
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Core;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
+    using Microsoft.Azure.Storage;
+    using Microsoft.Azure.Storage.Blob;
 
     class AzureStorageAttachment : ServiceBusPlugin
     {

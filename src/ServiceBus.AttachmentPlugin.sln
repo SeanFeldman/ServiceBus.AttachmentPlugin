@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceBus.AttachmentPlugin", "ServiceBus.AttachmentPlugin\ServiceBus.AttachmentPlugin.csproj", "{5B09D75C-3554-4A8B-8DE2-C593CEF79656}"
 EndProject
@@ -10,7 +10,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{2295CF61-70EF-43B4-8747-7C01493D607C}"
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
+		Directory.Build.props = Directory.Build.props
 		..\README.md = ..\README.md
+		..\README.source.md = ..\README.source.md
 	EndProjectSection
 EndProject
 Global
@@ -30,5 +32,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4C3E967C-51BC-43CA-9299-E09D3E7E8CAF}
 	EndGlobalSection
 EndGlobal

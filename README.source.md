@@ -18,6 +18,8 @@ To Install from the Nuget Package Manager Console
 
     PM> Install-Package ServiceBus.AttachmentPlugin
 
+toc
+
 ## Examples
 
 ### Convert body into attachment, no matter how big it is

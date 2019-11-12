@@ -1,5 +1,4 @@
-﻿
-namespace ServiceBus.AttachmentPlugin.Tests
+﻿namespace ServiceBus.AttachmentPlugin.Tests
 {
     using System;
     using System.Text;

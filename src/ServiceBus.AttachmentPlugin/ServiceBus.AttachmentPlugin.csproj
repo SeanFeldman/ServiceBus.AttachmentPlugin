@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <Description>Microsoft Azure ServiceBus attachment plugin</Description>
-    <Version>5.1.0</Version>
+    <Version>6.0.0</Version>
     <Authors>Sean Feldman</Authors>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <PackageTags>Azure;Service Bus;ServiceBus;.NET;AMQP;IoT;Queue;Topic;Attachment;Plugin</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/SeanFeldman/ServiceBus.AttachmentPlugin/master/images/project-icon.png</PackageIconUrl>
-    <PackageLicense>https://raw.githubusercontent.com/SeanFeldman/ServiceBus.AttachmentPlugin/master/LICENSE</PackageLicense>
+    <PackageIcon>project-icon.png</PackageIcon>
+    <PackageLicenseFile Condition="'$(PackageLicenseFile)' == ''">LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin</PackageProjectUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -25,9 +25,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="../../images/project-icon.png" Pack="true" PackagePath="" />
+    <None Include="..\..\$(PackageLicenseFile)" Condition="Exists('..\..\$(PackageLicenseFile)')" Pack="true" PackagePath="$(PackageLicenseFile)" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="2.0.0" />
-    <PackageReference Include="WindowsAzure.Storage" Version="8.5.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19270-01" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.1.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19554-01" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

@@ -4,8 +4,9 @@
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Auth;
+    using Microsoft.Azure.Storage;
+    using Microsoft.Azure.Storage.Auth;
+    using Microsoft.Azure.Storage.Blob;
     using Xunit;
 
     public class When_sending_message_using_connection_string : IClassFixture<AzureStorageEmulatorFixture>
@@ -70,7 +71,7 @@
             var plugin = new AzureStorageAttachment(configuration);
             await plugin.BeforeMessageSend(message);
 
-            var account = CloudStorageAccount.Parse(await configuration.ConnectionStringProvider.GetConnectionString());
+            var account = CloudStorageAccount.Parse(await configuration.ConnectionStringProvider!.GetConnectionString());
             var client = account.CreateCloudBlobClient();
             var container = client.GetContainerReference(configuration.ContainerName);
             var blobName = (string)message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];

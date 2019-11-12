@@ -1,8 +1,8 @@
 ﻿namespace Microsoft.Azure.ServiceBus
 {
     using System;
-    using WindowsAzure.Storage;
-    using WindowsAzure.Storage.Auth;
+    using Storage;
+    using Storage.Auth;
 
     /// <summary>Runtime configuration for Azure Storage Attachment plugin.</summary>
     public class AzureStorageAttachmentConfiguration
@@ -16,7 +16,7 @@
             string connectionString,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            Func<Message, bool> messageMaxSizeReachedCriteria = null)
+            Func<Message, bool>? messageMaxSizeReachedCriteria = default)
             : this(new PlainTextConnectionStringProvider(connectionString), containerName, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
         {
         }
@@ -33,7 +33,7 @@
             string blobEndpoint,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            Func<Message, bool> messageMaxSizeReachedCriteria = null)
+            Func<Message, bool>? messageMaxSizeReachedCriteria = default)
         {
             Guard.AgainstNull(nameof(storageCredentials), storageCredentials);
             Guard.AgainstEmpty(nameof(blobEndpoint), blobEndpoint);
@@ -67,7 +67,7 @@
             IProvideStorageConnectionString connectionStringProvider,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            Func<Message, bool> messageMaxSizeReachedCriteria = null)
+            Func<Message, bool>? messageMaxSizeReachedCriteria = default)
         {
             Guard.AgainstNull(nameof(connectionStringProvider), connectionStringProvider);
             Guard.AgainstEmpty(nameof(containerName), containerName);
@@ -84,7 +84,7 @@
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
         }
 
-        Func<Message, bool> GetMessageMaxSizeReachedCriteria(Func<Message, bool> messageMaxSizeReachedCriteria)
+        Func<Message, bool> GetMessageMaxSizeReachedCriteria(Func<Message, bool>? messageMaxSizeReachedCriteria)
         {
             if (messageMaxSizeReachedCriteria == null)
             {
@@ -103,11 +103,11 @@
             };
         }
 
-        internal IProvideStorageConnectionString ConnectionStringProvider { get; }
+        internal IProvideStorageConnectionString? ConnectionStringProvider { get; }
 
         internal string ContainerName { get; }
 
-        internal string MessagePropertyForBlobSasUri { get; set; }
+        internal string? MessagePropertyForBlobSasUri { get; set; }
 
         internal TimeSpan? BlobSasTokenValidationTime { get; set; }
 
