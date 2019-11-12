@@ -55,6 +55,7 @@
             public FakeClientEntity(string clientTypeName, string postfix, RetryPolicy retryPolicy) : base(clientTypeName, postfix, retryPolicy)
             {
                 RegisteredPlugins = new List<ServiceBusPlugin>();
+                Path = string.Empty;
             }
 
             public override void RegisterPlugin(ServiceBusPlugin serviceBusPlugin)
@@ -70,7 +71,7 @@
 
             public override string Path { get; }
             public override TimeSpan OperationTimeout { get; set; }
-            public override ServiceBusConnection ServiceBusConnection { get; }
+            public override ServiceBusConnection? ServiceBusConnection { get; }
             public override IList<ServiceBusPlugin> RegisteredPlugins { get; }
 
             protected override Task OnClosingAsync()

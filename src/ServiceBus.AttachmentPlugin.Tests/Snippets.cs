@@ -152,6 +152,6 @@ class Snippets
 
     class MyMessage
     {
-        public string MyProperty { get; set; }
+        public string MyProperty { get; set; } = string.Empty;
     }
 }
