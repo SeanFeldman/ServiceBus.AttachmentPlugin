@@ -71,7 +71,7 @@
             var plugin = new AzureStorageAttachment(configuration);
             await plugin.BeforeMessageSend(message);
 
-            var account = CloudStorageAccount.Parse(await configuration.ConnectionStringProvider.GetConnectionString());
+            var account = CloudStorageAccount.Parse(await configuration.ConnectionStringProvider!.GetConnectionString());
             var client = account.CreateCloudBlobClient();
             var container = client.GetContainerReference(configuration.ContainerName);
             var blobName = (string)message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob];
