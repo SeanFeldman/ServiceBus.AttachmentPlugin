@@ -91,7 +91,7 @@ snippet: Configuring_connection_string_provider
 
 snippet: Configuring_plugin_using_StorageCredentials
 
-See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.windowsazure.storage.auth.storagecredentials) for more details.
+See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.storage.auth.storagecredentials) for more details.
 
 ### Using attachments with Azure Functions
 
