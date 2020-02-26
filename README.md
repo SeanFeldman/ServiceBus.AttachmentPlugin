@@ -198,7 +198,7 @@ var config = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint);
 <sup>[snippet source](/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L120-L125) / [anchor](#snippet-configuring_plugin_using_storagecredentials)</sup>
 <!-- endsnippet -->
 
-See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.windowsazure.storage.auth.storagecredentials) for more details.
+See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.storage.auth.storagecredentials?) for more details.
 
 ### Using attachments with Azure Functions
 
