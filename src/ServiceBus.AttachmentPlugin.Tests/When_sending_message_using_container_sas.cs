@@ -159,5 +159,50 @@
 
             Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
         }
+
+        [Fact]
+        public async Task Should_use_blob_name_resolver_when_defined()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes);
+            message.UserProperties["CustomName"] = "NewBlobName";
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint(), 
+                blobNameResolver: msg => msg.UserProperties["CustomName"]?.ToString() ?? "");
+
+            var plugin = new AzureStorageAttachment(configuration);
+            await plugin.BeforeMessageSend(message);
+
+            Assert.Equal("NewBlobName", message.UserProperties["$attachment.blob"].ToString());
+
+            var receivePlugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments"));
+
+            var receivedMessage = await receivePlugin.AfterMessageReceive(message);
+
+            Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
+        }
+
+        [Fact]
+        public async Task Should_use_guid_as_name_when_resolver_is_not_defined()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes);
+            var credentials = new StorageCredentials(await fixture.GetContainerSas("attachments"));
+            var configuration = new AzureStorageAttachmentConfiguration(credentials, fixture.GetBlobEndpoint());
+
+            var plugin = new AzureStorageAttachment(configuration);
+            await plugin.BeforeMessageSend(message);
+            Assert.True(Guid.TryParse(message.UserProperties["$attachment.blob"].ToString(), out _));
+
+            var receivePlugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments"));
+
+            var receivedMessage = await receivePlugin.AfterMessageReceive(message);
+
+            Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
+        }
     }
 }

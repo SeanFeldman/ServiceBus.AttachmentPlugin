@@ -21,6 +21,7 @@
             Assert.Equal(AzureStorageAttachmentConfigurationExtensions.DefaultSasTokenValidationTime.Days, configuration.BlobSasTokenValidationTime!.Value.Days);
             Assert.Equal(AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri, configuration.MessagePropertyForBlobSasUri);
             Assert.True(configuration.MessageMaxSizeReachedCriteria(new Message()));
+            Assert.True(Guid.TryParse(configuration.BlobNameResolver(new Message()), out _));
         }
 
         [Fact]

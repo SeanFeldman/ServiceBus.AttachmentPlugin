@@ -3,9 +3,9 @@ namespace Microsoft.Azure.ServiceBus
 {
     public class AzureStorageAttachmentConfiguration
     {
-        public AzureStorageAttachmentConfiguration(Microsoft.Azure.ServiceBus.IProvideStorageConnectionString connectionStringProvider, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool>? messageMaxSizeReachedCriteria = null) { }
-        public AzureStorageAttachmentConfiguration(string connectionString, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool>? messageMaxSizeReachedCriteria = null) { }
-        public AzureStorageAttachmentConfiguration(Microsoft.Azure.Storage.Auth.StorageCredentials storageCredentials, string blobEndpoint, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool>? messageMaxSizeReachedCriteria = null) { }
+        public AzureStorageAttachmentConfiguration(Microsoft.Azure.ServiceBus.IProvideStorageConnectionString connectionStringProvider, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool>? messageMaxSizeReachedCriteria = null, System.Func<Microsoft.Azure.ServiceBus.Message, string>? blobNameResolver = null) { }
+        public AzureStorageAttachmentConfiguration(string connectionString, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool>? messageMaxSizeReachedCriteria = null, System.Func<Microsoft.Azure.ServiceBus.Message, string>? blobNameResolver = null) { }
+        public AzureStorageAttachmentConfiguration(Microsoft.Azure.Storage.Auth.StorageCredentials storageCredentials, string blobEndpoint, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool>? messageMaxSizeReachedCriteria = null, System.Func<Microsoft.Azure.ServiceBus.Message, string>? blobNameResolver = null) { }
     }
     public static class AzureStorageAttachmentConfigurationExtensions
     {

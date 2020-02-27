@@ -12,12 +12,14 @@
         /// <param name="containerName"></param>
         /// <param name="messagePropertyToIdentifyAttachmentBlob"></param>
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
+        /// <param name="blobNameResolver">Default is always use Guid.NewGuid()</param>
         public AzureStorageAttachmentConfiguration(
             string connectionString,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            Func<Message, bool>? messageMaxSizeReachedCriteria = default)
-            : this(new PlainTextConnectionStringProvider(connectionString), containerName, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
+            Func<Message, bool>? messageMaxSizeReachedCriteria = default,
+            Func<Message, string>? blobNameResolver = default)
+            : this(new PlainTextConnectionStringProvider(connectionString), containerName, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria, blobNameResolver)
         {
         }
 
@@ -28,12 +30,14 @@
         /// <param name="containerName"></param>
         /// <param name="messagePropertyToIdentifyAttachmentBlob"></param>
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
+        /// <param name="blobNameResolver">Default is always use Guid.NewGuid()</param>
         public AzureStorageAttachmentConfiguration(
             StorageCredentials storageCredentials,
             string blobEndpoint,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            Func<Message, bool>? messageMaxSizeReachedCriteria = default)
+            Func<Message, bool>? messageMaxSizeReachedCriteria = default,
+            Func<Message, string>? blobNameResolver = default)
         {
             Guard.AgainstNull(nameof(storageCredentials), storageCredentials);
             Guard.AgainstEmpty(nameof(blobEndpoint), blobEndpoint);
@@ -45,6 +49,7 @@
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
+            BlobNameResolver = GetBlobNameResolver(blobNameResolver);
         }
 
         static Uri EnsureBlobEndpointEndsWithSlash(string blobEndpoint)
@@ -63,11 +68,13 @@
         /// <param name="containerName">Storage container name</param>
         /// <param name="messagePropertyToIdentifyAttachmentBlob">Message user property to use for blob URI</param>
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
+        /// <param name="blobNameResolver">Default is always use Guid.NewGuid()</param>
         public AzureStorageAttachmentConfiguration(
             IProvideStorageConnectionString connectionStringProvider,
             string containerName = "attachments",
             string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
-            Func<Message, bool>? messageMaxSizeReachedCriteria = default)
+            Func<Message, bool>? messageMaxSizeReachedCriteria = default, 
+            Func<Message, string>? blobNameResolver = default)
         {
             Guard.AgainstNull(nameof(connectionStringProvider), connectionStringProvider);
             Guard.AgainstEmpty(nameof(containerName), containerName);
@@ -82,6 +89,7 @@
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
+            BlobNameResolver = GetBlobNameResolver(blobNameResolver);
         }
 
         Func<Message, bool> GetMessageMaxSizeReachedCriteria(Func<Message, bool>? messageMaxSizeReachedCriteria)
@@ -103,6 +111,26 @@
             };
         }
 
+        Func<Message, string> GetBlobNameResolver(Func<Message, string>? blobNameResolver)
+        {
+            if (blobNameResolver == null)
+            {
+                return _ => Guid.NewGuid().ToString();
+            }
+            
+            return message =>
+            {
+                try
+                {
+                    return blobNameResolver(message);
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception("An exception occurred when executing the BlobNameResolver delegate.", exception);
+                }
+            };
+        }
+
         internal IProvideStorageConnectionString? ConnectionStringProvider { get; }
 
         internal string ContainerName { get; }
@@ -114,6 +142,8 @@
         internal string MessagePropertyToIdentifyAttachmentBlob { get; }
 
         internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
+        
+        internal Func<Message, string> BlobNameResolver { get; }
 
         internal StorageCredentials StorageCredentials { get; }
 

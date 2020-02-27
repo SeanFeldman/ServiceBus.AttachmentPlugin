@@ -182,5 +182,39 @@
 
             Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
         }
+
+        [Fact]
+        public async Task Should_use_blob_name_resolver_when_defined()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes)
+            {
+                MessageId = Guid.NewGuid().ToString(),
+            };
+            message.UserProperties["CustomName"] = "NewBlobName";
+            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName:"attachments", 
+                blobNameResolver: msg => msg.UserProperties["CustomName"]?.ToString() ?? ""));
+            var result = await plugin.BeforeMessageSend(message);
+
+            Assert.Equal("NewBlobName", message.UserProperties["$attachment.blob"].ToString());
+        }
+
+        [Fact]
+        public async Task Should_use_guid_as_name_when_resolver_is_not_defined()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes)
+            {
+                MessageId = Guid.NewGuid().ToString(),
+            };
+            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName:"attachments"));
+            var result = await plugin.BeforeMessageSend(message);
+            
+            Assert.True(Guid.TryParse(message.UserProperties["$attachment.blob"].ToString(), out _));
+        }
     }
 }
