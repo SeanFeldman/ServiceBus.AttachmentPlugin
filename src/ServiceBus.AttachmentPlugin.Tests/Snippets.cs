@@ -63,6 +63,23 @@ class Snippets
         #endregion
     }
 
+    void Configure_blob_name_override(string connectionString, string queueName, string storageConnectionString)
+    {
+        #region Configure_blob_name_override
+
+        var sender = new MessageSender(connectionString, queueName);
+        var config = new AzureStorageAttachmentConfiguration(storageConnectionString)
+            .OverrideBlobName(message =>
+            {
+                var tenantId = message.UserProperties["tenantId"].ToString();
+                var blobName = $"{tenantId}/{message.MessageId}";
+                return blobName;
+            });
+        sender.RegisterAzureStorageAttachmentPlugin(config);
+
+        #endregion
+    }
+
     [SuppressMessage("ReSharper", "UnusedVariable")]
     void AttachmentSendingSas()
     {

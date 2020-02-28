@@ -39,5 +39,33 @@
             return azureStorageAttachmentConfiguration;
         }
 
+        /// <summary>
+        /// Allow attachment blob name overriding.
+        /// </summary>
+        /// <param name="azureStorageAttachmentConfiguration"></param>
+        /// <param name="blobNameResolver">A custom blob name resolver to override the default name set to a GUID.</param>
+        /// <returns></returns>
+        public static AzureStorageAttachmentConfiguration OverrideBlobName(
+            this AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration,
+            Func<Message, string> blobNameResolver)
+        {
+            Guard.AgainstNull(nameof(blobNameResolver), blobNameResolver);
+
+            azureStorageAttachmentConfiguration.BlobNameResolver = BlobNameResolver;
+
+            return azureStorageAttachmentConfiguration;
+
+            string BlobNameResolver(Message message)
+            {
+                try
+                {
+                    return blobNameResolver(message);
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception("An exception occurred when executing the blobNameResolver delegate.", exception);
+                }
+            }
+        }
     }
 }

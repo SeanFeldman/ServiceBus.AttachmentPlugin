@@ -120,5 +120,7 @@
         internal bool UsingSas => StorageCredentials.IsSAS;
 
         internal Uri BlobEndpoint { get; }
+
+        internal Func<Message, string> BlobNameResolver { get; set; } = message => Guid.NewGuid().ToString();
     }
 }
