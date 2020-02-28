@@ -66,6 +66,13 @@ Default blob identifier property name is "$attachment.blob".
 new AzureStorageAttachmentConfiguration(storageConnectionString, messagePropertyToIdentifyAttachmentBlob: "myblob");
 ```
 
+### Configure custom blob name override
+
+Default blob name is a GUID.
+
+snippet: Configure_blob_name_override
+
+
 ### Configure message property for SAS uri to attachment blob
 
 Default SAS uri property name is "$attachment.sas.uri".
@@ -91,7 +98,7 @@ snippet: Configuring_connection_string_provider
 
 snippet: Configuring_plugin_using_StorageCredentials
 
-See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.windowsazure.storage.auth.storagecredentials) for more details.
+See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.storage.auth.storagecredentials) for more details.
 
 ### Using attachments with Azure Functions
 
