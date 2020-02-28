@@ -1,5 +1,6 @@
 ﻿namespace ServiceBus.AttachmentPlugin.Tests
 {
+    using System;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
@@ -70,6 +71,27 @@
             var receivedMessage = await message.DownloadAzureStorageAttachment(customSasUri);
 
             Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
+        }
+
+        [Fact]
+        public async Task Should_be_able_to_override_blob_name_and_receive_message_payload_using_the_new_name()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes) { MessageId = Guid.NewGuid().ToString("N") };
+            var configuration = new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider);
+
+            configuration.OverrideBlobName(msg => $"test/{msg.MessageId}");
+
+            await message.UploadAzureStorageAttachment(configuration);
+
+            Assert.Null(message.Body);
+
+            var receivedMessage = await message.DownloadAzureStorageAttachment(configuration);
+
+            Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
+            Assert.Equal($"test/{message.MessageId}", message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob]);
         }
     }
 }

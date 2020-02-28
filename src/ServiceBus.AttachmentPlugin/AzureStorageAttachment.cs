@@ -56,7 +56,8 @@
                 // swallow in case a container SAS is used
             }
 
-            var blobUri = new Uri($"{containerUri}/{Guid.NewGuid().ToString()}");
+            var blobName = configuration.BlobNameResolver(message);
+            var blobUri = new Uri($"{containerUri}/{blobName}");
             var blob = new CloudBlockBlob(blobUri, configuration.StorageCredentials);
 
             SetValidMessageId(blob, message.MessageId);
@@ -104,7 +105,7 @@
         public override async Task<Message> AfterMessageReceive(Message message)
         {
             var userProperties = message.UserProperties;
-            
+
             if (!userProperties.TryGetValue(configuration.MessagePropertyToIdentifyAttachmentBlob, out var blobNameObject))
             {
                 return message;
