@@ -266,7 +266,7 @@ The plugin does **NOT** implement cleanup for the reasons stated [here](https://
 
 ![Microsoft](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/microsoft.png)
 ![Codit](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/Codit.png)
-![Hemonto]((https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/Hemonto.png))
+![Hemonto]((https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/Hemonto.png)
 
 Proudly list your company here if use this plugin in production
 
