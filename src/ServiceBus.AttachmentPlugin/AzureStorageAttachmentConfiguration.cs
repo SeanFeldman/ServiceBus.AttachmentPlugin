@@ -103,15 +103,24 @@
             };
         }
 
-        internal IProvideStorageConnectionString? ConnectionStringProvider { get; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public IProvideStorageConnectionString? ConnectionStringProvider { get; }
 
-        internal string ContainerName { get; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ContainerName { get; }
 
         internal string? MessagePropertyForBlobSasUri { get; set; }
 
         internal TimeSpan? BlobSasTokenValidationTime { get; set; }
 
-        internal string MessagePropertyToIdentifyAttachmentBlob { get; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string MessagePropertyToIdentifyAttachmentBlob { get; }
 
         internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
 
