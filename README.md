@@ -262,6 +262,8 @@ await message.DownloadAzureStorageAttachment(config);
 
 The plugin does **NOT** implement cleanup for the reasons stated [here](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/issues/86#issuecomment-458541694). When cleanup is required, there are a few [options available](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/issues/86#issue-404101630) depending on the use case.
 
+It is, however, possible to reuse the plugin's settings from properties on `AzureStorageAttachmentConfiguration` in order to implement your own cleanup solution.
+
 ## Who's trusting this plugin in production
 
 ![Microsoft](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/microsoft.png)
