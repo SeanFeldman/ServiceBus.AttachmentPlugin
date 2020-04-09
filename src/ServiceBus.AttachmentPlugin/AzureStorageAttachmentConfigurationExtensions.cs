@@ -63,7 +63,7 @@
                 }
                 catch (Exception exception)
                 {
-                    throw new Exception("An exception occurred when executing the blobNameResolver delegate.", exception);
+                    throw new Exception($"An exception occurred when executing the {nameof(blobNameResolver)} delegate.", exception);
                 }
             }
         }
