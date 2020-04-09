@@ -168,15 +168,6 @@ var config = new AzureStorageAttachmentConfiguration(storageConnectionString)
 sender.RegisterAzureStorageAttachmentPlugin(config);
 ```
 <sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L68-L80' title='File snippet `configure_blob_name_override` was extracted from'>snippet source</a> | <a href='#snippet-configure_blob_name_override' title='Navigate to start of snippet `configure_blob_name_override`'>anchor</a></sup>
-<a id='snippet-configure_blob_name_override-1'/></a>
-```cs
-var sender = new MessageSender(connectionString, queueName);
-var config = new AzureStorageAttachmentConfiguration(storageConnectionString)
-    .OverrideBody(message => Array.Empty<byte>());
-
-sender.RegisterAzureStorageAttachmentPlugin(config);
-```
-<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L85-L93' title='File snippet `configure_blob_name_override` was extracted from'>snippet source</a> | <a href='#snippet-configure_blob_name_override-1' title='Navigate to start of snippet `configure_blob_name_override`'>anchor</a></sup>
 <!-- endsnippet -->
 
 

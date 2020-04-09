@@ -82,7 +82,7 @@ class Snippets
 
     void Configure_body_override(string connectionString, string queueName, string storageConnectionString)
     {
-        #region Configure_blob_name_override
+        #region Configure_body_override
 
         var sender = new MessageSender(connectionString, queueName);
         var config = new AzureStorageAttachmentConfiguration(storageConnectionString)
