@@ -103,24 +103,15 @@
             };
         }
 
-        /// <summary>
-        /// Provider to retrieve connection string such as <see cref="PlainTextConnectionStringProvider"/>
-        /// </summary>
-        public IProvideStorageConnectionString? ConnectionStringProvider { get; }
+        internal IProvideStorageConnectionString? ConnectionStringProvider { get; }
 
-        /// <summary>
-        /// Storage container name
-        /// </summary>
-        public string ContainerName { get; }
+        internal string ContainerName { get; }
 
         internal string? MessagePropertyForBlobSasUri { get; set; }
 
         internal TimeSpan? BlobSasTokenValidationTime { get; set; }
 
-        /// <summary>
-        /// Message user property to use for blob URI
-        /// </summary>
-        public string MessagePropertyToIdentifyAttachmentBlob { get; }
+        internal string MessagePropertyToIdentifyAttachmentBlob { get; }
 
         internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
 
