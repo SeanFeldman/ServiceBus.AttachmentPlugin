@@ -10,6 +10,7 @@ namespace Microsoft.Azure.ServiceBus
     public static class AzureStorageAttachmentConfigurationExtensions
     {
         public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration OverrideBlobName(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, System.Func<Microsoft.Azure.ServiceBus.Message, string> blobNameResolver) { }
+        public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration OverrideBodyReplacer(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, System.Func<Microsoft.Azure.ServiceBus.Message, byte[]> bodyReplacer) { }
         public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration WithBlobSasUri(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, string messagePropertyToIdentifySasUri = "$attachment.sas.uri", System.TimeSpan? sasTokenValidationTime = default) { }
     }
     public static class AzureStorageAttachmentExtensions
