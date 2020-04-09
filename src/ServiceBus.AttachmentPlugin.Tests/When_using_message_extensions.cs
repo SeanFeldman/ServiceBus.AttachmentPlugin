@@ -105,7 +105,7 @@
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
                     connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id")
-                .OverrideBodyReplacer(msg => Array.Empty<byte>()));
+                .OverrideBody(msg => Array.Empty<byte>()));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.NotNull(result.Body);

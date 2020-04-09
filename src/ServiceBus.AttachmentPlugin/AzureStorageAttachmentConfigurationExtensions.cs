@@ -77,7 +77,7 @@
         /// <param name="azureStorageAttachmentConfiguration"></param>
         /// <param name="bodyReplacer">A custom body replacer.</param>
         /// <returns></returns>
-        public static AzureStorageAttachmentConfiguration OverrideBodyReplacer(
+        public static AzureStorageAttachmentConfiguration OverrideBody(
             this AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration,
             Func<Message, byte[]> bodyReplacer)
         {
