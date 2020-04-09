@@ -67,5 +67,37 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Allow body replacement override.
+        /// <remarks>
+        /// By default, message body is replaced with null.
+        /// </remarks>
+        /// </summary>
+        /// <param name="azureStorageAttachmentConfiguration"></param>
+        /// <param name="bodyReplacer">A custom body replacer.</param>
+        /// <returns></returns>
+        public static AzureStorageAttachmentConfiguration OverrideBodyReplacer(
+            this AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration,
+            Func<Message, byte[]> bodyReplacer)
+        {
+            Guard.AgainstNull(nameof(bodyReplacer), bodyReplacer);
+
+            azureStorageAttachmentConfiguration.BodyReplacer = BodyReplacer;
+
+            return azureStorageAttachmentConfiguration;
+
+            byte[] BodyReplacer(Message message)
+            {
+                try
+                {
+                    return bodyReplacer(message);
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception($"An exception occurred when executing {nameof(bodyReplacer)} delegate.", exception);
+                }
+            }
+        }
     }
 }
