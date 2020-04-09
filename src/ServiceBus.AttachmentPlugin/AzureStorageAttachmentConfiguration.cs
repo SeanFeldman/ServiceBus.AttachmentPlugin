@@ -13,7 +13,7 @@
         public const string DefaultContainerName = "attachments";
 
         /// <summary>
-        /// Message user property to use for blob URI
+        /// Default message user property to use for blob URI
         /// </summary>
         public const string DefaultMessagePropertyToIdentifyAttachmentBlob = "$attachment.blob";
 
