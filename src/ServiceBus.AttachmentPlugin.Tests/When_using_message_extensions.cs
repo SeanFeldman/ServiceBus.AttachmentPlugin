@@ -93,5 +93,39 @@
             Assert.Equal(payload, Encoding.UTF8.GetString(receivedMessage.Body));
             Assert.Equal($"test/{message.MessageId}", message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob]);
         }
+
+        [Fact]
+        public async Task Should_set_body_to_the_value_provided_by_body_replacer_override()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes)
+            {
+                MessageId = Guid.NewGuid().ToString(),
+            };
+            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                    connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id")
+                .OverrideBodyReplacer(msg => Array.Empty<byte>()));
+            var result = await plugin.BeforeMessageSend(message);
+
+            Assert.NotNull(result.Body);
+            Assert.Equal(Array.Empty<byte>(), result.Body);
+        }
+
+        [Fact]
+        public async Task Should_set_body_to_null_if_body_replacer_override_is_not_provided()
+        {
+            var payload = "payload";
+            var bytes = Encoding.UTF8.GetBytes(payload);
+            var message = new Message(bytes)
+            {
+                MessageId = Guid.NewGuid().ToString(),
+            };
+            var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
+                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
+            var result = await plugin.BeforeMessageSend(message);
+
+            Assert.Null(result.Body);
+        }
     }
 }
