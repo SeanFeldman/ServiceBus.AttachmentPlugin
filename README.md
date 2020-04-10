@@ -136,7 +136,7 @@ var message = await messageReceiver.ReceiveAsync().ConfigureAwait(false);
 
 ### Configure blob container name
 
-Default container name is "attachments".
+Default container name is "attachments". The value is available via `AzureStorageAttachmentConfiguration.DefaultContainerName` constant.
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"blobs");
@@ -144,7 +144,7 @@ new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"
 
 ### Configure message property to identify attachment blob
 
-Default blob identifier property name is "$attachment.blob".
+Default blob identifier property name is "$attachment.blob". The value is available via `AzureStorageAttachmentConfiguration.DefaultMessagePropertyToIdentifyAttachmentBlob` constant.
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, messagePropertyToIdentifyAttachmentBlob: "myblob");
