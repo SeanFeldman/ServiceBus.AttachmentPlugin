@@ -132,5 +132,7 @@
         internal Uri BlobEndpoint { get; }
 
         internal Func<Message, string> BlobNameResolver { get; set; } = message => Guid.NewGuid().ToString();
+
+        internal Func<Message, byte[]?> BodyReplacer { get; set; } = message => null;
     }
 }

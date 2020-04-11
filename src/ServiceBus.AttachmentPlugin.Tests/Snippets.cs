@@ -80,6 +80,19 @@ class Snippets
         #endregion
     }
 
+    void Configure_body_override(string connectionString, string queueName, string storageConnectionString)
+    {
+        #region Configure_body_override
+
+        var sender = new MessageSender(connectionString, queueName);
+        var config = new AzureStorageAttachmentConfiguration(storageConnectionString)
+            .OverrideBody(message => Array.Empty<byte>());
+
+        sender.RegisterAzureStorageAttachmentPlugin(config);
+
+        #endregion
+    }
+
     [SuppressMessage("ReSharper", "UnusedVariable")]
     void AttachmentSendingSas()
     {

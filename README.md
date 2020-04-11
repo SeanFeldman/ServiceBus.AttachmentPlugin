@@ -118,7 +118,7 @@ var serialized = JsonConvert.SerializeObject(payload);
 var payloadAsBytes = Encoding.UTF8.GetBytes(serialized);
 var message = new Message(payloadAsBytes);
 ```
-<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L86-L96' title='File snippet `attachmentsendingsas` was extracted from'>snippet source</a> | <a href='#snippet-attachmentsendingsas' title='Navigate to start of snippet `attachmentsendingsas`'>anchor</a></sup>
+<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L99-L109' title='File snippet `attachmentsendingsas` was extracted from'>snippet source</a> | <a href='#snippet-attachmentsendingsas' title='Navigate to start of snippet `attachmentsendingsas`'>anchor</a></sup>
 <!-- endsnippet -->
 
 Receiving only mode (w/o Storage account credentials)
@@ -131,12 +131,12 @@ Receiving only mode (w/o Storage account credentials)
 messageReceiver.RegisterAzureStorageAttachmentPluginForReceivingOnly("mySasUriProperty");
 var message = await messageReceiver.ReceiveAsync().ConfigureAwait(false);
 ```
-<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L102-L109' title='File snippet `attachmentreceivingsas` was extracted from'>snippet source</a> | <a href='#snippet-attachmentreceivingsas' title='Navigate to start of snippet `attachmentreceivingsas`'>anchor</a></sup>
+<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L115-L122' title='File snippet `attachmentreceivingsas` was extracted from'>snippet source</a> | <a href='#snippet-attachmentreceivingsas' title='Navigate to start of snippet `attachmentreceivingsas`'>anchor</a></sup>
 <!-- endsnippet -->
 
 ### Configure blob container name
 
-Default container name is "attachments".
+Default container name is "attachments". The value is available via `AzureStorageAttachmentConfiguration.DefaultContainerName` constant.
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"blobs");
@@ -144,7 +144,7 @@ new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"
 
 ### Configure message property to identify attachment blob
 
-Default blob identifier property name is "$attachment.blob".
+Default blob identifier property name is "$attachment.blob". The value is available via `AzureStorageAttachmentConfiguration.DefaultMessagePropertyToIdentifyAttachmentBlob` constant.
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, messagePropertyToIdentifyAttachmentBlob: "myblob");
@@ -190,7 +190,7 @@ Default is to convert any body to attachment.
 new AzureStorageAttachmentConfiguration(storageConnectionString,
     messageMaxSizeReachedCriteria: message => message.Body.Length > 200 * 1024);
 ```
-<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L114-L120' title='File snippet `configure_criteria_for_message_max_size_identification` was extracted from'>snippet source</a> | <a href='#snippet-configure_criteria_for_message_max_size_identification' title='Navigate to start of snippet `configure_criteria_for_message_max_size_identification`'>anchor</a></sup>
+<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L127-L133' title='File snippet `configure_criteria_for_message_max_size_identification` was extracted from'>snippet source</a> | <a href='#snippet-configure_criteria_for_message_max_size_identification' title='Navigate to start of snippet `configure_criteria_for_message_max_size_identification`'>anchor</a></sup>
 <!-- endsnippet -->
 
 ### Configuring connection string provider
@@ -204,7 +204,7 @@ The plugin comes with a `PlainTextConnectionStringProvider` and can be used in t
 var provider = new PlainTextConnectionStringProvider(connectionString);
 var config = new AzureStorageAttachmentConfiguration(provider);
 ```
-<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L126-L131' title='File snippet `configuring_connection_string_provider` was extracted from'>snippet source</a> | <a href='#snippet-configuring_connection_string_provider' title='Navigate to start of snippet `configuring_connection_string_provider`'>anchor</a></sup>
+<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L139-L144' title='File snippet `configuring_connection_string_provider` was extracted from'>snippet source</a> | <a href='#snippet-configuring_connection_string_provider' title='Navigate to start of snippet `configuring_connection_string_provider`'>anchor</a></sup>
 <!-- endsnippet -->
 
 ### Configuring plugin using StorageCredentials (Service or Container SAS)
@@ -215,7 +215,7 @@ var config = new AzureStorageAttachmentConfiguration(provider);
 var credentials = new StorageCredentials( /*Shared key OR Service SAS OR Container SAS*/);
 var config = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint);
 ```
-<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L137-L142' title='File snippet `configuring_plugin_using_storagecredentials` was extracted from'>snippet source</a> | <a href='#snippet-configuring_plugin_using_storagecredentials' title='Navigate to start of snippet `configuring_plugin_using_storagecredentials`'>anchor</a></sup>
+<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L150-L155' title='File snippet `configuring_plugin_using_storagecredentials` was extracted from'>snippet source</a> | <a href='#snippet-configuring_plugin_using_storagecredentials' title='Navigate to start of snippet `configuring_plugin_using_storagecredentials`'>anchor</a></sup>
 <!-- endsnippet -->
 
 See [`StorageCredentials`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.storage.auth.storagecredentials) for more details.
@@ -234,7 +234,7 @@ Upload attachment to Azure Storage blob
 //To make it possible to use SAS URI when downloading, use WithBlobSasUri() when creating configuration object
 await message.UploadAzureStorageAttachment(config);
 ```
-<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L147-L152' title='File snippet `upload_attachment_without_registering_plugin` was extracted from'>snippet source</a> | <a href='#snippet-upload_attachment_without_registering_plugin' title='Navigate to start of snippet `upload_attachment_without_registering_plugin`'>anchor</a></sup>
+<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L160-L165' title='File snippet `upload_attachment_without_registering_plugin` was extracted from'>snippet source</a> | <a href='#snippet-upload_attachment_without_registering_plugin' title='Navigate to start of snippet `upload_attachment_without_registering_plugin`'>anchor</a></sup>
 <!-- endsnippet -->
 
 Download attachment from Azure Storage blob
@@ -251,7 +251,7 @@ await message.DownloadAzureStorageAttachment("$custom-attachment.sas.uri");
 //Using configuration object
 await message.DownloadAzureStorageAttachment(config);
 ```
-<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L156-L167' title='File snippet `download_attachment_without_registering_plugin` was extracted from'>snippet source</a> | <a href='#snippet-download_attachment_without_registering_plugin' title='Navigate to start of snippet `download_attachment_without_registering_plugin`'>anchor</a></sup>
+<sup><a href='/src/ServiceBus.AttachmentPlugin.Tests/Snippets.cs#L169-L180' title='File snippet `download_attachment_without_registering_plugin` was extracted from'>snippet source</a> | <a href='#snippet-download_attachment_without_registering_plugin' title='Navigate to start of snippet `download_attachment_without_registering_plugin`'>anchor</a></sup>
 <!-- endsnippet -->
 
 #### Additional providers

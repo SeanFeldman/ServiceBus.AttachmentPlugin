@@ -65,7 +65,7 @@
 
             await blob.UploadFromByteArrayAsync(message.Body, 0, message.Body.Length).ConfigureAwait(false);
 
-            message.Body = null;
+            message.Body = configuration.BodyReplacer(message);
             message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob] = blob.Name;
 
             if (!configuration.BlobSasTokenValidationTime.HasValue)
