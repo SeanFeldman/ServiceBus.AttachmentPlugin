@@ -75,11 +75,11 @@ snippet: Configure_blob_name_override
 
 ### Configure message property for SAS uri to attachment blob
 
-Default SAS uri property name is "$attachment.sas.uri".
+Default SAS uri property name is "$attachment.sas.uri". The value is available via `AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri` constant.
 
-```c#
-new AzureStorageAttachmentConfiguration(storageConnectionString).WithSasUri(messagePropertyToIdentifySasUri: "mySasUriProperty");
-```
+Default SAS token validation time is 7 days. The value is available via `AzureStorageAttachmentConfigurationExtensions.DefaultSasTokenValidationTime` constant.
+
+snippet: Configure_blob_sas_uri_override
 
 ### Configure criteria for message max size identification
 

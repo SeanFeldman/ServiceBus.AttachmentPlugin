@@ -7,8 +7,15 @@
     /// </summary>
     public static class AzureStorageAttachmentConfigurationExtensions
     {
-        internal const string DefaultMessagePropertyToIdentitySasUri = "$attachment.sas.uri";
-        internal static TimeSpan DefaultSasTokenValidationTime = TimeSpan.FromDays(7);
+        /// <summary>
+        /// Default message property which contains the SAS URI used to fetch message body from blob.
+        /// </summary>
+        public const string DefaultMessagePropertyToIdentitySasUri = "$attachment.sas.uri";
+
+        /// <summary>
+        /// Default time the blob SAS URI is valid for.
+        /// </summary>
+        public static readonly TimeSpan DefaultSasTokenValidationTime = TimeSpan.FromDays(7);
 
         /// <summary>
         /// Adds blob SAS URI configuration.
