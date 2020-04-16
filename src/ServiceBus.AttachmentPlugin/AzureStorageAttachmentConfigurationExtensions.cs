@@ -79,7 +79,7 @@
         /// <returns></returns>
         public static AzureStorageAttachmentConfiguration OverrideBody(
             this AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration,
-            Func<Message, byte[]> bodyReplacer)
+            Func<Message, byte[]?> bodyReplacer)
         {
             Guard.AgainstNull(nameof(bodyReplacer), bodyReplacer);
 
@@ -87,7 +87,7 @@
 
             return azureStorageAttachmentConfiguration;
 
-            byte[] BodyReplacer(Message message)
+            byte[]? BodyReplacer(Message message)
             {
                 try
                 {
