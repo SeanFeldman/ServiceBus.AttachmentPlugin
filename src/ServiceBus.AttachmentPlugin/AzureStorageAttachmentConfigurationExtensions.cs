@@ -7,9 +7,6 @@
     /// </summary>
     public static class AzureStorageAttachmentConfigurationExtensions
     {
-        /// <summary>
-        /// Default time the blob SAS URI is valid for.
-        /// </summary>
         internal static readonly TimeSpan DefaultSasTokenValidationTime = TimeSpan.FromDays(7);
 
         /// <summary>
