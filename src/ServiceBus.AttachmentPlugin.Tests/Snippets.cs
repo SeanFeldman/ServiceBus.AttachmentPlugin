@@ -80,6 +80,18 @@ class Snippets
         #endregion
     }
 
+    void Configure_blob_sas_uri_override(string storageConnectionString)
+    {
+        #region Configure_blob_sas_uri_override
+
+        new AzureStorageAttachmentConfiguration(storageConnectionString)
+            .WithBlobSasUri(
+                messagePropertyToIdentifySasUri: "mySasUriProperty",
+                sasTokenValidationTime: TimeSpan.FromHours(12));
+
+        #endregion
+    }
+
     void Configure_body_override(string connectionString, string queueName, string storageConnectionString)
     {
         #region Configure_body_override

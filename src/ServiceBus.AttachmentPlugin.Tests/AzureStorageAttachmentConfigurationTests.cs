@@ -19,7 +19,7 @@
             Assert.NotEmpty(configuration.ContainerName);
             Assert.NotEmpty(configuration.MessagePropertyToIdentifyAttachmentBlob);
             Assert.Equal(AzureStorageAttachmentConfigurationExtensions.DefaultSasTokenValidationTime.Days, configuration.BlobSasTokenValidationTime!.Value.Days);
-            Assert.Equal(AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri, configuration.MessagePropertyForBlobSasUri);
+            Assert.Equal(AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentitySasUri, configuration.MessagePropertyForBlobSasUri);
             Assert.True(configuration.MessageMaxSizeReachedCriteria(new Message()));
         }
 
