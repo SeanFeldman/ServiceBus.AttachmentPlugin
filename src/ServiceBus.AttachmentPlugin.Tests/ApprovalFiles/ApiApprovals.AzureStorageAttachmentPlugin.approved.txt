@@ -3,15 +3,18 @@ namespace Microsoft.Azure.ServiceBus
 {
     public class AzureStorageAttachmentConfiguration
     {
-        public const string DefaultContainerName = "attachments";
-        public const string DefaultMessagePropertyToIdentifyAttachmentBlob = "$attachment.blob";
         public AzureStorageAttachmentConfiguration(Microsoft.Azure.ServiceBus.IProvideStorageConnectionString connectionStringProvider, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool>? messageMaxSizeReachedCriteria = null) { }
         public AzureStorageAttachmentConfiguration(string connectionString, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool>? messageMaxSizeReachedCriteria = null) { }
         public AzureStorageAttachmentConfiguration(Microsoft.Azure.Storage.Auth.StorageCredentials storageCredentials, string blobEndpoint, string containerName = "attachments", string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob", System.Func<Microsoft.Azure.ServiceBus.Message, bool>? messageMaxSizeReachedCriteria = null) { }
     }
+    public static class AzureStorageAttachmentConfigurationConstants
+    {
+        public const string DefaultContainerName = "attachments";
+        public const string DefaultMessagePropertyToIdentifyAttachmentBlob = "$attachment.blob";
+        public const string DefaultMessagePropertyToIdentitySasUri = "$attachment.sas.uri";
+    }
     public static class AzureStorageAttachmentConfigurationExtensions
     {
-        public const string DefaultMessagePropertyToIdentitySasUri = "$attachment.sas.uri";
         public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration OverrideBlobName(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, System.Func<Microsoft.Azure.ServiceBus.Message, string> blobNameResolver) { }
         public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration OverrideBody(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, System.Func<Microsoft.Azure.ServiceBus.Message, byte[]> bodyReplacer) { }
         public static Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration WithBlobSasUri(this Microsoft.Azure.ServiceBus.AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration, string messagePropertyToIdentifySasUri = "$attachment.sas.uri", System.TimeSpan? sasTokenValidationTime = default) { }

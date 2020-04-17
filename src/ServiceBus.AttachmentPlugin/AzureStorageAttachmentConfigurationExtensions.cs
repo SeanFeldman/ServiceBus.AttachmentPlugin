@@ -8,11 +8,6 @@
     public static class AzureStorageAttachmentConfigurationExtensions
     {
         /// <summary>
-        /// Default message property which contains the SAS URI used to fetch message body from blob.
-        /// </summary>
-        public const string DefaultMessagePropertyToIdentitySasUri = "$attachment.sas.uri";
-
-        /// <summary>
         /// Default time the blob SAS URI is valid for.
         /// </summary>
         internal static readonly TimeSpan DefaultSasTokenValidationTime = TimeSpan.FromDays(7);
@@ -26,7 +21,7 @@
         /// <returns></returns>
         public static AzureStorageAttachmentConfiguration WithBlobSasUri(
             this AzureStorageAttachmentConfiguration azureStorageAttachmentConfiguration,
-            string messagePropertyToIdentifySasUri = DefaultMessagePropertyToIdentitySasUri,
+            string messagePropertyToIdentifySasUri = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentitySasUri,
             TimeSpan? sasTokenValidationTime = null)
         {
             if (azureStorageAttachmentConfiguration.UsingSas)

@@ -52,7 +52,7 @@ snippet: AttachmentReceivingSas
 
 ### Configure blob container name
 
-Default container name is "attachments". The value is available via `AzureStorageAttachmentConfiguration.DefaultContainerName` constant.
+Default container name is "attachments". The value is available via `AzureStorageAttachmentConfigurationConstants.DefaultContainerName` constant.
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"blobs");
@@ -60,7 +60,7 @@ new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"
 
 ### Configure message property to identify attachment blob
 
-Default blob identifier property name is "$attachment.blob". The value is available via `AzureStorageAttachmentConfiguration.DefaultMessagePropertyToIdentifyAttachmentBlob` constant.
+Default blob identifier property name is "$attachment.blob". The value is available via `AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob` constant.
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, messagePropertyToIdentifyAttachmentBlob: "myblob");
@@ -75,9 +75,9 @@ snippet: Configure_blob_name_override
 
 ### Configure message property for SAS uri to attachment blob
 
-Default SAS uri property name is "$attachment.sas.uri". The value is available via `AzureStorageAttachmentConfigurationExtensions.DefaultMessagePropertyToIdentitySasUri` constant.
+Default SAS uri property name is "$attachment.sas.uri". The value is available via `AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentitySasUri` constant.
 
-Default SAS token validation time is 7 days. The value is available via `AzureStorageAttachmentConfigurationExtensions.DefaultSasTokenValidationTime` constant.
+Default SAS token validation time is 7 days.
 
 snippet: Configure_blob_sas_uri_override
 
