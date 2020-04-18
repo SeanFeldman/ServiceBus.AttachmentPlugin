@@ -52,7 +52,7 @@ snippet: AttachmentReceivingSas
 
 ### Configure blob container name
 
-Default container name is "attachments".
+Default container name is "attachments". The value is available via `AzureStorageAttachmentConfigurationConstants.DefaultContainerName` constant.
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"blobs");
@@ -60,7 +60,7 @@ new AzureStorageAttachmentConfiguration(storageConnectionString, containerName:"
 
 ### Configure message property to identify attachment blob
 
-Default blob identifier property name is "$attachment.blob".
+Default blob identifier property name is "$attachment.blob". The value is available via `AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob` constant.
 
 ```c#
 new AzureStorageAttachmentConfiguration(storageConnectionString, messagePropertyToIdentifyAttachmentBlob: "myblob");
@@ -75,11 +75,11 @@ snippet: Configure_blob_name_override
 
 ### Configure message property for SAS uri to attachment blob
 
-Default SAS uri property name is "$attachment.sas.uri".
+Default SAS uri property name is "$attachment.sas.uri". The value is available via `AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentitySasUri` constant.
 
-```c#
-new AzureStorageAttachmentConfiguration(storageConnectionString).WithSasUri(messagePropertyToIdentifySasUri: "mySasUriProperty");
-```
+Default SAS token validation time is 7 days.
+
+snippet: Configure_blob_sas_uri_override
 
 ### Configure criteria for message max size identification
 
@@ -125,7 +125,8 @@ The plugin does **NOT** implement cleanup for the reasons stated [here](https://
 ## Who's trusting this plugin in production
 
 ![Microsoft](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/microsoft.png)
-![Codit](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/using/Codit.png)
+![Codit](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/Codit.png)
+![Hemonto](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/develop/images/using/Hemonto.png)
 
 Proudly list your company here if use this plugin in production
 

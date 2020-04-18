@@ -14,8 +14,8 @@
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
         public AzureStorageAttachmentConfiguration(
             string connectionString,
-            string containerName = "attachments",
-            string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
+            string containerName = AzureStorageAttachmentConfigurationConstants.DefaultContainerName,
+            string messagePropertyToIdentifyAttachmentBlob = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob,
             Func<Message, bool>? messageMaxSizeReachedCriteria = default)
             : this(new PlainTextConnectionStringProvider(connectionString), containerName, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
         {
@@ -31,8 +31,8 @@
         public AzureStorageAttachmentConfiguration(
             StorageCredentials storageCredentials,
             string blobEndpoint,
-            string containerName = "attachments",
-            string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
+            string containerName = AzureStorageAttachmentConfigurationConstants.DefaultContainerName,
+            string messagePropertyToIdentifyAttachmentBlob = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob,
             Func<Message, bool>? messageMaxSizeReachedCriteria = default)
         {
             Guard.AgainstNull(nameof(storageCredentials), storageCredentials);
@@ -65,8 +65,8 @@
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
         public AzureStorageAttachmentConfiguration(
             IProvideStorageConnectionString connectionStringProvider,
-            string containerName = "attachments",
-            string messagePropertyToIdentifyAttachmentBlob = "$attachment.blob",
+            string containerName = AzureStorageAttachmentConfigurationConstants.DefaultContainerName,
+            string messagePropertyToIdentifyAttachmentBlob = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob,
             Func<Message, bool>? messageMaxSizeReachedCriteria = default)
         {
             Guard.AgainstNull(nameof(connectionStringProvider), connectionStringProvider);
@@ -122,5 +122,7 @@
         internal Uri BlobEndpoint { get; }
 
         internal Func<Message, string> BlobNameResolver { get; set; } = message => Guid.NewGuid().ToString();
+
+        internal Func<Message, byte[]?> BodyReplacer { get; set; } = message => null;
     }
 }
