@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Microsoft Azure ServiceBus attachment plugin</Description>
-    <Version>6.1.0</Version>
+    <Version>6.2.0</Version>
     <Authors>Sean Feldman</Authors>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <PackageTags>Azure;Service Bus;ServiceBus;.NET;AMQP;IoT;Queue;Topic;Attachment;Plugin</PackageTags>
