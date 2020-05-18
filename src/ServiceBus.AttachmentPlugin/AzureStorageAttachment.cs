@@ -2,11 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Threading.Tasks;
+    using Azure;
+    using Azure.Core;
+    using Azure.Storage;
+    using Azure.Storage.Blobs;
+    using Azure.Storage.Blobs.Specialized;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Core;
-    using Microsoft.Azure.Storage;
-    using Microsoft.Azure.Storage.Blob;
 
     class AzureStorageAttachment : ServiceBusPlugin
     {
@@ -41,7 +45,7 @@
             }
 
             var containerUri = new Uri($"{configuration.BlobEndpoint}{configuration.ContainerName}");
-            var container = new CloudBlobContainer(containerUri, configuration.StorageCredentials);
+            var container = new BlobContainerClient(containerUri, configuration.StorageCredentials);
 
             try
             {
@@ -51,19 +55,21 @@
                     await container.CreateIfNotExistsAsync().ConfigureAwait(false);
                 }
             }
-            catch (StorageException)
+            catch (RequestFailedException)
             {
                 // swallow in case a container SAS is used
             }
 
             var blobName = configuration.BlobNameResolver(message);
             var blobUri = new Uri($"{containerUri}/{blobName}");
-            var blob = new CloudBlockBlob(blobUri, configuration.StorageCredentials);
+            var blob = new BlockBlobClient(blobUri, configuration.StorageCredentials);
 
-            SetValidMessageId(blob, message.MessageId);
-            SetValidUntil(blob, message.TimeToLive);
+            var metadata = new Dictionary<string, string>();
+            SetValidMessageId(metadata, message.MessageId);
+            SetValidUntil(metadata, message.TimeToLive);
 
-            await blob.UploadFromByteArrayAsync(message.Body, 0, message.Body.Length).ConfigureAwait(false);
+            using var memory = new MemoryStream(message.Body);
+            await blob.UploadAsync(memory, metadata:metadata).ConfigureAwait(false);
 
             message.Body = configuration.BodyReplacer(message);
             message.UserProperties[configuration.MessagePropertyToIdentifyAttachmentBlob] = blob.Name;
@@ -83,15 +89,15 @@
         bool AttachmentBlobAssociated(IDictionary<string, object> messageUserProperties) =>
             messageUserProperties.TryGetValue(configuration.MessagePropertyToIdentifyAttachmentBlob, out var _);
 
-        static void SetValidMessageId(ICloudBlob blob, string messageId)
+        static void SetValidMessageId(Dictionary<string, string> metadata, string messageId)
         {
             if (!string.IsNullOrWhiteSpace(messageId))
             {
-                blob.Metadata[MessageId] = messageId;
+                metadata[MessageId] = messageId;
             }
         }
 
-        static void SetValidUntil(ICloudBlob blob, TimeSpan timeToBeReceived)
+        static void SetValidUntil(Dictionary<string, string> metadata, TimeSpan timeToBeReceived)
         {
             if (timeToBeReceived == TimeSpan.MaxValue)
             {
@@ -99,7 +105,7 @@
             }
 
             var validUntil = DateTimeFunc().Add(timeToBeReceived);
-            blob.Metadata[ValidUntilUtc] = validUntil.ToString(DateFormat);
+            metadata[ValidUntilUtc] = validUntil.ToString(DateFormat);
         }
 
         public override async Task<Message> AfterMessageReceive(Message message)
@@ -115,34 +121,32 @@
 
             try
             {
-                await blob.FetchAttributesAsync().ConfigureAwait(false);
+                using var memory = new MemoryStream();
+                await blob.DownloadToAsync(memory).ConfigureAwait(false);
+                message.Body = memory.ToArray();
+                return message;
             }
-            catch (StorageException exception)
+            catch (RequestFailedException exception)
             {
-                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.Container.Name}' cannot be found."
+                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.BlobContainerName}' cannot be found."
                     + $" Check {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.ContainerName)} or"
                     + $" {nameof(AzureStorageAttachmentConfiguration)}.{nameof(AzureStorageAttachmentConfiguration.MessagePropertyToIdentifyAttachmentBlob)} for correct values.", exception);
             }
-            var fileByteLength = blob.Properties.Length;
-            var bytes = new byte[fileByteLength];
-            await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
-            message.Body = bytes;
-            return message;
         }
 
-        CloudBlockBlob BuildBlob(IDictionary<string, object> userProperties, object blobNameObject)
+        BlockBlobClient BuildBlob(IDictionary<string, object> userProperties, object blobNameObject)
         {
             if (configuration.MessagePropertyForBlobSasUri != null)
             {
                 if (userProperties.TryGetValue(configuration.MessagePropertyForBlobSasUri, out var propertyForBlobSasUri))
                 {
-                    return new CloudBlockBlob(new Uri((string)propertyForBlobSasUri));
+                    return new BlockBlobClient(new Uri((string)propertyForBlobSasUri));
                 }
             }
 
             var blobName = (string) blobNameObject;
             var blobUri = new Uri($"{configuration.BlobEndpoint}{configuration.ContainerName}/{blobName}");
-            return new CloudBlockBlob(blobUri, configuration.StorageCredentials);
+            return new BlockBlobClient(blobUri, configuration.StorageCredentials);
         }
     }
 }
