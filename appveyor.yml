@@ -38,8 +38,7 @@ test:
     only:
       - '**\*.tests.dll'
 
-after_build:
-  ##  7z a ServiceBus.AttachmentPlugin-%GitVersion_MajorMinorPatch%.zip %APPVEYOR_BUILD_FOLDER%\src\ServiceBus.AttachmentPlugin\bin\Release\*.*
+after_test:
   - ps: Stop-Process $AzuriteProcess
 
 # artifacts configuration
