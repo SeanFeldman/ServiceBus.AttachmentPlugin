@@ -16,7 +16,6 @@ environment:
 # install Azurite (https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite#install-and-run-azurite-by-using-npm)
 install:
   - npm install -g azurite
-  - ps: $AzuriteProcess = Start-Process azurite-blob -PassThru
 
 # restore nuget packages 
 before_build:
@@ -32,6 +31,9 @@ build:
 
   # MSBuild verbosity level
   verbosity: normal                  # quiet|minimal|normal|detailed
+
+before_test:
+  - ps: $AzuriteProcess = Start-Process azurite-blob -PassThru
 
 test:
   assemblies:
