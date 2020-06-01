@@ -34,8 +34,8 @@ build:
 
 before_test:
   - ps: |
-    $AzuriteProcess = Start-Process azurite-blob -PassThru
-    Get-Process
+        $AzuriteProcess = Start-Process azurite-blob -PassThru
+        Get-Process
 
 test:
   assemblies:
