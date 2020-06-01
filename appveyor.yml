@@ -33,7 +33,9 @@ build:
   verbosity: normal                  # quiet|minimal|normal|detailed
 
 before_test:
-  - ps: $AzuriteProcess = Start-Process azurite-blob -PassThru
+  - ps: |
+    $AzuriteProcess = Start-Process azurite-blob -PassThru
+    Get-Process
 
 test:
   assemblies:
