@@ -34,6 +34,7 @@ build:
 
 before_test:
   - ps: |
+        npm list -g --depth 0
         $AzuriteProcess = Start-Process azurite-blob -PassThru
         Get-Process
 
