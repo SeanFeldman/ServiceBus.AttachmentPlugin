@@ -8,18 +8,19 @@
 
     public class AzureStorageEmulatorFixture
     {
-        public static IProvideStorageConnectionString ConnectionStringProvider = new PlainTextConnectionStringProvider("UseDevelopmentStorage=true");
-        CloudStorageAccount DevelopmentStorageAccount = CloudStorageAccount.DevelopmentStorageAccount;
+        static string ConnectionString = "UseDevelopmentStorage=true";
+        public static IProvideStorageConnectionString ConnectionStringProvider = new PlainTextConnectionStringProvider(ConnectionString);
+        CloudStorageAccount TestingStorageAccount = CloudStorageAccount.Parse(ConnectionString);
 
         public string GetBlobEndpoint()
         {
-            return DevelopmentStorageAccount.BlobEndpoint.ToString();
+            return TestingStorageAccount.BlobEndpoint.ToString();
         }
 
         public async Task<string> GetContainerSas(string containerName)
         {
             // get container
-            var blobClient = DevelopmentStorageAccount.CreateCloudBlobClient();
+            var blobClient = TestingStorageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference(containerName);
             if (!await container.ExistsAsync())
             {
@@ -65,8 +66,8 @@
 
         public async Task CreateContainer(string containerName)
         {
-            var containerUri = new Uri($"{DevelopmentStorageAccount.BlobEndpoint}/{containerName}");
-            var container = new CloudBlobContainer(containerUri, DevelopmentStorageAccount.Credentials);
+            var containerUri = new Uri($"{TestingStorageAccount.BlobEndpoint}/{containerName}");
+            var container = new CloudBlobContainer(containerUri, TestingStorageAccount.Credentials);
             if (!await container.ExistsAsync())
             {
                 await container.CreateIfNotExistsAsync();
@@ -74,8 +75,8 @@
         }
         public async Task DeleteContainer(string containerName)
         {
-            var containerUri = new Uri($"{DevelopmentStorageAccount.BlobEndpoint}/{containerName}");
-            var container = new CloudBlobContainer(containerUri, DevelopmentStorageAccount.Credentials);
+            var containerUri = new Uri($"{TestingStorageAccount.BlobEndpoint}/{containerName}");
+            var container = new CloudBlobContainer(containerUri, TestingStorageAccount.Credentials);
             if (await container.ExistsAsync())
             {
                 await container.DeleteIfExistsAsync();
