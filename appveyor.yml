@@ -33,10 +33,7 @@ build:
   verbosity: normal                  # quiet|minimal|normal|detailed
 
 before_test:
-  - ps: |
-        npm list -g --depth 0
-        $AzuriteProcess = Start-Process azurite-blob -PassThru
-        Get-Process
+  - ps: $AzuriteProcess = Start-Process azurite-blob.cmd -PassThru
 
 test:
   assemblies:
