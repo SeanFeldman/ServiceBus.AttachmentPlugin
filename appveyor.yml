@@ -13,24 +13,14 @@ environment:
     # Second build
     - DotNetRunTime: netcoreapp3.0
 
-# ensure Azure Storage emulator 5.9 is installed
+# install Azurite (https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite#install-and-run-azurite-by-using-npm)
 install:
-  - ps: |
-        $msiPath = "$($env:USERPROFILE)\MicrosoftAzureStorageEmulator.msi"
-        (New-Object Net.WebClient).DownloadFile('https://download.visualstudio.microsoft.com/download/pr/e9476781-1f65-40e4-b7fd-e6b49840c7de/7028682de076b2dbc1aa5f1e02ec420a/microsoftazurestorageemulator.msi', $msiPath)
-        cmd /c start /wait msiexec /i $msiPath /quiet
-        del $msiPath
+  - npm install -g azurite
 
-#---------------------------------#
-#       restore nuget packages    #
-#---------------------------------#
+# restore nuget packages 
 before_build:
   - cmd: dotnet restore src\ServiceBus.AttachmentPlugin.sln
   - cmd: echo %appveyor_build_version%
-
-#---------------------------------#
-#       build configuration       #
-#---------------------------------#
 
 # build Configuration, i.e. Debug, Release, etc.
 configuration: Release
@@ -42,36 +32,30 @@ build:
   # MSBuild verbosity level
   verbosity: normal                  # quiet|minimal|normal|detailed
 
+before_test:
+  - ps: $AzuriteProcess = Start-Process azurite-blob.cmd -PassThru
+
 test:
   assemblies:
     only:
       - '**\*.tests.dll'
 
-after_build:
-##  7z a ServiceBus.AttachmentPlugin-%GitVersion_MajorMinorPatch%.zip %APPVEYOR_BUILD_FOLDER%\src\ServiceBus.AttachmentPlugin\bin\Release\*.*
+after_test:
+  - ps: Stop-Process $AzuriteProcess
 
-#---------------------------------#
-#      artifacts configuration    #
-#---------------------------------#
-
+# artifacts configuration
 artifacts:
   - path: '**\*.nupkg'
     name: 'ServiceBus.AttachmentPlugin%GitVersion_MajorMinorPatch%.nupkg'
 
-#---------------------------------#
-#     GitHub PR notifications     #
-#---------------------------------#
-
+# GitHub PR notifications
 notifications:
   - provider: GitHubPullRequest
     auth_token:
       secure: oQQNBFHTaM9998aRO2Y2Gnvz1hSdU44cQACuLaANlAusEEA2QqlWt5hw907b/IIC # encrypted token from GitHub
     template: "{{#passed}}:white_check_mark:{{/passed}}{{#failed}}:x:{{/failed}} [Build {{&projectName}} {{buildVersion}} {{status}}]({{buildUrl}}) (commit {{commitUrl}} by @{{&commitAuthorUsername}})"
 
-#---------------------------------#
-#     deployment configuration    #
-#---------------------------------#
-
+# deployment configuration 
 deploy:
   provider: NuGet
   api_key:
