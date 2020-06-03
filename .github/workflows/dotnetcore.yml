@@ -33,6 +33,8 @@ jobs:
       with:
         node-version: '12'
     - run: npm install -g azurite
+    - shell: cmd
+      run: start /B azurite-blob
     - name: Run tests (target framework ${{ matrix.tfm }})
       run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release --framework ${{ matrix.tfm }} --list-tests
   Deploy:
