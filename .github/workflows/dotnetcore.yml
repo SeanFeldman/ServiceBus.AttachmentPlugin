@@ -5,13 +5,6 @@ env:
 on: [push]
 
 jobs:
-#  Print:
-#    runs-on: windows-latest
-#    steps:
-#    - run: |
-#        echo %GITHUB_WORKSPACE%
-#        exit 1234
-#      shell: cmd
   Build:
     runs-on: windows-latest
     steps:
@@ -19,7 +12,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
     - name: Build
-      run: dotnet build src --configuration Release
+      run: dotnet build ./src/ServiceBus.AttachmentPlugin.sln --configuration Release
   Test:
     needs: [Build]
     runs-on: windows-latest
@@ -28,8 +21,15 @@ jobs:
         tfm: ['netcoreapp2.1', 'net461']
     steps:
     - uses: actions/checkout@v1
+    - name: Install NPM
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+    - run: npm install -g azurite
+    - shell: cmd
+      run: start /B azurite-blob
     - name: Run tests (target framework ${{ matrix.tfm }})
-      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release --framework ${{ matrix.tfm }} --list-tests
+      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release --framework ${{ matrix.tfm }} --no-build --list-tests --verbosity normal --nologo
   Deploy:
     needs: [Build, Test]
     runs-on: windows-latest
