@@ -5,7 +5,7 @@ env:
 on: [push]
 
 jobs:
-  Build:
+  BuildAndTest:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v1
@@ -13,14 +13,6 @@ jobs:
       uses: actions/setup-dotnet@v1
     - name: Build
       run: dotnet build ./src/ServiceBus.AttachmentPlugin.sln --configuration Release
-  Test:
-    needs: [Build]
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        tfm: ['netcoreapp2.1', 'net461']
-    steps:
-    - uses: actions/checkout@v1
     - name: Install NPM
       uses: actions/setup-node@v1
       with:
@@ -28,12 +20,10 @@ jobs:
     - run: npm install -g azurite
     - shell: cmd
       run: start /B azurite-blob
-    - name: Build
-      run: dotnet build ./src/ServiceBus.AttachmentPlugin.sln --configuration Release
-    - name: Run tests (target framework ${{ matrix.tfm }})
-      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release --framework ${{ matrix.tfm }} --no-restore  --list-tests --verbosity normal --nologo
+    - name: Run tests
+      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --list-tests --verbosity normal --nologo
   Deploy:
-    needs: [Build, Test]
+    needs: [BuildAndTest]
     runs-on: windows-latest
     steps:
       - shell: cmd
