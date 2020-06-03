@@ -21,7 +21,7 @@ jobs:
     - shell: cmd
       run: start /B azurite-blob
     - name: Run tests
-      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --list-tests --verbosity normal --nologo
+      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
   Deploy:
     needs: [BuildAndTest]
     runs-on: windows-latest
