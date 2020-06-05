@@ -8,24 +8,30 @@ jobs:
   BuildAndTest:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-    - name: Build
-      run: dotnet build ./src/ServiceBus.AttachmentPlugin.sln --configuration Release
-    - name: Install NPM
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12'
-    - run: npm install -g azurite
-    - shell: cmd
-      run: start /B azurite-blob
-    - name: trying http://localhost:10000
-    - shell: cmd
-      run: timeout 5 && curl http://localhost:10000
-    - name: trying http://127.0.0.1:10000
-    - shell: cmd
-      run: timeout 5 && curl http://127.0.0.1:10000
+      - uses: actions/checkout@v1
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+      - name: Build
+        run: dotnet build ./src/ServiceBus.AttachmentPlugin.sln --configuration Release
+      - name: Install NPM
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - run: npm install -g azurite
+      - shell: cmd
+        run: start /B azurite-blob
+        
+      - shell: cmd
+        name: trying http://127.0.0.1:10000
+        run: |
+          timeout 5
+          curl http://127.0.0.1:10000
+
+      - shell: cmd
+        name: trying http://localhost:10000
+        run: |
+          timeout 5
+          curl http://localhost:10000
 #    - name: Run tests
 #      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
 #  Deploy:
