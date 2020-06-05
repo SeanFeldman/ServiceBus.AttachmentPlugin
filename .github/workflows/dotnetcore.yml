@@ -18,22 +18,12 @@ jobs:
         with:
           node-version: '12'
       - run: npm install -g azurite
-      - shell: cmd
-        run: start /B azurite-blob
-        
-      - shell: cmd
-        name: trying http://127.0.0.1:10000
-        run: |
-          timeout 5
-          curl http://127.0.0.1:10000
+      - shell: bash                         # "start /B" suggested in https://github.com/Azure/Azurite/issues/382#issuecomment-572409873 for AzDO doesn't work with GitHub
+        name: Run Azurite as a b/g process
+        run: azurite-blob &
 
-      - shell: cmd
-        name: trying http://localhost:10000
-        run: |
-          timeout 5
-          curl http://localhost:10000
-#    - name: Run tests
-#      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
+      - name: Run tests
+        run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
 #  Deploy:
 #    needs: [BuildAndTest]
 #    runs-on: windows-latest
