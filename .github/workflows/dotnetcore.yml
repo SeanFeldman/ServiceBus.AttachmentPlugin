@@ -20,12 +20,18 @@ jobs:
     - run: npm install -g azurite
     - shell: cmd
       run: start /B azurite-blob
-    - name: Run tests
-      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
-  Deploy:
-    needs: [BuildAndTest]
-    runs-on: windows-latest
-    steps:
-      - shell: cmd
-        run:
-          echo deploying...
+    - name: trying http://localhost:10000
+    - shell: cmd
+      run: timeout 5 && curl http://localhost:10000
+    - name: trying http://127.0.0.1:10000
+    - shell: cmd
+      run: timeout 5 && curl http://127.0.0.1:10000
+#    - name: Run tests
+#      run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
+#  Deploy:
+#    needs: [BuildAndTest]
+#    runs-on: windows-latest
+#    steps:
+#      - shell: cmd
+#        run:
+#          echo deploying...
