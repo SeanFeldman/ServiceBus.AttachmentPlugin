@@ -25,10 +25,18 @@ jobs:
       - name: Run tests
         run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
 
+      - shell: bash
+        name: Get .nupkg file name
+        id: vars
+        run: |
+          path=$(find . -name "*.nupkg")
+          echo "::set-output name=nugetPath::$path"
+          echo  ${{ steps.vars.outputs.nugetPath }}
+
       - name: Deploy NuGet package to GitHub packages
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
-          nupkg-path:  './src/**/*.nupkg'
+          nupkg-path:  '${{ steps.vars.outputs.nugetPath }}'
           repo-owner:  'SeanFeldman'
           gh-user:  'SeanFeldman'
           token:  ${{ secrets.GITHUB_TOKEN }}
