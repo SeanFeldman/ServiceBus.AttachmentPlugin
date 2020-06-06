@@ -25,10 +25,14 @@ jobs:
       - name: Run tests
         run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
 
+
+      - name: Setup NuGet.exe for use with actions
+        uses: NuGet/setup-nuget@v1.0.2
+        with:
+          nuget-version: latest
+
       - shell: bash
         name: Deploy
         run: |
-          tree -aC ./src
           nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/SeanFeldman/ServiceBus.AttachmentPlugin/index.json" -UserName SeanFeldman
-          nuget pack
           nuget push "ServiceBus.AttachmentPlugin.0.0.1.nupkg" -Source "GitHub" #.src/ServiceBus.AttachmentPlugin/nugets/ServiceBus.AttachmentPlugin.6.2.0.nupkg
