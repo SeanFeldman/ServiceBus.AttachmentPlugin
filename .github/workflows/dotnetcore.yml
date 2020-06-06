@@ -25,14 +25,10 @@ jobs:
       - name: Run tests
         run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
 
-
-      - name: Setup NuGet.exe for use with actions
-        uses: NuGet/setup-nuget@v1.0.2
+      - name: Deploy NuGet package to GitHub packages
+        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
-          nuget-version: latest
-
-      - shell: bash
-        name: Deploy
-        run: |
-          nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/SeanFeldman/ServiceBus.AttachmentPlugin/index.json" -UserName SeanFeldman
-          nuget push "ServiceBus.AttachmentPlugin.0.0.1.nupkg" -Source "GitHub" #.src/ServiceBus.AttachmentPlugin/nugets/ServiceBus.AttachmentPlugin.6.2.0.nupkg
+          nupkg-path:  './src/**/*.nupkg'
+          repo-owner:  'SeanFeldman'
+          gh-user:  'SeanFeldman'
+          token:  ${{ secrets.GITHUB_TOKEN }}
