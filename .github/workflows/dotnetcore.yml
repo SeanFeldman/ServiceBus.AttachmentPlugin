@@ -1,6 +1,6 @@
 name: Build and Test
 env:
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: true
 
 on: [push]
 
@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: '12'
       - run: npm install -g azurite
-      - shell: bash                         # "start /B" suggested in https://github.com/Azure/Azurite/issues/382#issuecomment-572409873 for AzDO doesn't work with GitHub
+      - shell: bash
         name: Run Azurite as a b/g process
         run: azurite-blob &
 
