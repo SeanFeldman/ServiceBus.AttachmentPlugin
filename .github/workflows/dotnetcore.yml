@@ -33,10 +33,10 @@ jobs:
           echo "::set-output name=nugetPath::$path"
           echo  ${{ steps.vars.outputs.nugetPath }}
 
-      - name: Deploy NuGet package to GitHub packages
-        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
-        with:
-          nupkg-path:  '${{ steps.vars.outputs.nugetPath }}'
-          repo-owner:  'SeanFeldman'
-          gh-user:  'SeanFeldman'
-          token:  ${{ secrets.GITHUB_TOKEN }}
+#      - name: Deploy NuGet package to GitHub packages
+#        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+#        with:
+#          nupkg-path:  '${{ steps.vars.outputs.nugetPath }}'
+#          repo-owner:  'SeanFeldman'
+#          gh-user:  'SeanFeldman'
+#          token:  ${{ secrets.GITHUB_TOKEN }}
