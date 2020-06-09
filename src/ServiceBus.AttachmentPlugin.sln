@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 		Directory.Build.props = Directory.Build.props
 		..\README.md = ..\README.md
 		..\README.source.md = ..\README.source.md
+		..\.github\workflows\dotnetcore.yml = ..\.github\workflows\dotnetcore.yml
 	EndProjectSection
 EndProject
 Global

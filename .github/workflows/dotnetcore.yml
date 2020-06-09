@@ -1,0 +1,42 @@
+name: Build and Test
+env:
+  DOTNET_NOLOGO: true
+
+on: [push]
+
+jobs:
+  BuildAndTest:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+      - name: Build
+        run: dotnet build ./src/ServiceBus.AttachmentPlugin.sln --configuration Release
+      - name: Install NPM
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - run: npm install -g azurite
+      - shell: bash
+        name: Run Azurite as a b/g process
+        run: azurite-blob &
+
+      - name: Run tests
+        run: dotnet test ./src/ServiceBus.AttachmentPlugin.sln --configuration Release  --no-restore  --verbosity normal
+
+      - shell: bash
+        name: Get .nupkg file name
+        id: vars
+        run: |
+          path=$(find . -name "*.nupkg")
+          echo "::set-output name=nugetPath::$path"
+          echo  ${{ steps.vars.outputs.nugetPath }}
+
+#      - name: Deploy NuGet package to GitHub packages
+#        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+#        with:
+#          nupkg-path:  '${{ steps.vars.outputs.nugetPath }}'
+#          repo-owner:  'SeanFeldman'
+#          gh-user:  'SeanFeldman'
+#          token:  ${{ secrets.GITHUB_TOKEN }}
