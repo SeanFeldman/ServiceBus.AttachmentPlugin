@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup Label="API Approvals">
-    <PackageReference Include="PublicApiGenerator" Version="10.1.0" />
+    <PackageReference Include="PublicApiGenerator" Version="10.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="[12.0.1, 13.0.0)" />
     <None Remove="ApprovalFiles\ApiApprovals.CompressionPlugin.received.txt" />
   </ItemGroup>
