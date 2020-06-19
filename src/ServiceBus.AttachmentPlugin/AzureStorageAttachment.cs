@@ -45,7 +45,7 @@
             }
 
             var containerUri = new Uri($"{configuration.BlobEndpoint}{configuration.ContainerName}");
-            var container = new BlobContainerClient(containerUri, configuration.StorageCredentials);
+            var container = new BlobContainerClient(containerUri, configuration.StorageSharedKeyCredentials);
 
             try
             {
@@ -62,7 +62,7 @@
 
             var blobName = configuration.BlobNameResolver(message);
             var blobUri = new Uri($"{containerUri}/{blobName}");
-            var blob = new BlockBlobClient(blobUri, configuration.StorageCredentials);
+            var blob = new BlockBlobClient(blobUri, configuration.StorageSharedKeyCredentials);
 
             var metadata = new Dictionary<string, string>();
             SetValidMessageId(metadata, message.MessageId);
@@ -146,7 +146,7 @@
 
             var blobName = (string) blobNameObject;
             var blobUri = new Uri($"{configuration.BlobEndpoint}{configuration.ContainerName}/{blobName}");
-            return new BlockBlobClient(blobUri, configuration.StorageCredentials);
+            return new BlockBlobClient(blobUri, configuration.StorageSharedKeyCredentials);
         }
     }
 }
