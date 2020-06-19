@@ -21,21 +21,22 @@
             string messagePropertyToIdentifySasUri = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentitySasUri,
             TimeSpan? sasTokenValidationTime = null)
         {
-            if (azureStorageAttachmentConfiguration.UsingSas)
-            {
-                throw new Exception("Invalid configuration: .WithBlobSasUri() requires account shared key and cannot be used with service/container Shared Access Signature.");
-            }
-
-            if (sasTokenValidationTime == null)
-            {
-                sasTokenValidationTime = DefaultSasTokenValidationTime;
-            }
-            Guard.AgainstNegativeOrZeroTimeSpan(nameof(sasTokenValidationTime), sasTokenValidationTime);
-
-            azureStorageAttachmentConfiguration.MessagePropertyForBlobSasUri = messagePropertyToIdentifySasUri;
-            azureStorageAttachmentConfiguration.BlobSasTokenValidationTime = sasTokenValidationTime.Value;
-
-            return azureStorageAttachmentConfiguration;
+            throw new NotImplementedException();
+            // if (azureStorageAttachmentConfiguration.UsingSas)
+            // {
+            //     throw new Exception("Invalid configuration: .WithBlobSasUri() requires account shared key and cannot be used with service/container Shared Access Signature.");
+            // }
+            //
+            // if (sasTokenValidationTime == null)
+            // {
+            //     sasTokenValidationTime = DefaultSasTokenValidationTime;
+            // }
+            // Guard.AgainstNegativeOrZeroTimeSpan(nameof(sasTokenValidationTime), sasTokenValidationTime);
+            //
+            // azureStorageAttachmentConfiguration.MessagePropertyForBlobSasUri = messagePropertyToIdentifySasUri;
+            // azureStorageAttachmentConfiguration.BlobSasTokenValidationTime = sasTokenValidationTime.Value;
+            //
+            // return azureStorageAttachmentConfiguration;
         }
 
         /// <summary>

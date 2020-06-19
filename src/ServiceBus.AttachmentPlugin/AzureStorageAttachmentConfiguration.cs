@@ -66,31 +66,32 @@
             return new Uri(blobEndpoint + "/");
         }
 
-        // /// <summary>Constructor to create new configuration object.</summary>
-        // /// <param name="connectionStringProvider">Provider to retrieve connection string such as <see cref="PlainTextConnectionStringProvider"/></param>
-        // /// <param name="containerName">Storage container name</param>
-        // /// <param name="messagePropertyToIdentifyAttachmentBlob">Message user property to use for blob URI</param>
-        // /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
-        // public AzureStorageAttachmentConfiguration(
-        //     IProvideStorageConnectionString connectionStringProvider,
-        //     string containerName = AzureStorageAttachmentConfigurationConstants.DefaultContainerName,
-        //     string messagePropertyToIdentifyAttachmentBlob = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob,
-        //     Func<Message, bool>? messageMaxSizeReachedCriteria = default)
-        // {
-        //     Guard.AgainstNull(nameof(connectionStringProvider), connectionStringProvider);
-        //     Guard.AgainstEmpty(nameof(containerName), containerName);
-        //     Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
-        //
-        //     var connectionString = connectionStringProvider.GetConnectionString().GetAwaiter().GetResult();
-        //     var account = CloudStorageAccount.Parse(connectionString);
-        //
-        //     ConnectionStringProvider = connectionStringProvider;
-        //     StorageSharedKeyCredentials = account.Credentials;
-        //     BlobEndpoint = EnsureBlobEndpointEndsWithSlash(account.BlobEndpoint.ToString());
-        //     ContainerName = containerName;
-        //     MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
-        //     MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
-        // }
+        /// <summary>Constructor to create new configuration object.</summary>
+        /// <param name="connectionStringProvider">Provider to retrieve connection string such as <see cref="PlainTextConnectionStringProvider"/></param>
+        /// <param name="containerName">Storage container name</param>
+        /// <param name="messagePropertyToIdentifyAttachmentBlob">Message user property to use for blob URI</param>
+        /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
+        public AzureStorageAttachmentConfiguration(
+            IProvideStorageConnectionString connectionStringProvider,
+            string containerName = AzureStorageAttachmentConfigurationConstants.DefaultContainerName,
+            string messagePropertyToIdentifyAttachmentBlob = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob,
+            Func<Message, bool>? messageMaxSizeReachedCriteria = default)
+        {
+            throw new NotImplementedException();
+            // Guard.AgainstNull(nameof(connectionStringProvider), connectionStringProvider);
+            // Guard.AgainstEmpty(nameof(containerName), containerName);
+            // Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
+            //
+            // var connectionString = connectionStringProvider.GetConnectionString().GetAwaiter().GetResult();
+            // var account = CloudStorageAccount.Parse(connectionString);
+            //
+            // ConnectionStringProvider = connectionStringProvider;
+            // StorageSharedKeyCredentials = account.Credentials;
+            // BlobEndpoint = EnsureBlobEndpointEndsWithSlash(account.BlobEndpoint.ToString());
+            // ContainerName = containerName;
+            // MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
+            // MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
+        }
 
         Func<Message, bool> GetMessageMaxSizeReachedCriteria(Func<Message, bool>? messageMaxSizeReachedCriteria)
         {
