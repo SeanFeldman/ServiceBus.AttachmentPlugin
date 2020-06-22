@@ -29,7 +29,7 @@ namespace ServiceBus.AttachmentPlugin.Tests
                 MessageId = Guid.NewGuid().ToString(),
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                    connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider,
+                    connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments"),
                     containerName: "attachments-sendonly",
                     messagePropertyToIdentifyAttachmentBlob:
                     "attachment-id")

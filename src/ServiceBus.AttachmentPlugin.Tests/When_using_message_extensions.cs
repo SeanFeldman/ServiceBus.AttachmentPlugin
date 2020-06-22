@@ -23,7 +23,7 @@
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes);
             var configuration = new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id");
+                connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments"), messagePropertyToIdentifyAttachmentBlob: "attachment-id");
 
             await message.UploadAzureStorageAttachment(configuration);
 
@@ -41,7 +41,7 @@
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes);
             var configuration = new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id")
+                connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments"),  messagePropertyToIdentifyAttachmentBlob: "attachment-id")
             .WithBlobSasUri();
 
             await message.UploadAzureStorageAttachment(configuration);
@@ -61,7 +61,7 @@
             var message = new Message(bytes);
             var customSasUri = "$custom-attachment.sas.uri";
             var configuration = new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id")
+                connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments"), messagePropertyToIdentifyAttachmentBlob: "attachment-id")
             .WithBlobSasUri(customSasUri);
 
             await message.UploadAzureStorageAttachment(configuration);
@@ -80,7 +80,7 @@
             var bytes = Encoding.UTF8.GetBytes(payload);
             var message = new Message(bytes) { MessageId = Guid.NewGuid().ToString("N") };
             var configuration = new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider);
+                connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments"));
 
             configuration.OverrideBlobName(msg => $"test/{msg.MessageId}");
 
@@ -104,7 +104,7 @@
                 MessageId = Guid.NewGuid().ToString(),
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                    connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id")
+                    connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments"), messagePropertyToIdentifyAttachmentBlob: "attachment-id")
                 .OverrideBody(msg => Array.Empty<byte>()));
             var result = await plugin.BeforeMessageSend(message);
 
@@ -122,7 +122,7 @@
                 MessageId = Guid.NewGuid().ToString(),
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
+                connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments"), messagePropertyToIdentifyAttachmentBlob: "attachment-id"));
             var result = await plugin.BeforeMessageSend(message);
 
             Assert.Null(result.Body);

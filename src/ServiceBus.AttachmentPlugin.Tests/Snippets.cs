@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
-using Microsoft.Azure.Storage.Auth;
 using Newtonsoft.Json;
 
 class Snippets
@@ -161,8 +160,9 @@ class Snippets
     {
         #region Configuring_plugin_using_StorageCredentials
 
-        var credentials = new StorageCredentials( /*Shared key OR Service SAS OR Container SAS*/);
-        var config = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint);
+        // TODO: change
+        // var credentials = new StorageCredentials( /*Shared key OR Service SAS OR Container SAS*/);
+        // var config = new AzureStorageAttachmentConfiguration(credentials, blobEndpoint);
 
         #endregion
     }

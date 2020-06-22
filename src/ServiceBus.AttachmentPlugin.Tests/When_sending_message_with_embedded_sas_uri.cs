@@ -18,7 +18,7 @@
                 MessageId = Guid.NewGuid().ToString(),
             };
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionStringProvider: AzureStorageEmulatorFixture.ConnectionStringProvider, containerName: "attachments", messagePropertyToIdentifyAttachmentBlob: "attachment-id")
+                connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments"), messagePropertyToIdentifyAttachmentBlob: "attachment-id")
                 .WithBlobSasUri(sasTokenValidationTime: TimeSpan.FromHours(4), messagePropertyToIdentifySasUri: "mySasUriProperty"));
             var result = await plugin.BeforeMessageSend(message);
 

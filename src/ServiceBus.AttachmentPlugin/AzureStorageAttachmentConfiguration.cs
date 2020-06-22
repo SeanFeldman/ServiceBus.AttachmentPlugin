@@ -25,8 +25,10 @@
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
 
-            StorageSharedKeyCredentials = null;
-            BlobEndpoint = null;
+            // TODO: figure out
+            StorageSharedKeyCredentials = new StorageSharedKeyCredential("devstoreaccount1", "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==");
+            // TODO: figure out
+            BlobEndpoint = EnsureBlobEndpointEndsWithSlash("http://127.0.0.1:10000/devstoreaccount1");
         }
 
         /// <summary>Constructor to create new configuration object.</summary>
@@ -49,6 +51,7 @@
             Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
 
             StorageSharedKeyCredentials = storageSharedKeyCredentials;
+            // TODO: figure out
             BlobEndpoint = EnsureBlobEndpointEndsWithSlash(blobEndpoint);
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
