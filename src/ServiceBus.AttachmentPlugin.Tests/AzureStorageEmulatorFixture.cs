@@ -65,7 +65,7 @@
             };
             //blobSasBuilder.SetPermissions(BlobSasPermissions.Add | BlobSasPermissions.Create | BlobSasPermissions.Read | BlobSasPermissions.Write);
             var blobSasQueryParameters = blobSasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential("devstoreaccount1", "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="));
-            var fullUri = $"{GetBlobEndpoint()}/{blobSasQueryParameters}";
+            var fullUri = $"{GetBlobEndpoint()}?{blobSasQueryParameters}";
             return fullUri;
         }
 

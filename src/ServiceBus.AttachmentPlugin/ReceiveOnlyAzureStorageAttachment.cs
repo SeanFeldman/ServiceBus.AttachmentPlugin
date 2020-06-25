@@ -29,7 +29,8 @@
                 return message;
             }
 
-            var blob = new BlockBlobClient(new Uri(userProperties[messagePropertyToIdentifySasUri].ToString()));
+            var blob = new BlockBlobClient(new Uri(userProperties[messagePropertyToIdentifySasUri].ToString() 
+                                                   ?? throw new Exception($"Value of {nameof(messagePropertyToIdentifySasUri)} `{messagePropertyToIdentifySasUri}` was null.")));
             try
             {
                 await blob.GetPropertiesAsync().ConfigureAwait(false);
@@ -38,7 +39,8 @@
             {
                 throw new Exception($"Blob with name '{blob.Name}' under container '{blob.BlobContainerName}' cannot be found.", exception);
             }
-            using var memory = new MemoryStream();
+
+            await using var memory = new MemoryStream();
             await blob.DownloadToAsync(memory).ConfigureAwait(false);
             message.Body = memory.ToArray();
             return message;

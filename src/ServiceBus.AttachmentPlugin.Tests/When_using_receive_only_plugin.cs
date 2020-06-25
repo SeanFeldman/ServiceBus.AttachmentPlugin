@@ -31,8 +31,7 @@ namespace ServiceBus.AttachmentPlugin.Tests
             var plugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
                     connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments"),
                     containerName: "attachments-sendonly",
-                    messagePropertyToIdentifyAttachmentBlob:
-                    "attachment-id")
+                    messagePropertyToIdentifyAttachmentBlob: "attachment-id")
                     .WithBlobSasUri(
                         sasTokenValidationTime: TimeSpan.FromHours(4),
                         messagePropertyToIdentifySasUri: "mySasUriProperty"));

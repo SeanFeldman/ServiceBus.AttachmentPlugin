@@ -4,7 +4,7 @@
     <Description>Microsoft Azure ServiceBus attachment plugin</Description>
     <Version>6.2.0</Version>
     <Authors>Sean Feldman</Authors>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageTags>Azure;Service Bus;ServiceBus;.NET;AMQP;IoT;Queue;Topic;Attachment;Plugin</PackageTags>
     <PackageIcon>project-icon.png</PackageIcon>
     <PackageLicenseFile Condition="'$(PackageLicenseFile)' == ''">LICENSE.md</PackageLicenseFile>

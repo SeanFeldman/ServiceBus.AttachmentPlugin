@@ -19,11 +19,13 @@
             };
 
             var sendingPlugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments")));
+                connectionString: AzureStorageEmulatorFixture.TestingStorageAccountConnectionString,
+                containerName: "attachments"));
             await sendingPlugin.BeforeMessageSend(message);
 
             var receivingPlugin = new AzureStorageAttachment(new AzureStorageAttachmentConfiguration(
-                connectionString: await AzureStorageEmulatorFixture.GetContainerSas("attachments-wrong-containers")));
+                connectionString: AzureStorageEmulatorFixture.TestingStorageAccountConnectionString,
+                containerName: "attachments-wrong-containers"));
 
             var exception = await Assert.ThrowsAsync<Exception>(() => receivingPlugin.AfterMessageReceive(message));
             Assert.Contains("attachments-wrong-containers", actualString: exception.Message);

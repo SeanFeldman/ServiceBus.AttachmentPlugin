@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Azure.ServiceBus
 {
     using System;
+    using global::Azure.Core;
     using global::Azure.Storage;
 
     /// <summary>Runtime configuration for Azure Storage Attachment plugin.</summary>
@@ -25,12 +26,11 @@
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
 
-            // TODO: figure out
-            StorageSharedKeyCredentials = new StorageSharedKeyCredential("devstoreaccount1", "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==");
-            // TODO: figure out
-            BlobEndpoint = EnsureBlobEndpointEndsWithSlash("http://127.0.0.1:10000/devstoreaccount1");
+            var storageConnectionString = ReflectedAzureStorageConnectionString.Create(connectionString);
+            StorageSharedKeyCredentials = storageConnectionString.Credentials;
+            BlobEndpoint = EnsureBlobEndpointEndsWithSlash(storageConnectionString.BlobEndpoint);
         }
-
+        
         /// <summary>Constructor to create new configuration object.</summary>
         /// <remarks>Container name is not required as it's included in the SharedAccessSignature.</remarks>
         /// <param name="storageSharedKeyCredentials"></param>
@@ -52,17 +52,17 @@
 
             StorageSharedKeyCredentials = storageSharedKeyCredentials;
             // TODO: figure out
-            BlobEndpoint = EnsureBlobEndpointEndsWithSlash(blobEndpoint);
+            BlobEndpoint = EnsureBlobEndpointEndsWithSlash(new Uri(blobEndpoint));
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
         }
 
-        static Uri EnsureBlobEndpointEndsWithSlash(string blobEndpoint)
+        static Uri EnsureBlobEndpointEndsWithSlash(Uri blobEndpoint)
         {
-            if (blobEndpoint.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+            if (blobEndpoint.Segments[^1].Equals("/", StringComparison.OrdinalIgnoreCase))
             {
-                return new Uri(blobEndpoint);
+                return blobEndpoint;
             }
 
             // Emulator blob endpoint doesn't end with slash
@@ -115,27 +115,28 @@
             };
         }
 
-        internal IProvideStorageConnectionString? ConnectionStringProvider { get; }
-
+        ////////////////////
+        internal Uri? BlobEndpoint { get; } 
+        
         internal string ContainerName { get; }
+        
+        internal StorageSharedKeyCredential? StorageSharedKeyCredentials { get; }
+        // or
+        internal TokenCredential? TokenCredential { get; }
+        
+        internal Func<Message, string> BlobNameResolver { get; set; } = message => Guid.NewGuid().ToString();
 
+        internal Func<Message, byte[]?> BodyReplacer { get; set; } = message => null;
+        
+        internal string MessagePropertyToIdentifyAttachmentBlob { get; }
+
+        internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
+        
+        //////??
         internal string? MessagePropertyForBlobSasUri { get; set; }
 
         internal TimeSpan? BlobSasTokenValidationTime { get; set; }
 
-        internal string MessagePropertyToIdentifyAttachmentBlob { get; }
-
-        internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
-
-        internal StorageSharedKeyCredential? StorageSharedKeyCredentials { get; }
-
-        internal Uri? BlobEndpoint { get; }
-
-        // internal bool UsingSas => StorageSharedKeyCredentials.IsSAS;
-
-
-        internal Func<Message, string> BlobNameResolver { get; set; } = message => Guid.NewGuid().ToString();
-
-        internal Func<Message, byte[]?> BodyReplacer { get; set; } = message => null;
+        internal bool UsingSas { get; } = false;
     }
 }
