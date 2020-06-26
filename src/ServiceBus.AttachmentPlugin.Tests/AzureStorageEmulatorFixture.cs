@@ -1,73 +1,77 @@
 ﻿namespace ServiceBus.AttachmentPlugin.Tests
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.Azure.ServiceBus;
-    using Microsoft.Azure.Storage;
-    using Microsoft.Azure.Storage.Blob;
+    using Azure.Storage;
+    using Azure.Storage.Blobs;
+    using Azure.Storage.Blobs.Models;
+    using Azure.Storage.Sas;
 
     public class AzureStorageEmulatorFixture
     {
-        static string ConnectionString = "UseDevelopmentStorage=true";
-        public static IProvideStorageConnectionString ConnectionStringProvider = new PlainTextConnectionStringProvider(ConnectionString);
-        CloudStorageAccount TestingStorageAccount = CloudStorageAccount.Parse(ConnectionString);
+        // development account
+        public const string TestingStorageAccountConnectionString = "UseDevelopmentStorage=true;";
 
-        public string GetBlobEndpoint()
+        public static string GetBlobEndpoint()
         {
-            return TestingStorageAccount.BlobEndpoint.ToString();
+            return "http://127.0.0.1:10000/devstoreaccount1";
         }
 
-        public async Task<string> GetContainerSas(string containerName)
+        public static async Task<string> GetContainerSas(string containerName)
         {
             // get container
-            var blobClient = TestingStorageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(containerName);
-            if (!await container.ExistsAsync())
+            var containerClient = new BlobContainerClient(TestingStorageAccountConnectionString, containerName);
+            if (!await containerClient.ExistsAsync())
             {
-                await container.CreateIfNotExistsAsync();
+                await containerClient.CreateIfNotExistsAsync();
             }
 
-            await container.FetchAttributesAsync();
-            var permissionsFound = await container.GetPermissionsAsync();
+            await containerClient.GetPropertiesAsync();
+            BlobContainerAccessPolicy permissionsFound = await containerClient.GetAccessPolicyAsync();
 
             // create access policy and store it
             var accessPolicyId = "test-policy";
 
-            if (!permissionsFound.SharedAccessPolicies.ContainsKey(accessPolicyId))
+            var blobSignedIdentifier = permissionsFound.SignedIdentifiers.FirstOrDefault(x=> x.Id == accessPolicyId);
+            if (blobSignedIdentifier is null)
             {
-                var permissions = new BlobContainerPermissions
+                var permissions = new BlobSignedIdentifier
                 {
-                    PublicAccess = BlobContainerPublicAccessType.Off,
-                    SharedAccessPolicies =
+                    Id =  accessPolicyId,
+                    AccessPolicy = new BlobAccessPolicy
                     {
-                        {
-                            accessPolicyId,
-                            new SharedAccessBlobPolicy
-                            {
-                                Permissions = SharedAccessBlobPermissions.Add | SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write,
-                                SharedAccessStartTime = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromMinutes(1)),
-                                SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddDays(1)
-                            }
-                        }
+                        Permissions =  "acrw"
                     }
                 };
 
-                await container.SetPermissionsAsync(permissions);
+                await containerClient.SetAccessPolicyAsync(PublicAccessType.None, new []{permissions});
             }
             else
             {
-                permissionsFound.SharedAccessPolicies[accessPolicyId].SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddDays(1);
-                await container.SetPermissionsAsync(permissionsFound);
+                blobSignedIdentifier.AccessPolicy.ExpiresOn = DateTimeOffset.UtcNow.AddDays(1);
+                await containerClient.SetAccessPolicyAsync(PublicAccessType.None, new []{blobSignedIdentifier});
             }
-
+            
             // create SAS with policy
-            return container.GetSharedAccessSignature(null, accessPolicyId);
+            //return containerClient.sas.GetSharedAccessSignature(null, accessPolicyId);
+            
+            var blobSasBuilder = new BlobSasBuilder
+            {
+                Identifier = accessPolicyId,
+                BlobContainerName = containerName,
+                // StartsOn = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromMinutes(1)),
+                // ExpiresOn = DateTimeOffset.UtcNow.AddDays(1)
+            };
+            //blobSasBuilder.SetPermissions(BlobSasPermissions.Add | BlobSasPermissions.Create | BlobSasPermissions.Read | BlobSasPermissions.Write);
+            var blobSasQueryParameters = blobSasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential("devstoreaccount1", "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="));
+            var fullUri = $"{GetBlobEndpoint()}?{blobSasQueryParameters}";
+            return fullUri;
         }
 
         public async Task CreateContainer(string containerName)
         {
-            var containerUri = new Uri($"{TestingStorageAccount.BlobEndpoint}/{containerName}");
-            var container = new CloudBlobContainer(containerUri, TestingStorageAccount.Credentials);
+            var container = new BlobContainerClient(TestingStorageAccountConnectionString, containerName);
             if (!await container.ExistsAsync())
             {
                 await container.CreateIfNotExistsAsync();
@@ -75,8 +79,7 @@
         }
         public async Task DeleteContainer(string containerName)
         {
-            var containerUri = new Uri($"{TestingStorageAccount.BlobEndpoint}/{containerName}");
-            var container = new CloudBlobContainer(containerUri, TestingStorageAccount.Credentials);
+            var container = new BlobContainerClient(TestingStorageAccountConnectionString, containerName);
             if (await container.ExistsAsync())
             {
                 await container.DeleteIfExistsAsync();

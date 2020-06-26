@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Core;
-    using Microsoft.Azure.Storage.Auth;
     using Xunit;
 
     public class When_registering_plugin : IClassFixture<AzureStorageEmulatorFixture>
@@ -31,7 +30,7 @@
         {
             IClientEntity client = new FakeClientEntity("fake", string.Empty, RetryPolicy.Default);
 
-            var azureStorageAttachmentConfiguration = new AzureStorageAttachmentConfiguration(new StorageCredentials("?sv=2018-03-28&sr=c&sig=5XxlRKoP4yEmibM2HhJlQuV7MG3rYgQXD89mLpNp%2F24%3D"), "http://127.0.0.1:10000/devstoreaccount1");
+            var azureStorageAttachmentConfiguration = new AzureStorageAttachmentConfiguration("http://127.0.0.1:10000/devstoreaccount1?sv=2018-03-28&sr=c&sig=5XxlRKoP4yEmibM2HhJlQuV7MG3rYgQXD89mLpNp%2F24%3D");
 
             var registeredPlugin = AzureStorageAttachmentExtensions.RegisterAzureStorageAttachmentPlugin(client, azureStorageAttachmentConfiguration);
 

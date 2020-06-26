@@ -1,8 +1,8 @@
 ﻿namespace Microsoft.Azure.ServiceBus
 {
     using System;
-    using Storage;
-    using Storage.Auth;
+    using global::Azure.Core;
+    using global::Azure.Storage;
 
     /// <summary>Runtime configuration for Azure Storage Attachment plugin.</summary>
     public class AzureStorageAttachmentConfiguration
@@ -17,41 +17,52 @@
             string containerName = AzureStorageAttachmentConfigurationConstants.DefaultContainerName,
             string messagePropertyToIdentifyAttachmentBlob = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob,
             Func<Message, bool>? messageMaxSizeReachedCriteria = default)
-            : this(new PlainTextConnectionStringProvider(connectionString), containerName, messagePropertyToIdentifyAttachmentBlob, messageMaxSizeReachedCriteria)
         {
-        }
+            Guard.AgainstNull(nameof(connectionString), connectionString);
+            Guard.AgainstEmpty(nameof(containerName), containerName);
+            Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
 
+            ContainerName = containerName;
+            MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
+            MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
+
+            var storageConnectionString = ReflectedAzureStorageConnectionString.Create(connectionString);
+            StorageSharedKeyCredentials = storageConnectionString.Credentials;
+            BlobEndpoint = EnsureBlobEndpointEndsWithSlash(storageConnectionString.BlobEndpoint);
+        }
+        
         /// <summary>Constructor to create new configuration object.</summary>
         /// <remarks>Container name is not required as it's included in the SharedAccessSignature.</remarks>
-        /// <param name="storageCredentials"></param>
+        /// <param name="storageSharedKeyCredentials"></param>
         /// <param name="blobEndpoint">Blob endpoint in the format of "https://account.blob.core.windows.net/". For the emulator the value is "http://127.0.0.1:10000/devstoreaccount1".</param>
         /// <param name="containerName"></param>
         /// <param name="messagePropertyToIdentifyAttachmentBlob"></param>
         /// <param name="messageMaxSizeReachedCriteria">Default is always use attachments</param>
         public AzureStorageAttachmentConfiguration(
-            StorageCredentials storageCredentials,
+            StorageSharedKeyCredential storageSharedKeyCredentials,
             string blobEndpoint,
             string containerName = AzureStorageAttachmentConfigurationConstants.DefaultContainerName,
             string messagePropertyToIdentifyAttachmentBlob = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob,
             Func<Message, bool>? messageMaxSizeReachedCriteria = default)
         {
-            Guard.AgainstNull(nameof(storageCredentials), storageCredentials);
+            Guard.AgainstNull(nameof(storageSharedKeyCredentials), storageSharedKeyCredentials);
             Guard.AgainstEmpty(nameof(blobEndpoint), blobEndpoint);
             Guard.AgainstEmpty(nameof(containerName), containerName);
             Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
 
-            StorageCredentials = storageCredentials;
-            BlobEndpoint = EnsureBlobEndpointEndsWithSlash(blobEndpoint);
+            StorageSharedKeyCredentials = storageSharedKeyCredentials;
+            // TODO: figure out
+            BlobEndpoint = EnsureBlobEndpointEndsWithSlash(new Uri(blobEndpoint));
             ContainerName = containerName;
             MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
             MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
         }
 
-        static Uri EnsureBlobEndpointEndsWithSlash(string blobEndpoint)
+        static Uri EnsureBlobEndpointEndsWithSlash(Uri blobEndpoint)
         {
-            if (blobEndpoint.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+            if (blobEndpoint.Segments[^1].Equals("/", StringComparison.OrdinalIgnoreCase))
             {
-                return new Uri(blobEndpoint);
+                return blobEndpoint;
             }
 
             // Emulator blob endpoint doesn't end with slash
@@ -69,19 +80,20 @@
             string messagePropertyToIdentifyAttachmentBlob = AzureStorageAttachmentConfigurationConstants.DefaultMessagePropertyToIdentifyAttachmentBlob,
             Func<Message, bool>? messageMaxSizeReachedCriteria = default)
         {
-            Guard.AgainstNull(nameof(connectionStringProvider), connectionStringProvider);
-            Guard.AgainstEmpty(nameof(containerName), containerName);
-            Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
-
-            var connectionString = connectionStringProvider.GetConnectionString().GetAwaiter().GetResult();
-            var account = CloudStorageAccount.Parse(connectionString);
-
-            ConnectionStringProvider = connectionStringProvider;
-            StorageCredentials = account.Credentials;
-            BlobEndpoint = EnsureBlobEndpointEndsWithSlash(account.BlobEndpoint.ToString());
-            ContainerName = containerName;
-            MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
-            MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
+            throw new NotImplementedException();
+            // Guard.AgainstNull(nameof(connectionStringProvider), connectionStringProvider);
+            // Guard.AgainstEmpty(nameof(containerName), containerName);
+            // Guard.AgainstEmpty(nameof(messagePropertyToIdentifyAttachmentBlob), messagePropertyToIdentifyAttachmentBlob);
+            //
+            // var connectionString = connectionStringProvider.GetConnectionString().GetAwaiter().GetResult();
+            // var account = CloudStorageAccount.Parse(connectionString);
+            //
+            // ConnectionStringProvider = connectionStringProvider;
+            // StorageSharedKeyCredentials = account.Credentials;
+            // BlobEndpoint = EnsureBlobEndpointEndsWithSlash(account.BlobEndpoint.ToString());
+            // ContainerName = containerName;
+            // MessagePropertyToIdentifyAttachmentBlob = messagePropertyToIdentifyAttachmentBlob;
+            // MessageMaxSizeReachedCriteria = GetMessageMaxSizeReachedCriteria(messageMaxSizeReachedCriteria);
         }
 
         Func<Message, bool> GetMessageMaxSizeReachedCriteria(Func<Message, bool>? messageMaxSizeReachedCriteria)
@@ -103,26 +115,28 @@
             };
         }
 
-        internal IProvideStorageConnectionString? ConnectionStringProvider { get; }
-
+        ////////////////////
+        internal Uri? BlobEndpoint { get; } 
+        
         internal string ContainerName { get; }
+        
+        internal StorageSharedKeyCredential? StorageSharedKeyCredentials { get; }
+        // or
+        internal TokenCredential? TokenCredential { get; }
+        
+        internal Func<Message, string> BlobNameResolver { get; set; } = message => Guid.NewGuid().ToString();
 
+        internal Func<Message, byte[]?> BodyReplacer { get; set; } = message => null;
+        
+        internal string MessagePropertyToIdentifyAttachmentBlob { get; }
+
+        internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
+        
+        //////??
         internal string? MessagePropertyForBlobSasUri { get; set; }
 
         internal TimeSpan? BlobSasTokenValidationTime { get; set; }
 
-        internal string MessagePropertyToIdentifyAttachmentBlob { get; }
-
-        internal Func<Message, bool> MessageMaxSizeReachedCriteria { get; }
-
-        internal StorageCredentials StorageCredentials { get; }
-
-        internal bool UsingSas => StorageCredentials.IsSAS;
-
-        internal Uri BlobEndpoint { get; }
-
-        internal Func<Message, string> BlobNameResolver { get; set; } = message => Guid.NewGuid().ToString();
-
-        internal Func<Message, byte[]?> BodyReplacer { get; set; } = message => null;
+        internal bool UsingSas { get; } = false;
     }
 }

@@ -1,11 +1,12 @@
 ﻿namespace ServiceBus.AttachmentPlugin
 {
     using System;
+    using System.IO;
     using System.Threading.Tasks;
+    using Azure;
+    using Azure.Storage.Blobs.Specialized;
     using Microsoft.Azure.ServiceBus;
     using Microsoft.Azure.ServiceBus.Core;
-    using Microsoft.Azure.Storage;
-    using Microsoft.Azure.Storage.Blob;
 
     class ReceiveOnlyAzureStorageAttachment : ServiceBusPlugin
     {
@@ -28,19 +29,20 @@
                 return message;
             }
 
-            var blob = new CloudBlockBlob(new Uri(userProperties[messagePropertyToIdentifySasUri].ToString()));
+            var blob = new BlockBlobClient(new Uri(userProperties[messagePropertyToIdentifySasUri].ToString() 
+                                                   ?? throw new Exception($"Value of {nameof(messagePropertyToIdentifySasUri)} `{messagePropertyToIdentifySasUri}` was null.")));
             try
             {
-                await blob.FetchAttributesAsync().ConfigureAwait(false);
+                await blob.GetPropertiesAsync().ConfigureAwait(false);
             }
-            catch (StorageException exception)
+            catch (RequestFailedException exception)
             {
-                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.Container.Name}' cannot be found.", exception);
+                throw new Exception($"Blob with name '{blob.Name}' under container '{blob.BlobContainerName}' cannot be found.", exception);
             }
-            var fileByteLength = blob.Properties.Length;
-            var bytes = new byte[fileByteLength];
-            await blob.DownloadToByteArrayAsync(bytes, 0).ConfigureAwait(false);
-            message.Body = bytes;
+
+            await using var memory = new MemoryStream();
+            await blob.DownloadToAsync(memory).ConfigureAwait(false);
+            message.Body = memory.ToArray();
             return message;
         }
     }
