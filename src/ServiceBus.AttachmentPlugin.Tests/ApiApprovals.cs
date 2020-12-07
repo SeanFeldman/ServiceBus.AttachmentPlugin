@@ -8,12 +8,15 @@
         [Fact]
         public void AzureStorageAttachmentPlugin()
         {
-            var publicApi = ApiGenerator.GeneratePublicApi(typeof(AzureStorageAttachment).Assembly,
-                new ApiGeneratorOptions
+            var publicApi = typeof(AzureStorageAttachment).Assembly.GeneratePublicApi(new ApiGeneratorOptions
+            {
+                WhitelistedNamespacePrefixes = new[] {"Microsoft.Azure.ServiceBus."},
+                ExcludeAttributes = new[]
                 {
-                    WhitelistedNamespacePrefixes = new[] {"Microsoft.Azure.ServiceBus."},
-                    ExcludeAttributes = new[] {"System.Runtime.Versioning.TargetFrameworkAttribute"}
-                });
+                    "System.Runtime.Versioning.TargetFrameworkAttribute",
+                    "System.Reflection.AssemblyMetadataAttribute"
+                }
+            });
 
             Approver.Verify(publicApi);
         }
