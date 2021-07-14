@@ -5,6 +5,9 @@ Source File: /README.source.md
 To change this file edit the source file and then run MarkdownSnippets.
 -->
 
+_**2021-07-14**: Consider using native Azure Service Bus service [large messages](https://docs.microsoft.com/en-ca/azure/service-bus-messaging/service-bus-premium-messaging#large-messages-support-preview) feature for attachments up-to 100 MB._
+
+
 ![Icon](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/blob/master/images/project-icon.png)
 
 ### This is a plugin for [Microsoft.Azure.ServiceBus client](https://github.com/Azure/azure-service-bus-dotnet/)
