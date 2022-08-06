@@ -55,7 +55,9 @@
             {
                 // swallow in case a container SAS is used
                 if (exception.RequestInformation.HttpStatusCode != (int)System.Net.HttpStatusCode.Forbidden)
-                    throw exception;
+                {
+                    throw;
+                }
             }
 
             var blobName = configuration.BlobNameResolver(message);
