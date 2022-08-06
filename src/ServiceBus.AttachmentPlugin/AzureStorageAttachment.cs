@@ -46,14 +46,18 @@
             try
             {
                 // Will only work for Shared Key or Account SAS. For Container SAS will throw an exception.
-                if (! await container.ExistsAsync().ConfigureAwait(false))
+                if (! await container.ExistsAsync().ConfigureAwait(false)) 
                 {
                     await container.CreateIfNotExistsAsync().ConfigureAwait(false);
                 }
             }
-            catch (StorageException)
+            catch (StorageException exception)
             {
                 // swallow in case a container SAS is used
+                if (exception.RequestInformation.HttpStatusCode != (int)System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw;
+                }
             }
 
             var blobName = configuration.BlobNameResolver(message);
